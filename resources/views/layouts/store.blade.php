@@ -48,8 +48,18 @@
 
             <nav class="flex flex-wrap items-center gap-5 text-sm tracking-wide uppercase" aria-label="Principal">
                 <a href="{{ route('catalog.index') }}" class="hover:opacity-60">Colección</a>
-                <span class="text-zyro-muted" title="Disponible en la siguiente etapa">Carrito</span>
                 @auth
+                    <a href="{{ route('cart.index') }}" class="hover:opacity-60 relative">
+                        Carrito
+                        @php $cartCount = count(session('cart.items', [])); @endphp
+                        @if ($cartCount > 0)
+                            <span style="font-size:.65rem;background:#111;color:#fff;border-radius:50%;padding:1px 5px;margin-left:3px;vertical-align:middle;">{{ $cartCount }}</span>
+                        @endif
+                    </a>
+                    <a href="{{ route('orders.index') }}" class="hover:opacity-60">Mis pedidos</a>
+                    @if (auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="hover:opacity-60 text-zyro-muted">Admin</a>
+                    @endif
                     <span class="normal-case tracking-normal text-zyro-muted">{{ auth()->user()->name }}</span>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

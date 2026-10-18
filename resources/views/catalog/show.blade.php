@@ -25,10 +25,41 @@
                     Producto no disponible para compra.
                 @endif
             </p>
-            <p class="mt-8 text-sm text-zyro-muted">El carrito y el checkout se habilitarán en la siguiente etapa.</p>
-            <a href="{{ route('catalog.index') }}" class="mt-8 inline-block border border-zyro px-5 py-2 text-sm uppercase tracking-wide">
-                Volver al catálogo
-            </a>
+            @if ($product->isPurchasable())
+                @auth
+                    <form method="POST" action="{{ route('cart.store', $product->id) }}" class="mt-8 space-y-4">
+                        @csrf
+                        @if (count($product->availableSizes()) > 0)
+                            <div>
+                                <label for="size" class="block text-sm mb-1 uppercase tracking-wide">Talla</label>
+                                <select id="size" name="size" class="border border-zyro-border px-3 py-2 bg-white text-sm">
+                                    <option value="">— Selecciona una talla —</option>
+                                    @foreach ($product->availableSizes() as $sz)
+                                        <option value="{{ $sz }}">{{ $sz }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        <div>
+                            <label for="quantity" class="block text-sm mb-1 uppercase tracking-wide">Cantidad</label>
+                            <input id="quantity" name="quantity" type="number" value="1" min="1" max="{{ $product->stock }}"
+                                   class="w-24 border border-zyro-border px-3 py-2 text-sm text-center">
+                        </div>
+                        @error('cart') <p class="text-sm text-red-700">{{ $message }}</p> @enderror
+                        <button type="submit" class="w-full bg-zyro text-white py-3 uppercase tracking-wide text-sm hover:opacity-80 transition-opacity">
+                            Agregar al carrito
+                        </button>
+                    </form>
+                @else
+                    <div class="mt-8">
+                        <a href="{{ route('login') }}" class="block w-full bg-zyro text-white text-center py-3 uppercase tracking-wide text-sm">
+                            Inicia sesión para comprar
+                        </a>
+                    </div>
+                @endauth
+            @else
+                <p class="mt-8 text-sm text-zyro-muted border border-zyro-border px-4 py-3">Producto no disponible para compra.</p>
+            @endif
         </div>
     </article>
 @endsection

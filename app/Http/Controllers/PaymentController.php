@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\PaymentMethod;
+use App\Http\Requests\PaymentRequest;
+use App\Models\Order;
+use App\Services\SimulatedPaymentService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+
+class PaymentController extends Controller
+{
+    public function __construct(
+        private readonly SimulatedPaymentService $paymentService,
+    ) {}
+
+    /** Muestra el formulario de pago simulado. */
+    public function create(Order $order): View|RedirectResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        abort_unless($order->isOwnedBy($user), 403);
+
+        if ($order->status->value !== 'approved') {
+            return redirect()->route('orders.show', $order)
+                ->withErrors(['payment' => 'El pedido no está aprobado para pago.']);
+        }
+
+        $methods = PaymentMethod::cases();
+
+        return view('orders.payment', compact('order', 'methods'));
+    }
+
+    /** Procesa el pago simulado. */
+    public function store(PaymentRequest $request, Order $order): RedirectResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+
+        abort_unless($order->isOwnedBy($user), 403);
+
+        $method = PaymentMethod::from($request->validated('method'));
+
+        try {
+            $result = $this->paymentService->process($order, $method);
+
+            if ($result['success']) {
+                return redirect()->route('orders.show', $order)
+                    ->with('status', $result['message']);
+            }
+
+            return redirect()->route('orders.payment', $order)
+                ->withErrors(['payment' => $result['message']]);
+
+        } catch (\RuntimeException $e) {
+            return redirect()->route('orders.show', $order)
+                ->withErrors(['payment' => $e->getMessage()]);
+        }
+    }
+}
