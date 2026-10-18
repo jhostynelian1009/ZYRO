@@ -21,3 +21,18 @@ Laravel 12 · Blade/CSS · MySQL · XAMPP · Eloquent · monolito MVC.
 El cliente envía un pedido desde su dispositivo. El administrador lo ve desde otro dispositivo y lo aprueba o rechaza. Solo después de aprobarlo, el cliente puede realizar un pago ficticio. Si se aprueba el pago simulado, el pedido queda pagado, el dashboard refleja el ingreso simulado y el stock disminuye exactamente una vez.
 
 La aplicación local y el flujo completo son prioritarios. El dashboard detectará cambios mediante polling cada 5–10 segundos; WebSockets son opcionales y no deben retrasar la entrega.
+
+## Entorno local (XAMPP)
+
+1. PHP 8.2+ y Composer. Iniciar Apache y MySQL en XAMPP.
+2. Crear la base `zyro_store` en phpMyAdmin.
+3. Copiar `.env.example` a `.env` si aún no existe. No publicar secretos.
+4. Ajustar `DB_CONNECTION=mysql`, host, puerto, base, usuario y contraseña locales.
+5. `composer install`
+6. `php artisan key:generate` solo si falta `APP_KEY`.
+7. `php artisan migrate --seed`
+8. El seeder crea el administrador local (`ADMIN_EMAIL` / `ADMIN_PASSWORD` en `.env`). El registro público solo crea clientes.
+9. `npm install` y `npm run build` si se usa Vite. Hay estilos de reserva si el manifiesto aún no existe.
+10. `php artisan serve` o el VirtualHost de Apache.
+
+El logotipo oficial no está en el repositorio. Reservar `public/images/brand/logo.svg`. Las imágenes de producto actuales son SVG provisionales en `public/images/products/`.

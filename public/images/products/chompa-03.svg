@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="Recurso provisional chompa 03">
+  <rect width="600" height="800" fill="#F5F5F5"/>
+  <rect x="40" y="40" width="520" height="720" fill="none" stroke="#E5E5E5"/>
+  <path d="M210 260 l-70 40 v70 h40 v170 h240 v-170 h40 v-70 l-70 -40 v-30 h-30 v30 h-120 v-30 h-30 z" fill="none" stroke="#111111" stroke-width="2"/>
+  <text x="300" y="700" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#666666">ZYRO · 03</text>
+</svg>
