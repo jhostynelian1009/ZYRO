@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="100%" height="100%">
+  <rect width="600" height="700" fill="#F7F7F7"/>
+  <!-- Chompa Pure: Blanco marfil puro de algodón orgánico con cuello redondo atemporal -->
+  <g transform="translate(50, 40)">
+    <!-- Cuerpo y mangas -->
+    <path d="M 170 120 L 90 200 L 130 460 L 190 440 L 190 560 L 310 560 L 310 440 L 370 460 L 410 200 L 330 120 Z" fill="#FDFBF7" stroke="#E2DDD5" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Detalle textura de punto suave -->
+    <path d="M 215 220 Q 250 230 285 220 M 215 280 Q 250 290 285 280 M 215 340 Q 250 350 285 340" stroke="#EBE6DE" stroke-width="1.5" fill="none"/>
+    <!-- Pretina y puños acanalados en canalé fino marfil -->
+    <rect x="190" y="540" width="120" height="20" fill="#F5F0E6" stroke="#E2DDD5" stroke-width="2"/>
+    <rect x="130" y="445" width="60" height="15" fill="#F5F0E6" stroke="#E2DDD5" stroke-width="1.5" transform="rotate(-18 160 452)"/>
+    <rect x="310" y="445" width="60" height="15" fill="#F5F0E6" stroke="#E2DDD5" stroke-width="1.5" transform="rotate(18 340 452)"/>
+    <!-- Cuello redondo atemporal -->
+    <path d="M 210 120 Q 250 160 290 120" fill="none" stroke="#E2DDD5" stroke-width="4"/>
+    <path d="M 210 120 Q 250 160 290 120" fill="none" stroke="#111111" stroke-width="1.5"/>
+  </g>
+  <rect x="160" y="630" width="280" height="30" fill="#FFFFFF" stroke="#E0E0E0" rx="3"/>
+  <text x="300" y="650" font-family="'Inter', system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="1.5" fill="#666666" text-anchor="middle">FOTOGRAFÍA EN PRODUCCIÓN</text>
+</svg>
