@@ -1,61 +1,169 @@
-@extends('layouts.store')
+@extends('layouts.admin')
 
-@section('title', 'Pedidos — Admin — ZYRO')
+@section('title', 'Gestión de Pedidos — Admin — ZYRO')
+@section('section_title', 'Pedidos')
 
 @section('content')
-<section class="mx-auto max-w-6xl px-4 py-10">
-
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+    <div class="admin-page-header">
         <div>
-            <p class="text-xs uppercase tracking-[0.3em] text-zyro-muted mb-1">Admin</p>
-            <h1 class="font-serif text-4xl">Pedidos</h1>
+            <p class="admin-kicker">Operaciones &bull; Ventas</p>
+            <h1 class="admin-title">Gestión de Pedidos</h1>
+            <p class="admin-subtitle">Revisión, aprobación y seguimiento del flujo transaccional.</p>
         </div>
-        <a href="{{ route('admin.dashboard') }}" class="text-sm underline hover:opacity-60">← Dashboard</a>
+        <div style="display:flex; gap:0.75rem;">
+            <a href="{{ route('admin.dashboard') }}" class="btn-action">
+                <span>&larr;</span>
+                <span>Volver al Dashboard</span>
+            </a>
+        </div>
     </div>
 
-    @if (session('status'))
-        <div class="mb-6 border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">{{ session('status') }}</div>
-    @endif
-    @if ($errors->has('order'))
-        <div class="mb-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ $errors->first('order') }}</div>
-    @endif
-
-    @if ($orders->isEmpty())
-        <p class="border border-zyro-border bg-zyro-gray px-6 py-16 text-center text-sm text-zyro-muted">
-            No hay pedidos registrados.
-        </p>
-    @else
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm border-collapse">
-                <thead>
-                    <tr class="border-b border-zyro-border text-left text-xs uppercase tracking-wide text-zyro-muted">
-                        <th class="py-3 pr-4">Número</th>
-                        <th class="py-3 pr-4">Cliente</th>
-                        <th class="py-3 pr-4">Total</th>
-                        <th class="py-3 pr-4">Estado</th>
-                        <th class="py-3 pr-4">Fecha</th>
-                        <th class="py-3"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($orders as $order)
-                        <tr class="border-b border-zyro-border hover:bg-zyro-gray">
-                            <td class="py-3 pr-4 font-medium">{{ $order->order_number }}</td>
-                            <td class="py-3 pr-4">{{ $order->user->name ?? '—' }}</td>
-                            <td class="py-3 pr-4">${{ number_format($order->total, 2) }}</td>
-                            <td class="py-3 pr-4">
-                                @include('orders.partials.status-badge', ['status' => $order->status])
-                            </td>
-                            <td class="py-3 pr-4 text-zyro-muted">{{ $order->created_at->format('d/m/Y H:i') }}</td>
-                            <td class="py-3">
-                                <a href="{{ route('admin.orders.show', $order) }}" class="underline hover:opacity-60">Ver</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    {{-- Filtros y Buscador --}}
+    <div class="filters-toolbar">
+        <div class="filter-tabs" role="tablist">
+            <a
+                href="{{ route('admin.orders.index', array_merge(request()->except(['status', 'page']))) }}"
+                class="filter-tab {{ empty($status) ? 'active' : '' }}"
+            >
+                <span>Todos</span>
+                <span class="tab-count">{{ $counts['all'] ?? 0 }}</span>
+            </a>
+            <a
+                href="{{ route('admin.orders.index', array_merge(request()->except(['status', 'page']), ['status' => 'pending_approval'])) }}"
+                class="filter-tab {{ $status === 'pending_approval' ? 'active' : '' }}"
+            >
+                <span>Pendientes</span>
+                <span class="tab-count" style="{{ ($counts['pending_approval'] ?? 0) > 0 ? 'background:#FDE68A; color:#92400E;' : '' }}">
+                    {{ $counts['pending_approval'] ?? 0 }}
+                </span>
+            </a>
+            <a
+                href="{{ route('admin.orders.index', array_merge(request()->except(['status', 'page']), ['status' => 'approved'])) }}"
+                class="filter-tab {{ $status === 'approved' ? 'active' : '' }}"
+            >
+                <span>Aprobados</span>
+                <span class="tab-count">{{ $counts['approved'] ?? 0 }}</span>
+            </a>
+            <a
+                href="{{ route('admin.orders.index', array_merge(request()->except(['status', 'page']), ['status' => 'paid'])) }}"
+                class="filter-tab {{ $status === 'paid' ? 'active' : '' }}"
+            >
+                <span>Pagados</span>
+                <span class="tab-count">{{ $counts['paid'] ?? 0 }}</span>
+            </a>
+            <a
+                href="{{ route('admin.orders.index', array_merge(request()->except(['status', 'page']), ['status' => 'rejected'])) }}"
+                class="filter-tab {{ $status === 'rejected' ? 'active' : '' }}"
+            >
+                <span>Rechazados</span>
+                <span class="tab-count">{{ $counts['rejected'] ?? 0 }}</span>
+            </a>
         </div>
-        <div class="mt-6">{{ $orders->links() }}</div>
-    @endif
-</section>
+
+        <form method="GET" action="{{ route('admin.orders.index') }}" class="search-box">
+            @if (!empty($status))
+                <input type="hidden" name="status" value="{{ $status }}">
+            @endif
+            <input
+                type="search"
+                name="q"
+                value="{{ $q ?? '' }}"
+                placeholder="Buscar por # o cliente..."
+                aria-label="Buscar pedidos"
+            >
+            <button type="submit" aria-label="Ejecutar búsqueda">&rarr;</button>
+            @if (!empty($q))
+                <a href="{{ route('admin.orders.index', array_merge(request()->except('q'))) }}" style="font-size:0.75rem; color:var(--zyro-muted); margin-left:0.25rem;" title="Limpiar búsqueda">&times;</a>
+            @endif
+        </form>
+    </div>
+
+    {{-- Tabla de Pedidos --}}
+    <div class="card-table-wrapper">
+        <div class="card-table-head">
+            <div>
+                <h2 class="card-table-title">
+                    Listado de Pedidos
+                    @if (!empty($status))
+                        <span style="font-size:0.75rem; font-weight:normal; color:var(--zyro-muted);">
+                            &bull; Filtrado por: <strong>{{ ucfirst(str_replace('_', ' ', $status)) }}</strong>
+                        </span>
+                    @endif
+                </h2>
+                <span style="font-size:0.75rem; color:var(--zyro-muted);">
+                    {{ $orders->total() }} pedido(s) encontrado(s)
+                </span>
+            </div>
+        </div>
+
+        @if ($orders->isEmpty())
+            <div style="padding: 4.5rem 2rem; text-align: center; color: var(--zyro-muted);">
+                <p style="font-size: 1.125rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--zyro-black);">
+                    No se encontraron pedidos
+                </p>
+                <p style="font-size: 0.8125rem; margin-bottom: 1.25rem;">
+                    @if (!empty($q) || !empty($status))
+                        No hay pedidos que coincidan con los criterios de búsqueda o filtro seleccionados.
+                    @else
+                        Aún no se han registrado pedidos en la tienda.
+                    @endif
+                </p>
+                @if (!empty($q) || !empty($status))
+                    <a href="{{ route('admin.orders.index') }}" class="btn-action">
+                        Restablecer todos los filtros
+                    </a>
+                @endif
+            </div>
+        @else
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Fecha de Creación</th>
+                            <th style="text-align: right;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+                            <tr class="{{ $order->status->value === 'pending_approval' ? 'row-pending' : '' }}">
+                                <td>
+                                    <strong style="font-family:monospace; font-size:0.875rem;">
+                                        {{ $order->order_number }}
+                                    </strong>
+                                </td>
+                                <td>
+                                    <div style="font-weight:600;">{{ $order->customer_name ?: ($order->user->name ?? '—') }}</div>
+                                    <div style="font-size:0.6875rem; color:var(--zyro-muted);">{{ $order->user->email ?? '—' }}</div>
+                                </td>
+                                <td>
+                                    <span style="font-weight:700;">${{ number_format($order->total, 2) }}</span>
+                                </td>
+                                <td>
+                                    @include('orders.partials.status-badge', ['status' => $order->status])
+                                </td>
+                                <td style="color:var(--zyro-muted);">
+                                    {{ $order->created_at->format('d/m/Y H:i') }}
+                                </td>
+                                <td style="text-align: right;">
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="btn-action btn-action-primary">
+                                        Ver detalle
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            @if ($orders->hasPages())
+                <div class="pagination-wrap">
+                    {{ $orders->links() }}
+                </div>
+            @endif
+        @endif
+    </div>
 @endsection

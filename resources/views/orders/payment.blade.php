@@ -5,13 +5,10 @@
 @section('content')
 <section class="mx-auto max-w-2xl px-4 py-12">
 
-    {{-- Aviso académico permanente --}}
-    <div class="mb-8 border-2 border-yellow-400 bg-yellow-50 px-5 py-4">
-        <p class="text-xs uppercase tracking-widest text-yellow-700 font-semibold mb-1">⚠ SIMULACIÓN ACADÉMICA</p>
-        <p class="text-sm text-yellow-800">
-            Este formulario <strong>no procesa dinero real</strong>. No se solicitan ni almacenan datos bancarios.
-            El pago es ficticio con fines educativos.
-        </p>
+    {{-- Indicación discreta de entorno de pago simulado --}}
+    <div style="background:#F7F7F8; border:1px solid #E8E8EC; border-left:3px solid #0055FF; padding:0.875rem 1.25rem; margin-bottom:2rem; font-size:0.8125rem; color:#52525B; line-height:1.5;">
+        <strong style="color:#0F0F11; display:block; margin-bottom:0.2rem;">Entorno de pago protegido (Modo demostración):</strong>
+        Esta pasarela procesa transacciones simuladas de prueba. No se requiere tarjeta real ni se debitará saldo alguno.
     </div>
 
     <h1 class="font-serif text-3xl mb-2">Pago simulado</h1>
@@ -76,7 +73,7 @@
     </form>
 
     <p class="mt-6 text-xs text-center text-zyro-muted">
-        Entorno académico — Pago simulado — No se generan cargos reales
+        Transacción de prueba — No se efectúan cargos monetarios reales
     </p>
 
     <div class="mt-6">

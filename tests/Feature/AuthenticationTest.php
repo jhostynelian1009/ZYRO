@@ -68,4 +68,39 @@ class AuthenticationTest extends TestCase
         $this->post('/cerrar-sesion')->assertRedirect(route('catalog.index'));
         $this->assertGuest();
     }
+
+    public function test_login_page_renders_with_styled_card_and_inputs(): void
+    {
+        $response = $this->get('/iniciar-sesion');
+
+        $response->assertOk();
+        $response->assertSee('auth-card', false);
+        $response->assertSee('auth-title', false);
+        $response->assertSee('Iniciar sesión', false);
+        $response->assertSee('btn-auth-submit', false);
+        $response->assertSee('Entrar', false);
+    }
+
+    public function test_register_page_renders_with_styled_card_and_inputs(): void
+    {
+        $response = $this->get('/registro');
+
+        $response->assertOk();
+        $response->assertSee('auth-card', false);
+        $response->assertSee('auth-title', false);
+        $response->assertSee('Crear cuenta', false);
+        $response->assertSee('btn-auth-submit', false);
+        $response->assertSee('Registrarme', false);
+    }
+
+    public function test_login_shows_validation_error_when_credentials_are_invalid(): void
+    {
+        $response = $this->post('/iniciar-sesion', [
+            'email' => 'noexiste@zyro.test',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertSessionHasErrors('email');
+    }
 }
+

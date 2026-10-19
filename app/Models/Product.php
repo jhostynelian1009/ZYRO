@@ -97,6 +97,64 @@ class Product extends Model
         return $this->is_active && $this->stock > 0;
     }
 
+    public function hasTechnology(): bool
+    {
+        return $this->category === 'tech' || str_contains(strtolower($this->name), 'tech');
+    }
+
+    public function lineName(): string
+    {
+        return $this->hasTechnology() ? 'Línea Tech' : 'Línea Esencial';
+    }
+
+    public function isDesignReference(): bool
+    {
+        return str_contains((string) $this->image_path, 'clean.svg') || str_contains((string) $this->image_path, 'design-reference');
+    }
+
+    public function referenceNote(): string
+    {
+        if ($this->isDesignReference()) {
+            return 'Ficha de referencia de diseño oficial. Fotografía editorial individual en producción.';
+        }
+
+        return 'Fotografía editorial oficial de producto.';
+    }
+
+    public function scopeWithTechnology(Builder $query): Builder
+    {
+        return $query->where(function (Builder $sub) {
+            $sub->where('category', 'tech')
+                ->orWhere('name', 'like', '%Tech%');
+        });
+    }
+
+    public function scopeWithoutTechnology(Builder $query): Builder
+    {
+        return $query->where(function (Builder $sub) {
+            $sub->where('category', 'esencial')
+                ->orWhere(function (Builder $nested) {
+                    $nested->where('category', '!=', 'tech')
+                        ->where('name', 'not like', '%Tech%');
+                });
+        });
+    }
+
+    public function scopeByLine(Builder $query, ?string $filter): Builder
+    {
+        $filter = strtolower(trim((string) $filter));
+
+        if (in_array($filter, ['tech', 'con-tecnologia', 'con_tecnologia', 'con tecnologia'])) {
+            return $this->scopeWithTechnology($query);
+        }
+
+        if (in_array($filter, ['esencial', 'sin-tecnologia', 'sin_tecnologia', 'sin tecnologia'])) {
+            return $this->scopeWithoutTechnology($query);
+        }
+
+        return $query;
+    }
+
     protected static function booted(): void
     {
         static::creating(function (Product $product): void {

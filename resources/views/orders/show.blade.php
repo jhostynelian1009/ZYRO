@@ -98,7 +98,7 @@
                         <p class="text-sm text-purple-800">Referencia: {{ $pago->reference }}</p>
                         <p class="text-sm text-purple-800">Monto: ${{ number_format($pago->amount, 2) }}</p>
                     @endif
-                    <p class="text-xs text-purple-600 mt-2">SIMULACIÓN ACADÉMICA — no se procesó dinero real.</p>
+                    <p class="text-xs text-purple-600 mt-2">Transacción de prueba completada exitosamente.</p>
                 </div>
             @elseif ($order->status->value === 'rejected')
                 <div class="border border-red-200 bg-red-50 px-4 py-4">

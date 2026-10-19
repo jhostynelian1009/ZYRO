@@ -7,19 +7,45 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-    /** Lista todos los pedidos. */
-    public function index(): View
+    /** Lista pedidos con soporte de filtros por estado y búsqueda. */
+    public function index(Request $request): View
     {
-        $orders = Order::query()
-            ->with('user')
-            ->latest()
-            ->paginate(20);
+        $status = $request->query('status');
+        $q = trim((string) $request->query('q'));
 
-        return view('admin.orders.index', compact('orders'));
+        $query = Order::query()->with('user')->latest();
+
+        if ($status && in_array($status, array_column(OrderStatus::cases(), 'value'), true)) {
+            $query->where('status', $status);
+        }
+
+        if ($q !== '') {
+            $query->where(function ($sub) use ($q) {
+                $sub->where('order_number', 'like', "%{$q}%")
+                    ->orWhere('customer_name', 'like', "%{$q}%")
+                    ->orWhereHas('user', function ($u) use ($q) {
+                        $u->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%");
+                    });
+            });
+        }
+
+        $orders = $query->paginate(15)->withQueryString();
+
+        $counts = [
+            'all'              => Order::query()->count(),
+            'pending_approval' => Order::query()->where('status', OrderStatus::PendingApproval)->count(),
+            'approved'         => Order::query()->where('status', OrderStatus::Approved)->count(),
+            'paid'             => Order::query()->where('status', OrderStatus::Paid)->count(),
+            'rejected'         => Order::query()->where('status', OrderStatus::Rejected)->count(),
+        ];
+
+        return view('admin.orders.index', compact('orders', 'status', 'q', 'counts'));
     }
 
     /** Muestra el detalle de un pedido. */
