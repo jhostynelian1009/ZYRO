@@ -3,44 +3,57 @@
 @section('title', 'Mis pedidos — ZYRO')
 
 @section('content')
-<section class="mx-auto max-w-6xl px-4 py-12">
-    <h1 class="font-serif text-4xl mb-8">Mis pedidos</h1>
+<div class="orders-page-wrapper container">
+
+    <div class="cart-header">
+        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--zyro-muted);margin-bottom:0.25rem;">
+            Mi cuenta
+        </p>
+        <h1>Mis pedidos</h1>
+    </div>
 
     @if ($orders->isEmpty())
-        <div class="border border-zyro-border bg-zyro-gray px-6 py-16 text-center text-zyro-muted">
-            <p class="mb-4">No tienes pedidos todavía.</p>
-            <a href="{{ route('catalog.index') }}" class="inline-block bg-zyro text-white px-6 py-2 text-sm uppercase tracking-wide">Ver colección</a>
+        <div class="cart-empty-card">
+            <span class="cart-empty-icon">📦</span>
+            <h2>Aún no tienes pedidos</h2>
+            <p>Explora la colección ZYRO y realiza tu primera compra.</p>
+            <a href="{{ route('catalog.index') }}" class="btn-primary">Ver colección</a>
         </div>
     @else
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm border-collapse">
+        <div class="orders-table-wrapper">
+            <table class="orders-table">
                 <thead>
-                    <tr class="border-b border-zyro-border text-left text-xs uppercase tracking-wide text-zyro-muted">
-                        <th class="py-3 pr-4">Número</th>
-                        <th class="py-3 pr-4">Total</th>
-                        <th class="py-3 pr-4">Estado</th>
-                        <th class="py-3 pr-4">Fecha</th>
-                        <th class="py-3"></th>
+                    <tr>
+                        <th>Número de pedido</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($orders as $order)
-                        <tr class="border-b border-zyro-border hover:bg-zyro-gray">
-                            <td class="py-3 pr-4 font-medium">{{ $order->order_number }}</td>
-                            <td class="py-3 pr-4">${{ number_format($order->total, 2) }}</td>
-                            <td class="py-3 pr-4">
+                        <tr>
+                            <td style="font-weight:600;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;">
+                                {{ $order->order_number }}
+                            </td>
+                            <td style="font-weight:600;">${{ number_format($order->total, 2) }}</td>
+                            <td>
                                 @include('orders.partials.status-badge', ['status' => $order->status])
                             </td>
-                            <td class="py-3 pr-4 text-zyro-muted">{{ $order->created_at->format('d/m/Y H:i') }}</td>
-                            <td class="py-3">
-                                <a href="{{ route('orders.show', $order) }}" class="underline hover:opacity-60">Ver</a>
+                            <td style="color:var(--zyro-muted);">{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                            <td style="text-align:right;">
+                                <a href="{{ route('orders.show', $order) }}" class="btn-cart-update">Ver detalle</a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-        <div class="mt-6">{{ $orders->links() }}</div>
+
+        @if ($orders->hasPages())
+            <div style="margin-top:1.5rem;">{{ $orders->links() }}</div>
+        @endif
     @endif
-</section>
+</div>
 @endsection

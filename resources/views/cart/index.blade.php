@@ -3,41 +3,53 @@
 @section('title', 'Carrito — ZYRO')
 
 @section('content')
-<section class="mx-auto max-w-6xl px-4 py-12">
-    <h1 class="font-serif text-4xl mb-8">Carrito</h1>
+<div class="cart-page-wrapper container">
+
+    <div class="cart-header">
+        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--zyro-muted);margin-bottom:0.25rem;">
+            Mi cuenta
+        </p>
+        <h1>Carrito de compras</h1>
+    </div>
 
     @error('cart')
-        <p class="mb-6 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ $message }}</p>
+        <div style="background:#FEF2F2;border:1px solid #FECACA;border-left:3px solid #DC2626;padding:0.875rem 1rem;margin-bottom:1.5rem;font-size:0.8125rem;color:#991B1B;border-radius:2px;">
+            {{ $message }}
+        </div>
     @enderror
 
     @if (empty($items))
-        <div class="border border-zyro-border bg-zyro-gray px-6 py-16 text-center text-zyro-muted">
-            <p class="mb-4">El carrito está vacío.</p>
-            <a href="{{ route('catalog.index') }}" class="inline-block bg-zyro text-white px-6 py-2 text-sm uppercase tracking-wide">Ver colección</a>
+        <div class="cart-empty-card">
+            <span class="cart-empty-icon">🛒</span>
+            <h2>El carrito está vacío</h2>
+            <p>Aún no has agregado ninguna prenda. Explora la colección y encuentra tu modelo.</p>
+            <a href="{{ route('catalog.index') }}" class="btn-primary">Ver colección</a>
         </div>
     @else
-        <div class="grid gap-8 lg:grid-cols-3">
+        <div class="cart-grid">
             {{-- Lista de ítems --}}
-            <div class="lg:col-span-2 space-y-4">
+            <div class="cart-items-card">
                 @foreach ($items as $key => $item)
-                    <div class="flex gap-4 border border-zyro-border bg-white p-4">
-                        <div class="w-20 flex-shrink-0 bg-zyro-gray border border-zyro-border">
+                    <div class="cart-item-row">
+                        {{-- Miniatura --}}
+                        <div class="cart-thumb">
                             <img
                                 src="{{ asset($item['image_path'] ?? 'images/products/placeholder.svg') }}"
                                 alt="{{ $item['name'] }}"
-                                class="h-full w-full object-cover aspect-[3/4]"
                             >
                         </div>
-                        <div class="flex-1">
-                            <p class="font-serif text-lg">{{ $item['name'] }}</p>
-                            @if ($item['size'])
-                                <p class="text-xs uppercase tracking-wide text-zyro-muted mt-1">Talla: {{ $item['size'] }}</p>
-                            @endif
-                            <p class="text-sm mt-1">${{ number_format($item['price'], 2) }}</p>
 
-                            <div class="flex items-center gap-4 mt-3">
+                        {{-- Info --}}
+                        <div class="cart-item-info">
+                            <p class="cart-item-name">{{ $item['name'] }}</p>
+                            @if ($item['size'])
+                                <span class="cart-item-size-pill">Talla: {{ $item['size'] }}</span>
+                            @endif
+                            <p class="cart-item-unit-price">${{ number_format($item['price'], 2) }} por unidad</p>
+
+                            <div class="cart-item-actions">
                                 {{-- Actualizar cantidad --}}
-                                <form method="POST" action="{{ route('cart.update', $item['product_id']) }}" class="flex items-center gap-2">
+                                <form method="POST" action="{{ route('cart.update', $item['product_id']) }}" class="cart-qty-form">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="size" value="{{ $item['size'] }}">
@@ -49,43 +61,58 @@
                                         value="{{ $item['quantity'] }}"
                                         min="1"
                                         max="{{ $item['stock'] }}"
-                                        class="w-16 border border-zyro-border px-2 py-1 text-sm text-center"
+                                        class="cart-qty-input"
                                     >
-                                    <button type="submit" class="text-xs uppercase tracking-wide underline hover:opacity-60">Actualizar</button>
+                                    <button type="submit" class="btn-cart-update">Actualizar</button>
                                 </form>
 
                                 {{-- Eliminar --}}
                                 <form method="POST" action="{{ route('cart.destroy', $item['product_id']) }}?size={{ $item['size'] }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-xs uppercase tracking-wide text-red-600 hover:opacity-60">Eliminar</button>
+                                    <button type="submit" class="btn-cart-remove">
+                                        <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                                        Eliminar
+                                    </button>
                                 </form>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-sm font-medium">${{ number_format($item['price'] * $item['quantity'], 2) }}</p>
-                            <p class="text-xs text-zyro-muted mt-1">×{{ $item['quantity'] }}</p>
+
+                        {{-- Subtotal --}}
+                        <div class="cart-item-total">
+                            <p class="cart-item-total-amount">${{ number_format($item['price'] * $item['quantity'], 2) }}</p>
+                            <p style="font-size:0.6875rem;color:var(--zyro-muted);margin-top:0.25rem;">×{{ $item['quantity'] }}</p>
                         </div>
                     </div>
                 @endforeach
             </div>
 
             {{-- Resumen --}}
-            <div class="border border-zyro-border bg-zyro-gray p-6 h-fit">
-                <h2 class="font-serif text-xl mb-4">Resumen</h2>
-                <div class="flex justify-between text-sm mb-2">
-                    <span>Subtotal (estimado)</span>
+            <div class="cart-summary-card">
+                <h2 class="summary-card-title">Resumen</h2>
+
+                <div class="summary-row">
+                    <span>Productos ({{ array_sum(array_column($items, 'quantity')) }})</span>
                     <span>${{ number_format($subtotal, 2) }}</span>
                 </div>
-                <p class="text-xs text-zyro-muted mb-6">El total final (IVA + envío) se calculará al confirmar el pedido.</p>
-                <a href="{{ route('checkout.create') }}" class="block w-full bg-zyro text-white text-center py-3 text-sm uppercase tracking-wide">
-                    Ir al checkout
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-total-row">
+                    <span>Subtotal estimado</span>
+                    <span>${{ number_format($subtotal, 2) }}</span>
+                </div>
+
+                <p class="summary-note">El total definitivo (IVA 12% + envío) se calcula al confirmar el pedido en el servidor.</p>
+
+                <a href="{{ route('checkout.create') }}" class="btn-primary" style="width:100%;text-align:center;display:block;padding:0.875rem;">
+                    Continuar al checkout
                 </a>
-                <a href="{{ route('catalog.index') }}" class="block w-full text-center border border-zyro-border py-3 text-sm uppercase tracking-wide mt-2 hover:bg-zyro hover:text-white transition-colors">
+                <a href="{{ route('catalog.index') }}" class="btn-secondary" style="width:100%;text-align:center;display:block;padding:0.875rem;margin-top:0.75rem;">
                     Seguir comprando
                 </a>
             </div>
         </div>
     @endif
-</section>
+</div>
 @endsection
