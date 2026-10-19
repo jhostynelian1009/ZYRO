@@ -76,7 +76,10 @@ class Product extends Model
     public function imageUrl(): string
     {
         if (filled($this->image_path)) {
-            return asset($this->image_path);
+            $path = ltrim((string) $this->image_path, '/\\');
+            if (file_exists(public_path($path))) {
+                return asset($path);
+            }
         }
 
         return asset('images/products/placeholder.svg');
@@ -109,15 +112,11 @@ class Product extends Model
 
     public function isDesignReference(): bool
     {
-        return str_contains((string) $this->image_path, 'clean.svg') || str_contains((string) $this->image_path, 'design-reference');
+        return false;
     }
 
     public function referenceNote(): string
     {
-        if ($this->isDesignReference()) {
-            return 'Ficha de referencia de diseño oficial. Fotografía editorial individual en producción.';
-        }
-
         return 'Fotografía editorial oficial de producto.';
     }
 
