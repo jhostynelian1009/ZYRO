@@ -240,14 +240,23 @@
                                 </div>
                             </div>
                             <div class="product-card-body">
-                                <div>
+                                <div class="product-card-info">
                                     <h4 class="product-name" style="font-size:1.15rem;">
                                         <a href="{{ route('catalog.show', $rel) }}">{{ $rel->name }}</a>
                                     </h4>
                                 </div>
-                                <div class="product-price-row">
-                                    <span class="product-price">{{ $rel->formattedPrice() }}</span>
-                                        <a href="{{ route('catalog.show', $rel) }}" class="btn-card-action">Ver</a>
+                                <div class="product-card-footer">
+                                    <div class="product-price-row">
+                                        <span class="product-price">{{ $rel->formattedPrice() }}</span>
+                                    </div>
+                                    <div class="product-actions-row">
+                                        <a href="{{ route('catalog.show', $rel) }}" class="btn-card-details">
+                                            Detalles
+                                        </a>
+                                        <a href="{{ route('catalog.customize', $rel) }}" class="btn-card-customize">
+                                            Personalizar
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </article>

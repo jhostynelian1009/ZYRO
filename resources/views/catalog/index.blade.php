@@ -130,7 +130,7 @@
 
                                 {{-- Cuerpo de la Tarjeta --}}
                                 <div class="product-card-body">
-                                    <div>
+                                    <div class="product-card-info">
                                         <div class="product-meta-line">{{ $product->lineName() }}</div>
                                         <h3 class="product-name">
                                             <a href="{{ route('catalog.show', $product) }}">
@@ -139,12 +139,20 @@
                                         </h3>
                                     </div>
 
-                                    <div class="product-price-row">
-                                        <span class="product-price">{{ $product->formattedPrice() }}</span>
-                                        <a href="{{ route('catalog.show', $product) }}" class="btn-card-action">
-                                            Detalles
-                                        </a>
-                                        <a href="{{ route('catalog.customize', $product) }}" style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:underline;">Personalizar</a>
+                                    {{-- Footer de Tarjeta: Precio en fila independiente y botones abajo --}}
+                                    <div class="product-card-footer">
+                                        <div class="product-price-row">
+                                            <span class="product-price">{{ $product->formattedPrice() }}</span>
+                                        </div>
+
+                                        <div class="product-actions-row">
+                                            <a href="{{ route('catalog.show', $product) }}" class="btn-card-details">
+                                                Detalles
+                                            </a>
+                                            <a href="{{ route('catalog.customize', $product) }}" class="btn-card-customize">
+                                                Personalizar
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </article>
