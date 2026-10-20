@@ -74,30 +74,13 @@
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            flex-shrink: 0;
         }
 
-        .brand-emblem {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            background: var(--zyro-black);
-            color: var(--zyro-white);
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 0.875rem;
-            letter-spacing: -0.05em;
-        }
-
-        .brand-name {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: 0.28em;
-            line-height: 1;
-            color: var(--zyro-black);
+        .brand-logo-image {
+            width: 96px;
+            height: 58px;
+            object-fit: contain;
         }
 
         .nav-center {
@@ -509,6 +492,17 @@
         @media (max-width: 880px) {
             .nav-center { display: none; }
             .header-inner { grid-template-columns: auto 1fr; }
+            .brand-logo-image { width: 78px; height: 52px; }
+            .header-actions { gap: 0.75rem; }
+            .search-form-compact input { width: 100px; }
+        }
+
+        @media (max-width: 640px) {
+            .site-header { height: 60px; }
+            .header-inner { gap: 0.75rem; padding-inline: 0.75rem; }
+            .brand-logo-image { width: 64px; height: 44px; }
+            .search-form-compact { display: none; }
+            .header-actions { gap: 0.65rem; }
         }
 
         /* ─── ESTRUCTURA PRINCIPAL Y STICKY FOOTER ─── */
@@ -1270,8 +1264,7 @@
         <div class="container header-inner">
             {{-- Logo Izquierda --}}
             <a href="{{ route('home') }}" class="brand-logo" aria-label="ZYRO Inicio">
-                <span class="brand-emblem">Z</span>
-                <span class="brand-name">ZYRO</span>
+                <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
             </a>
 
             {{-- Navegación Centrada --}}
@@ -1337,8 +1330,7 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <div class="brand-logo" style="margin-bottom:0.75rem;">
-                    <span class="brand-emblem" style="background:#fff;color:#0F0F11;">Z</span>
-                    <span class="brand-name" style="color:#fff;">ZYRO</span>
+                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
                 </div>
                 <p style="color:#A1A1AA;font-size:0.8125rem;line-height:1.6;margin-bottom:1rem;">
                     Colección editorial de chompas urbanas. Cuatro modelos con termorregulación activa ($299.99) y cuatro esenciales en algodón orgánico puro ($79.99).

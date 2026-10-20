@@ -84,28 +84,14 @@
         .brand-link {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            min-width: 0;
         }
 
-        .brand-emblem {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            background: #FFFFFF;
-            color: var(--zyro-black);
-            font-weight: 700;
-            font-size: 0.875rem;
-        }
-
-        .brand-title {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            color: #FFFFFF;
-            line-height: 1;
+        .brand-logo-image {
+            display: block;
+            width: 112px;
+            height: 64px;
+            object-fit: contain;
         }
 
         .brand-badge {
@@ -798,8 +784,7 @@
         <aside id="admin-sidebar" class="admin-sidebar">
             <div class="sidebar-brand">
                 <a href="{{ route('admin.dashboard') }}" class="brand-link" aria-label="ZYRO Admin">
-                    <span class="brand-emblem">Z</span>
-                    <span class="brand-title">ZYRO</span>
+                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
                 </a>
                 <span class="brand-badge">ADMIN</span>
             </div>
