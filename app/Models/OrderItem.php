@@ -19,6 +19,7 @@ class OrderItem extends Model
         'product_id',
         'product_name',
         'size',
+        'customization',
         'quantity',
         'unit_price',
         'line_total',
@@ -31,6 +32,7 @@ class OrderItem extends Model
     {
         return [
             'quantity' => 'integer',
+            'customization' => 'array',
             'unit_price' => 'decimal:2',
             'line_total' => 'decimal:2',
         ];

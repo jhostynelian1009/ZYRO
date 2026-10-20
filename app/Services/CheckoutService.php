@@ -74,6 +74,7 @@ class CheckoutService
                     'product_id'   => $product->id,
                     'product_name' => $product->name,
                     'size'         => $item['size'] ?? null,
+                    'customization' => $item['customization'] ?? null,
                     'quantity'     => $qty,
                     'unit_price'   => $unitPrice,
                     'line_total'   => $lineTotal,

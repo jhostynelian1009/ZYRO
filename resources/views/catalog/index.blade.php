@@ -144,6 +144,7 @@
                                         <a href="{{ route('catalog.show', $product) }}" class="btn-card-action">
                                             Detalles
                                         </a>
+                                        <a href="{{ route('catalog.customize', $product) }}" style="font-size:.6875rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:underline;">Personalizar</a>
                                     </div>
                                 </div>
                             </article>

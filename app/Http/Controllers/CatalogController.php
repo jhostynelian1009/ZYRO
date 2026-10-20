@@ -54,4 +54,11 @@ class CatalogController extends Controller
             'relatedProducts' => $relatedProducts,
         ]);
     }
+
+    public function customize(Product $product): View
+    {
+        abort_unless($product->isPurchasable(), 404);
+
+        return view('catalog.customize', compact('product'));
+    }
 }

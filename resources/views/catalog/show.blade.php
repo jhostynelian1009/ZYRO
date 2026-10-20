@@ -193,6 +193,7 @@
                                     Añadir al Carrito &bull; {{ $product->formattedPrice() }}
                                 </button>
                             </form>
+                            <a href="{{ route('catalog.customize', $product) }}" class="btn-secondary" style="width:100%;margin-top:.75rem;padding-block:1rem;text-align:center;display:block;font-size:.8125rem;">Personaliza tu chompa</a>
                         @else
                             <div style="background:var(--zyro-light); border:1px solid var(--zyro-border); padding:1.5rem; text-align:center;">
                                 <p style="font-size:0.875rem; font-weight:600; margin-bottom:0.5rem; color:var(--zyro-black);">Inicia sesión para realizar tu pedido</p>
@@ -246,7 +247,7 @@
                                 </div>
                                 <div class="product-price-row">
                                     <span class="product-price">{{ $rel->formattedPrice() }}</span>
-                                    <a href="{{ route('catalog.show', $rel) }}" class="btn-card-action">Ver</a>
+                                        <a href="{{ route('catalog.show', $rel) }}" class="btn-card-action">Ver</a>
                                 </div>
                             </div>
                         </article>
