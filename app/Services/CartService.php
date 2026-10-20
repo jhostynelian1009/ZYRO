@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Gestiona el carrito de compra almacenado en sesión Laravel.
@@ -29,7 +30,7 @@ class CartService
      *
      * @throws \RuntimeException
      */
-    public function add(int $productId, int $quantity, ?string $size): void
+    public function add(int $productId, int $quantity, ?string $size, ?array $customization = null): void
     {
         if ($quantity < 1) {
             throw new \RuntimeException('La cantidad debe ser al menos 1.');
@@ -44,8 +45,12 @@ class CartService
             throw new \RuntimeException('Producto no disponible.');
         }
 
+        if ($size && ! in_array($size, $product->availableSizes(), true)) {
+            throw new \RuntimeException('La talla seleccionada no está disponible para este modelo.');
+        }
+
         $items = $this->items();
-        $key = $this->itemKey($productId, $size);
+        $key = $this->itemKey($productId, $size, $customization);
         $current = $items[$key]['quantity'] ?? 0;
         $newQty = $current + $quantity;
 
@@ -63,6 +68,7 @@ class CartService
             'size'       => $size,
             'quantity'   => $newQty,
             'stock'      => $product->stock,
+            'customization' => $customization,
         ];
 
         $this->session->put(self::SESSION_KEY, $items);
@@ -73,7 +79,7 @@ class CartService
      *
      * @throws \RuntimeException
      */
-    public function update(int $productId, ?string $size, int $quantity): void
+    public function update(int $productId, ?string $size, int $quantity, ?string $itemKey = null): void
     {
         if ($quantity < 1) {
             throw new \RuntimeException('La cantidad debe ser al menos 1.');
@@ -95,7 +101,7 @@ class CartService
         }
 
         $items = $this->items();
-        $key = $this->itemKey($productId, $size);
+        $key = $itemKey ?: $this->itemKey($productId, $size);
 
         if (! isset($items[$key])) {
             throw new \RuntimeException('Ítem no encontrado en el carrito.');
@@ -109,10 +115,14 @@ class CartService
     }
 
     /** Elimina un ítem del carrito. */
-    public function remove(int $productId, ?string $size): void
+    public function remove(int $productId, ?string $size, ?string $itemKey = null): void
     {
         $items = $this->items();
-        $key = $this->itemKey($productId, $size);
+        $key = $itemKey ?: $this->itemKey($productId, $size);
+        $imagePath = $items[$key]['customization']['image_path'] ?? null;
+        if (is_string($imagePath)) {
+            Storage::disk('local')->delete($imagePath);
+        }
         unset($items[$key]);
         $this->session->put(self::SESSION_KEY, $items);
     }
@@ -147,8 +157,10 @@ class CartService
     }
 
     /** Clave única del ítem en sesión. */
-    private function itemKey(int $productId, ?string $size): string
+    private function itemKey(int $productId, ?string $size, ?array $customization = null): string
     {
-        return $productId.'_'.($size ?? 'no-size');
+        $base = $productId.'_'.($size ?? 'no-size');
+
+        return $customization ? $base.'_'.hash('sha256', json_encode($customization)) : $base;
     }
 }

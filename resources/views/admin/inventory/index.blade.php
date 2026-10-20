@@ -140,7 +140,7 @@
                             <tr>
                                 <td>
                                     <div style="display:flex; align-items:center; gap:0.75rem;">
-                                        <div style="width:42px; height:48px; background:#F4F4F5; border:1px solid #E4E4E7; border-radius:2px; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                                        <div style="width:54px; height:38px; background:#F4F4F5; border:1px solid #E4E4E7; border-radius:2px; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
                                             <img
                                                 src="{{ $product->imageUrl() }}"
                                                 alt="{{ $product->name }}"

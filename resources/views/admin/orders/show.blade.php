@@ -124,6 +124,9 @@
                                                     Stock actual disponible: <strong>{{ $item->product->stock }}</strong>
                                                 </div>
                                             @endif
+                                            @if ($item->customization)
+                                                <div style="font-size:.75rem;color:var(--zyro-muted);line-height:1.6;margin-top:.35rem;"><strong style="color:var(--zyro-black);">Personalización</strong><br>{{ $item->product?->lineName() ?? 'Colección registrada' }} · {{ ucfirst($item->customization['color']) }} · {{ str_replace('_', ' ', $item->customization['location']) }}@if(!empty($item->customization['text']))<br>Texto: “{{ $item->customization['text'] }}”@endif @if(!empty($item->customization['image_path']))<br><a href="{{ route('customizations.image', $item) }}" style="text-decoration:underline;">Ver o descargar imagen</a>@endif</div>
+                                            @endif
                                         </td>
                                         <td>
                                             @if ($item->size)

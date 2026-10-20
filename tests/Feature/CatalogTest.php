@@ -120,4 +120,38 @@ class CatalogTest extends TestCase
         $this->assertSame(4, Product::query()->where('category', 'tech')->where('price', '370.00')->count());
         $this->assertSame(4, Product::query()->where('category', 'esencial')->where('price', '80.00')->count());
     }
+
+    public function test_customizer_renders_faithful_hoodie_and_sweater_structures(): void
+    {
+        $this->seed(ProductSeeder::class);
+
+        $hoodie = Product::query()->where('slug', 'zyro-eclipse-tech')->firstOrFail();
+        $crewneck = Product::query()->where('slug', 'zyro-classic')->firstOrFail();
+        $techCollar = Product::query()->where('slug', 'zyro-lunar-tech')->firstOrFail();
+
+        // 1. Hoodie: debe contener capucha y bolsillo canguro
+        $this->get(route('catalog.customize', $hoodie))
+            ->assertOk()
+            ->assertSee('Chompa Hoodie con Capucha', false)
+            ->assertSee('front-kangaroo-pocket', false)
+            ->assertSee('front-hoodie-hood', false)
+            ->assertSee('btn-zoom-in', false)
+            ->assertSee('custom_location', false)
+            ->assertSee('370.00', false);
+
+        // 2. Crewneck: silueta sin capucha con cuello acanalado
+        $this->get(route('catalog.customize', $crewneck))
+            ->assertOk()
+            ->assertSee('Chompa Crewneck Cuello Redondo', false)
+            ->assertSee('front-crewneck-collar', false)
+            ->assertDontSee('front-kangaroo-pocket', false)
+            ->assertSee('80.00', false);
+
+        // 3. Tech collar: silueta técnica ergonómica
+        $this->get(route('catalog.customize', $techCollar))
+            ->assertOk()
+            ->assertSee('Chompa Técnica con Cuello Ergonómico', false)
+            ->assertSee('front-tech-collar', false)
+            ->assertSee('370.00', false);
+    }
 }

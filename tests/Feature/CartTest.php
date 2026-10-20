@@ -6,6 +6,8 @@ use App\Enums\UserRole;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class CartTest extends TestCase
@@ -138,5 +140,64 @@ class CartTest extends TestCase
         $items = session('cart.items');
         $item  = collect($items)->first();
         $this->assertSame(50.0, (float) $item['price']);
+    }
+
+    public function test_customizations_are_stored_as_distinct_cart_lines(): void
+    {
+        $product = $this->product(['size_options' => ['S', 'M', 'L', 'XL']]);
+        $customer = $this->customer();
+
+        foreach (['navy', 'red'] as $color) {
+            $this->actingAs($customer)->post(route('cart.store', $product->id), [
+                'quantity' => 1,
+                'size' => 'M',
+                'customized' => '1',
+                'custom_color' => $color,
+                'custom_text' => 'ZYRO',
+                'custom_location' => 'chest',
+                'price' => 0.01,
+            ])->assertRedirect();
+        }
+
+        $items = session('cart.items');
+        $this->assertCount(2, $items);
+        $this->assertSame(['navy', 'red'], collect($items)->pluck('customization.color')->sort()->values()->all());
+        $this->assertSame((float) $product->price * 2, collect($items)->sum('price'));
+    }
+
+    public function test_customizer_rejects_an_invalid_color(): void
+    {
+        $product = $this->product();
+
+        $this->actingAs($this->customer())
+            ->post(route('cart.store', $product->id), [
+                'quantity' => 1,
+                'size' => 'M',
+                'customized' => '1',
+                'custom_color' => 'gold',
+                'custom_location' => 'chest',
+            ])
+            ->assertSessionHasErrors('custom_color');
+    }
+
+    public function test_customizer_rejects_images_larger_than_five_megabytes(): void
+    {
+        Storage::fake('local');
+        $product = $this->product();
+
+        $temp = tempnam(sys_get_temp_dir(), 'zyro_test');
+        file_put_contents($temp, str_repeat('A', 5200 * 1024));
+        $file = new UploadedFile($temp, 'design.png', 'image/png', null, true);
+
+        $this->actingAs($this->customer())
+            ->post(route('cart.store', $product->id), [
+                'quantity' => 1, 'size' => 'M', 'customized' => '1', 'custom_color' => 'black',
+                'custom_location' => 'chest', 'custom_image' => $file,
+            ])
+            ->assertSessionHasErrors('custom_image');
+
+        if (file_exists($temp)) {
+            @unlink($temp);
+        }
     }
 }

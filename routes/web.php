@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CustomizationImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [CatalogController::class, 'index'])->name('home');
 Route::get('/productos', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/productos/{product}', [CatalogController::class, 'show'])->name('catalog.show');
+Route::get('/productos/{product}/personalizar', [CatalogController::class, 'customize'])->name('catalog.customize');
 
 // ─── Autenticación (solo invitados) ──────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -34,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/carrito/agregar/{productId}', [CartController::class, 'store'])->name('cart.store');
     Route::patch('/carrito/{productId}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/carrito/{productId}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::get('/personalizaciones/{item}/imagen', [CustomizationImageController::class, 'show'])->name('customizations.image');
 
     // ─── Pedidos del cliente ──────────────────────────────────────────────────
     Route::get('/checkout', [OrderController::class, 'create'])->name('checkout.create');

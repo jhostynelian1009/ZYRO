@@ -45,6 +45,9 @@
                             @if ($item['size'])
                                 <span class="cart-item-size-pill">Talla: {{ $item['size'] }}</span>
                             @endif
+                            @if (!empty($item['customization']))
+                                <div style="font-size:.75rem;color:var(--zyro-muted);margin-top:.45rem;line-height:1.55;"><strong style="color:var(--zyro-black);">Personalizada</strong> · {{ ucfirst($item['customization']['color']) }} · {{ str_replace('_', ' ', $item['customization']['location']) }}@if(!empty($item['customization']['text']))<br>Texto: “{{ $item['customization']['text'] }}”@endif</div>
+                            @endif
                             <p class="cart-item-unit-price">${{ number_format($item['price'], 2) }} por unidad</p>
 
                             <div class="cart-item-actions">
@@ -53,6 +56,7 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="size" value="{{ $item['size'] }}">
+                                    <input type="hidden" name="item_key" value="{{ $key }}">
                                     <label for="qty-{{ $key }}" class="sr-only">Cantidad</label>
                                     <input
                                         id="qty-{{ $key }}"
@@ -67,7 +71,7 @@
                                 </form>
 
                                 {{-- Eliminar --}}
-                                <form method="POST" action="{{ route('cart.destroy', $item['product_id']) }}?size={{ $item['size'] }}">
+                                <form method="POST" action="{{ route('cart.destroy', $item['product_id']) }}?size={{ $item['size'] }}&item_key={{ urlencode($key) }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-cart-remove">

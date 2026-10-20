@@ -70,7 +70,7 @@
         <div class="product-show-grid">
             {{-- Columna de Imagen Contenida --}}
             <div>
-                <div style="background:var(--zyro-light); border:1px solid var(--zyro-border); aspect-ratio: 1 / 1.15; display:flex; align-items:center; justify-content:center; padding:2rem; position:relative; overflow:hidden;">
+                <div style="background:var(--zyro-light); border:1px solid var(--zyro-border); aspect-ratio: 16 / 11; display:flex; align-items:center; justify-content:center; padding:1.25rem; position:relative; overflow:hidden;">
                     <img
                         src="{{ $product->imageUrl() }}"
                         alt="{{ $product->name }}"
@@ -193,6 +193,7 @@
                                     Añadir al Carrito &bull; {{ $product->formattedPrice() }}
                                 </button>
                             </form>
+                            <a href="{{ route('catalog.customize', $product) }}" class="btn-secondary" style="width:100%;margin-top:.75rem;padding-block:1rem;text-align:center;display:block;font-size:.8125rem;">Personaliza tu chompa</a>
                         @else
                             <div style="background:var(--zyro-light); border:1px solid var(--zyro-border); padding:1.5rem; text-align:center;">
                                 <p style="font-size:0.875rem; font-weight:600; margin-bottom:0.5rem; color:var(--zyro-black);">Inicia sesión para realizar tu pedido</p>
@@ -239,14 +240,23 @@
                                 </div>
                             </div>
                             <div class="product-card-body">
-                                <div>
+                                <div class="product-card-info">
                                     <h4 class="product-name" style="font-size:1.15rem;">
                                         <a href="{{ route('catalog.show', $rel) }}">{{ $rel->name }}</a>
                                     </h4>
                                 </div>
-                                <div class="product-price-row">
-                                    <span class="product-price">{{ $rel->formattedPrice() }}</span>
-                                    <a href="{{ route('catalog.show', $rel) }}" class="btn-card-action">Ver</a>
+                                <div class="product-card-footer">
+                                    <div class="product-price-row">
+                                        <span class="product-price">{{ $rel->formattedPrice() }}</span>
+                                    </div>
+                                    <div class="product-actions-row">
+                                        <a href="{{ route('catalog.show', $rel) }}" class="btn-card-details">
+                                            Detalles
+                                        </a>
+                                        <a href="{{ route('catalog.customize', $rel) }}" class="btn-card-customize">
+                                            Personalizar
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </article>

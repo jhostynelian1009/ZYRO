@@ -99,6 +99,27 @@ class OrderTest extends TestCase
         $this->assertSame(2, $order->items->first()->quantity);
     }
 
+    public function test_checkout_persists_a_customization_snapshot_without_changing_price(): void
+    {
+        $product = $this->product(['price' => 370.00]);
+        $customer = $this->customer();
+        $items = $this->withCartItems([[$product, 1, 'L']]);
+        $items[array_key_first($items)]['customization'] = [
+            'color' => 'navy', 'text' => 'ANA', 'location' => 'chest',
+        ];
+        $items[array_key_first($items)]['price'] = 0.01;
+
+        $this->actingAs($customer)->withSession(['cart.items' => $items])->post(route('orders.store'), [
+            'customer_name' => 'Cliente Test', 'phone' => '0991234567', 'address' => 'Av. Principal 123',
+            'city' => 'Quito', 'delivery_method' => 'standard',
+        ])->assertRedirect();
+
+        $item = Order::query()->where('user_id', $customer->id)->firstOrFail()->items()->firstOrFail();
+        $this->assertSame('370.00', $item->unit_price);
+        $this->assertSame('navy', $item->customization['color']);
+        $this->assertSame('ANA', $item->customization['text']);
+    }
+
     public function test_server_recalculates_price_ignoring_cart_values(): void
     {
         // El precio en BD es 49.90; el carrito podría tener cualquier valor

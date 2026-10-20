@@ -50,6 +50,9 @@
                                     Talla: {{ $item->size }}
                                 </span>
                             @endif
+                            @if ($item->customization)
+                                <div style="font-size:.75rem;color:var(--zyro-muted);line-height:1.6;margin:.25rem 0;"><strong style="color:var(--zyro-black);">Personalización:</strong> {{ ucfirst($item->customization['color']) }}, {{ str_replace('_', ' ', $item->customization['location']) }}@if(!empty($item->customization['text'])) · “{{ $item->customization['text'] }}”@endif @if(!empty($item->customization['image_path'])) · <a href="{{ route('customizations.image', $item) }}" style="text-decoration:underline;">Ver imagen</a>@endif</div>
+                            @endif
                             <p style="font-size:0.75rem;color:var(--zyro-muted);">×{{ $item->quantity }} × ${{ number_format($item->unit_price, 2) }}</p>
                         </div>
                         <p style="font-weight:700;font-size:1rem;color:var(--zyro-black);white-space:nowrap;">${{ number_format($item->line_total, 2) }}</p>

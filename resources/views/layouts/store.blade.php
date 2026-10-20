@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=cormorant-garamond:500,600,700|inter:400,500,600,700" rel="stylesheet" />
 
+    {{-- Favicon Oficial ZYRO --}}
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
     {{-- Assets Vite (Tailwind CSS & JavaScript) --}}
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -72,15 +76,36 @@
         }
 
         .brand-logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            gap: 0.65rem;
+            text-decoration: none;
             flex-shrink: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .brand-logo:hover {
+            opacity: 0.85;
         }
 
         .brand-logo-image {
-            width: 96px;
-            height: 58px;
+            width: auto;
+            height: 38px;
+            max-height: 38px;
             object-fit: contain;
+            display: block;
+        }
+
+        .brand-wordmark {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.625rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--zyro-black);
+            line-height: 1;
+            display: inline-block;
+            padding-top: 1px;
         }
 
         .nav-center {
@@ -326,6 +351,7 @@
             border: 1px solid var(--zyro-border);
             display: flex;
             flex-direction: column;
+            height: 100%;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
@@ -338,12 +364,12 @@
         .product-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 1 / 1.15;
+            aspect-ratio: 16 / 11;
             background: var(--zyro-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.25rem;
+            padding: 0.875rem;
             overflow: hidden;
         }
 
@@ -374,6 +400,12 @@
             flex-direction: column;
             flex: 1;
             justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .product-card-info {
+            display: flex;
+            flex-direction: column;
         }
 
         .product-meta-line {
@@ -394,23 +426,95 @@
             margin-bottom: 0.5rem;
         }
 
+        .product-card-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: auto;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--zyro-border);
+        }
+
         .product-price-row {
             display: flex;
             align-items: baseline;
-            justify-content: space-between;
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--zyro-light);
+            justify-content: flex-start;
         }
 
         .product-price {
-            font-size: 1.125rem;
+            font-size: 1.15rem;
             font-weight: 700;
+            color: var(--zyro-black);
+            line-height: 1.2;
+        }
+
+        .product-actions-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-card-details {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+            padding: 0 0.5rem;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: var(--zyro-black);
+            color: var(--zyro-white);
+            border: 1px solid var(--zyro-black);
+            border-radius: 2px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .btn-card-details:hover {
+            background: #27272A;
+            border-color: #27272A;
+            color: var(--zyro-white);
+        }
+
+        .btn-card-customize {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
+            padding: 0 0.5rem;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: var(--zyro-white);
+            color: var(--zyro-black);
+            border: 1px solid var(--zyro-black);
+            border-radius: 2px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .btn-card-customize:hover {
+            background: var(--zyro-light);
             color: var(--zyro-black);
         }
 
         .btn-card-action {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
             font-size: 0.6875rem;
             font-weight: 600;
             letter-spacing: 0.1em;
@@ -419,6 +523,7 @@
             background: var(--zyro-black);
             color: var(--zyro-white);
             border: 1px solid var(--zyro-black);
+            border-radius: 2px;
             transition: background 0.2s, color 0.2s;
         }
 
@@ -492,17 +597,19 @@
         @media (max-width: 880px) {
             .nav-center { display: none; }
             .header-inner { grid-template-columns: auto 1fr; }
-            .brand-logo-image { width: 78px; height: 52px; }
+            .brand-logo-image { height: 32px; }
+            .brand-wordmark { font-size: 1.45rem; letter-spacing: 0.16em; }
             .header-actions { gap: 0.75rem; }
             .search-form-compact input { width: 100px; }
         }
 
         @media (max-width: 640px) {
             .site-header { height: 60px; }
-            .header-inner { gap: 0.75rem; padding-inline: 0.75rem; }
-            .brand-logo-image { width: 64px; height: 44px; }
+            .header-inner { gap: 0.5rem; padding-inline: 0.75rem; }
+            .brand-logo-image { height: 26px; }
+            .brand-wordmark { font-size: 1.25rem; letter-spacing: 0.14em; }
             .search-form-compact { display: none; }
-            .header-actions { gap: 0.65rem; }
+            .header-actions { gap: 0.5rem; }
         }
 
         /* ─── ESTRUCTURA PRINCIPAL Y STICKY FOOTER ─── */
@@ -1264,7 +1371,8 @@
         <div class="container header-inner">
             {{-- Logo Izquierda --}}
             <a href="{{ route('home') }}" class="brand-logo" aria-label="ZYRO Inicio">
-                <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
+                <img class="brand-logo-image" src="{{ asset('images/zyro-logo-transparent.png') }}" alt="ZYRO Monograma" width="46" height="36">
+                <span class="brand-wordmark">ZYRO</span>
             </a>
 
             {{-- Navegación Centrada --}}
@@ -1329,9 +1437,10 @@
     <footer class="site-footer">
         <div class="container footer-grid">
             <div class="footer-col">
-                <div class="brand-logo" style="margin-bottom:0.75rem;">
-                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
-                </div>
+                <a href="{{ route('home') }}" class="brand-logo" style="margin-bottom:0.85rem;" aria-label="ZYRO Inicio">
+                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo-white.png') }}" alt="ZYRO Monograma" width="46" height="36" style="height:36px;width:auto;">
+                    <span class="brand-wordmark" style="color:#FFFFFF;">ZYRO</span>
+                </a>
                 <p style="color:#A1A1AA;font-size:0.8125rem;line-height:1.6;margin-bottom:1rem;">
                     Colección editorial de chompas urbanas. Cuatro modelos con termorregulación activa ($370.00) y cuatro esenciales en algodón orgánico puro ($80.00).
                 </p>
