@@ -28,9 +28,9 @@ class InventoryController extends Controller
         }
 
         if ($line === 'tech') {
-            $query->where('price', '>=', 200);
+            $query->where('category', 'tech');
         } elseif ($line === 'esencial') {
-            $query->where('price', '<', 200);
+            $query->where('category', 'esencial');
         }
 
         $products = $query->paginate(15)->withQueryString();

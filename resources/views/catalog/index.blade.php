@@ -1,7 +1,7 @@
 @extends('layouts.store')
 
 @section('title', 'Colección de Chompas — ZYRO')
-@section('meta_description', 'Descubre las 8 chompas exclusivas de ZYRO: 4 modelos con tecnología de termorregulación activa ($299.99) y 4 modelos esenciales en algodón orgánico ($79.99).')
+@section('meta_description', 'Descubre las 8 chompas exclusivas de ZYRO: 4 modelos con tecnología de termorregulación activa ($370.00) y 4 modelos esenciales en algodón orgánico ($80.00).')
 
 @section('content')
     {{-- ─── HERO EDITORIAL COMPACTO Y ELEGANTE ─── --}}
@@ -26,11 +26,11 @@
                         Moda Urbana.<br>Rendimiento Térmico.
                     </h1>
                     <p style="font-size:0.9375rem; color:var(--zyro-muted); line-height:1.6; max-width:520px; margin-bottom:1.75rem;">
-                        Ocho siluetas editoriales con arquitectura textil de vanguardia: cuatro piezas con termorregulación activa ($299.99) y cuatro modelos esenciales en fibras puras de algodón orgánico ($79.99).
+                        Ocho siluetas editoriales con arquitectura textil de vanguardia: cuatro piezas con termorregulación activa ($370.00) y cuatro modelos esenciales en fibras puras de algodón orgánico ($80.00).
                     </p>
                     <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
                         <a href="#catalogo" class="btn-primary">Ver Colección</a>
-                        <a href="{{ route('catalog.index', ['line' => 'tech']) }}#catalogo" class="btn-secondary">Línea Tech ($299.99)</a>
+                        <a href="{{ route('catalog.index', ['line' => 'tech']) }}#catalogo" class="btn-secondary">Línea Tech ($370.00)</a>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@
                             <strong style="font-family:'Cormorant Garamond', Georgia, serif; font-size:1.15rem; color:var(--zyro-black);">Edición Insignia</strong>
                             <span style="display:block; font-size:0.6875rem; color:var(--zyro-muted); text-transform:uppercase; letter-spacing:0.08em;">Línea Tech &bull; Con Tecnología</span>
                         </div>
-                        <span style="font-weight:700; font-size:1rem; color:var(--zyro-black);">$299.99</span>
+                        <span style="font-weight:700; font-size:1rem; color:var(--zyro-black);">$370.00</span>
                     </div>
                 </div>
             </div>
@@ -77,13 +77,13 @@
                         href="{{ route('catalog.index', array_merge(request()->except('line'), ['line' => 'tech'])) }}#catalogo"
                         class="filter-btn filter-tech {{ in_array($filter, ['tech', 'con-tecnologia']) ? 'active' : '' }}"
                     >
-                        Con Tecnología ({{ $counts['tech'] ?? 4 }}) &bull; $299.99
+                        Con Tecnología ({{ $counts['tech'] ?? 4 }}) &bull; $370.00
                     </a>
                     <a
                         href="{{ route('catalog.index', array_merge(request()->except('line'), ['line' => 'esencial'])) }}#catalogo"
                         class="filter-btn {{ in_array($filter, ['esencial', 'sin-tecnologia']) ? 'active' : '' }}"
                     >
-                        Sin Tecnología ({{ $counts['esencial'] ?? 4 }}) &bull; $79.99
+                        Sin Tecnología ({{ $counts['esencial'] ?? 4 }}) &bull; $80.00
                     </a>
                 </div>
             </div>
@@ -176,7 +176,7 @@
                         Termorregulación Activa &bull; Línea Tech
                     </h2>
                     <p style="font-size:0.875rem; color:#A1A1AA; line-height:1.7; margin-bottom:1.5rem;">
-                        Los cuatro modelos de la Línea Tech ($299.99) integran filamentos conductores micro-aislados que modulan pasivamente la retención calórica frente a fluctuaciones de temperatura corporal y ambiente.
+                        Los cuatro modelos de la Línea Tech ($370.00) integran filamentos conductores micro-aislados que modulan pasivamente la retención calórica frente a fluctuaciones de temperatura corporal y ambiente.
                     </p>
 
                     <div style="display:flex; flex-direction:column; gap:1rem; border-top:1px solid #27272A; padding-top:1.5rem; margin-bottom:2rem; font-size:0.8125rem;">
@@ -197,7 +197,7 @@
                     </div>
 
                     <a href="{{ route('catalog.index', ['line' => 'tech']) }}#catalogo" class="btn-primary" style="background:var(--zyro-white); color:var(--zyro-black); border-color:var(--zyro-white);">
-                        Ver Modelos Tech ($299.99)
+                        Ver Modelos Tech ($370.00)
                     </a>
                 </div>
 

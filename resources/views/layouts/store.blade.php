@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'ZYRO — Moda Urbana & Alta Tecnología')</title>
-    <meta name="description" content="@yield('meta_description', 'ZYRO. Tienda de moda urbana con 8 diseños exclusivos de chompas: Línea Tech ($299.99) y Línea Esencial ($79.99).')">
+    <meta name="description" content="@yield('meta_description', 'ZYRO. Tienda de moda urbana con 8 diseños exclusivos de chompas: Línea Tech ($370.00) y Línea Esencial ($80.00).')">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=cormorant-garamond:500,600,700|inter:400,500,600,700" rel="stylesheet" />
 
@@ -74,30 +74,13 @@
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            flex-shrink: 0;
         }
 
-        .brand-emblem {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            background: var(--zyro-black);
-            color: var(--zyro-white);
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 0.875rem;
-            letter-spacing: -0.05em;
-        }
-
-        .brand-name {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: 0.28em;
-            line-height: 1;
-            color: var(--zyro-black);
+        .brand-logo-image {
+            width: 96px;
+            height: 58px;
+            object-fit: contain;
         }
 
         .nav-center {
@@ -509,6 +492,17 @@
         @media (max-width: 880px) {
             .nav-center { display: none; }
             .header-inner { grid-template-columns: auto 1fr; }
+            .brand-logo-image { width: 78px; height: 52px; }
+            .header-actions { gap: 0.75rem; }
+            .search-form-compact input { width: 100px; }
+        }
+
+        @media (max-width: 640px) {
+            .site-header { height: 60px; }
+            .header-inner { gap: 0.75rem; padding-inline: 0.75rem; }
+            .brand-logo-image { width: 64px; height: 44px; }
+            .search-form-compact { display: none; }
+            .header-actions { gap: 0.65rem; }
         }
 
         /* ─── ESTRUCTURA PRINCIPAL Y STICKY FOOTER ─── */
@@ -1270,8 +1264,7 @@
         <div class="container header-inner">
             {{-- Logo Izquierda --}}
             <a href="{{ route('home') }}" class="brand-logo" aria-label="ZYRO Inicio">
-                <span class="brand-emblem">Z</span>
-                <span class="brand-name">ZYRO</span>
+                <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
             </a>
 
             {{-- Navegación Centrada --}}
@@ -1337,11 +1330,10 @@
         <div class="container footer-grid">
             <div class="footer-col">
                 <div class="brand-logo" style="margin-bottom:0.75rem;">
-                    <span class="brand-emblem" style="background:#fff;color:#0F0F11;">Z</span>
-                    <span class="brand-name" style="color:#fff;">ZYRO</span>
+                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
                 </div>
                 <p style="color:#A1A1AA;font-size:0.8125rem;line-height:1.6;margin-bottom:1rem;">
-                    Colección editorial de chompas urbanas. Cuatro modelos con termorregulación activa ($299.99) y cuatro esenciales en algodón orgánico puro ($79.99).
+                    Colección editorial de chompas urbanas. Cuatro modelos con termorregulación activa ($370.00) y cuatro esenciales en algodón orgánico puro ($80.00).
                 </p>
                 <p style="font-size:0.6875rem;color:#71717A;text-transform:uppercase;letter-spacing:0.1em;">
                     Colección Oficial &bull; Cápsula 2026
@@ -1351,8 +1343,8 @@
             <div class="footer-col">
                 <h4>Líneas</h4>
                 <ul class="footer-links">
-                    <li><a href="{{ route('catalog.index', ['line' => 'tech']) }}">Línea Tech — $299.99</a></li>
-                    <li><a href="{{ route('catalog.index', ['line' => 'esencial']) }}">Línea Esencial — $79.99</a></li>
+                    <li><a href="{{ route('catalog.index', ['line' => 'tech']) }}">Línea Tech — $370.00</a></li>
+                    <li><a href="{{ route('catalog.index', ['line' => 'esencial']) }}">Línea Esencial — $80.00</a></li>
                     <li><a href="{{ route('catalog.index') }}">Catálogo Completo (8)</a></li>
                     <li><a href="{{ route('home') }}#tecnologia">Innovación Textil</a></li>
                 </ul>
@@ -1386,7 +1378,7 @@
 
         <div class="container footer-bottom">
             <span>&copy; {{ date('Y') }} ZYRO. Tienda de moda urbana y alta tecnología textil.</span>
-            <span>8 Modelos Oficiales: 4 Tech ($299.99) &bull; 4 Esencial ($79.99)</span>
+            <span>8 Modelos Oficiales: 4 Tech ($370.00) &bull; 4 Esencial ($80.00)</span>
         </div>
     </footer>
 </body>

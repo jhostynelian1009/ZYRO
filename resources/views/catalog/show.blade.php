@@ -110,7 +110,7 @@
                         @if ($product->hasTechnology())
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--zyro-muted);">Línea</span>
-                                <strong style="color:var(--zyro-tech-blue);">Con Tecnología Activa ($299.99)</strong>
+                                <strong style="color:var(--zyro-tech-blue);">Con Tecnología Activa ($370.00)</strong>
                             </div>
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--zyro-muted);">Termorregulación</span>
@@ -123,7 +123,7 @@
                         @else
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--zyro-muted);">Línea</span>
-                                <strong style="color:var(--zyro-black);">Línea Esencial ($79.99)</strong>
+                                <strong style="color:var(--zyro-black);">Línea Esencial ($80.00)</strong>
                             </div>
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--zyro-muted);">Material</span>
