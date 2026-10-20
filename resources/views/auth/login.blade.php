@@ -12,7 +12,7 @@
             <p class="auth-subtitle">Ingresa tus credenciales para acceder a tu cuenta.</p>
         </header>
 
-        <form method="POST" action="{{ route('login') }}" class="auth-form" novalidate>
+        <form method="POST" action="{{ route('login') }}" class="auth-form" data-clarity-mask="true" novalidate>
             @csrf
 
             <div class="form-group">

@@ -18,6 +18,21 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
+    {{-- Microsoft Clarity (Exclusivo para páginas públicas del catálogo; omitido en admin, checkout, auth y pagos) --}}
+    @php
+        $clarityProjectId = config('services.clarity.project_id');
+        $isPublicTrackingRoute = request()->routeIs('home', 'catalog.index', 'catalog.show', 'catalog.customize');
+    @endphp
+    @if (filled($clarityProjectId) && $isPublicTrackingRoute)
+        <script type="text/javascript">
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "{{ e($clarityProjectId) }}");
+        </script>
+    @endif
+
     <style>
         :root {
             --zyro-black: #0F0F11;
@@ -1490,5 +1505,49 @@
             <span>8 Modelos Oficiales: 4 Tech ($370.00) &bull; 4 Esencial ($80.00)</span>
         </div>
     </footer>
+
+    {{-- Listener no-bloqueante para eventos de interacción pública (Microsoft Clarity & ZYRO Heatmap) --}}
+    @if ($isPublicTrackingRoute ?? false)
+        <script>
+            (function () {
+                var csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                document.addEventListener('click', function (e) {
+                    var target = e.target.closest('[data-clarity-action]');
+                    if (!target) return;
+
+                    var action = target.getAttribute('data-clarity-action');
+                    var productId = target.getAttribute('data-product-id');
+
+                    // 1. Notificar a Microsoft Clarity si está activo en la página
+                    if (typeof window.clarity === 'function') {
+                        window.clarity('event', action);
+                    }
+
+                    // 2. Registro asíncrono seguro en la base de datos de ZYRO
+                    if (csrf && action) {
+                        try {
+                            fetch("{{ route('analytics.interaction') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrf,
+                                    'Accept': 'application/json'
+                                },
+                                keepalive: true,
+                                body: JSON.stringify({
+                                    event: 'interaction_' + action,
+                                    product_id: productId ? parseInt(productId, 10) : null,
+                                    metadata: {
+                                        action: action,
+                                        path: window.location.pathname
+                                    }
+                                })
+                            }).catch(function () {});
+                        } catch (err) {}
+                    }
+                }, true);
+            })();
+        </script>
+    @endif
 </body>
 </html>

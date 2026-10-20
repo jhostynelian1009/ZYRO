@@ -29,8 +29,8 @@
                         Ocho siluetas editoriales con arquitectura textil de vanguardia: cuatro piezas con termorregulación activa ($370.00) y cuatro modelos esenciales en fibras puras de algodón orgánico ($80.00).
                     </p>
                     <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
-                        <a href="#catalogo" class="btn-primary">Ver Colección</a>
-                        <a href="{{ route('catalog.index', ['line' => 'tech']) }}#catalogo" class="btn-secondary">Línea Tech ($370.00)</a>
+                        <a href="#catalogo" class="btn-primary" data-clarity-action="hero_view_collection">Ver Colección</a>
+                        <a href="{{ route('catalog.index', ['line' => 'tech']) }}#catalogo" class="btn-secondary" data-clarity-action="hero_line_tech">Línea Tech ($370.00)</a>
                     </div>
                 </div>
 
@@ -70,18 +70,21 @@
                     <a
                         href="{{ route('catalog.index', array_merge(request()->except('line'), ['line' => 'todos'])) }}#catalogo"
                         class="filter-btn {{ ($filter === 'todos' || empty($filter)) ? 'active' : '' }}"
+                        data-clarity-action="filter_todos"
                     >
                         Todos ({{ $counts['todos'] ?? 8 }})
                     </a>
                     <a
                         href="{{ route('catalog.index', array_merge(request()->except('line'), ['line' => 'tech'])) }}#catalogo"
                         class="filter-btn filter-tech {{ in_array($filter, ['tech', 'con-tecnologia']) ? 'active' : '' }}"
+                        data-clarity-action="filter_tech"
                     >
                         Con Tecnología ({{ $counts['tech'] ?? 4 }}) &bull; $370.00
                     </a>
                     <a
                         href="{{ route('catalog.index', array_merge(request()->except('line'), ['line' => 'esencial'])) }}#catalogo"
                         class="filter-btn {{ in_array($filter, ['esencial', 'sin-tecnologia']) ? 'active' : '' }}"
+                        data-clarity-action="filter_esencial"
                     >
                         Sin Tecnología ({{ $counts['esencial'] ?? 4 }}) &bull; $80.00
                     </a>
@@ -107,10 +110,10 @@
                 <ul class="products-grid">
                     @foreach ($products as $product)
                         <li>
-                            <article class="product-card">
+                            <article class="product-card" data-clarity-tag="product-card" data-clarity-item="{{ $product->slug }}" data-product-id="{{ $product->id }}">
                                 {{-- Contenedor de Imagen Contenida (Sin recortes forzados) --}}
                                 <div class="product-image-box">
-                                    <a href="{{ route('catalog.show', $product) }}" style="display:flex; width:100%; height:100%; align-items:center; justify-content:center;" tabindex="-1">
+                                    <a href="{{ route('catalog.show', $product) }}" style="display:flex; width:100%; height:100%; align-items:center; justify-content:center;" tabindex="-1" data-clarity-action="card_image" data-product-id="{{ $product->id }}">
                                         <img
                                             src="{{ $product->imageUrl() }}"
                                             alt="{{ $product->name }}"
@@ -133,7 +136,7 @@
                                     <div class="product-card-info">
                                         <div class="product-meta-line">{{ $product->lineName() }}</div>
                                         <h3 class="product-name">
-                                            <a href="{{ route('catalog.show', $product) }}">
+                                            <a href="{{ route('catalog.show', $product) }}" data-clarity-action="card_title" data-product-id="{{ $product->id }}">
                                                 {{ $product->name }}
                                             </a>
                                         </h3>
@@ -146,10 +149,10 @@
                                         </div>
 
                                         <div class="product-actions-row">
-                                            <a href="{{ route('catalog.show', $product) }}" class="btn-card-details">
+                                            <a href="{{ route('catalog.show', $product) }}" class="btn-card-details" data-clarity-action="card_details" data-product-id="{{ $product->id }}">
                                                 Detalles
                                             </a>
-                                            <a href="{{ route('catalog.customize', $product) }}" class="btn-card-customize">
+                                            <a href="{{ route('catalog.customize', $product) }}" class="btn-card-customize" data-clarity-action="card_customize" data-product-id="{{ $product->id }}">
                                                 Personalizar
                                             </a>
                                         </div>

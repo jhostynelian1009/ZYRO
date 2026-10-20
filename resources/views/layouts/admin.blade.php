@@ -880,6 +880,16 @@
                     </span>
                 </a>
 
+                <div class="nav-section-title">Comportamiento & Datos</div>
+
+                {{-- 9. Analítica y mapas de calor --}}
+                <a href="{{ route('admin.analytics.index') }}" class="sidebar-link {{ request()->routeIs('admin.analytics.*') ? 'active' : '' }}">
+                    <span class="sidebar-link-inner">
+                        <span class="sidebar-link-icon">🔥</span>
+                        <span>Analítica y mapas de calor</span>
+                    </span>
+                </a>
+
                 <div class="nav-section-title">Navegación</div>
 
                 {{-- 9. Volver a la tienda --}}

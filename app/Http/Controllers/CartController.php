@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AnalyticsTracker;
 use App\Services\CartService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,6 +44,12 @@ class CartController extends Controller
 
         try {
             $this->cart->add($productId, (int) $data['quantity'], $data['size'] ?? null, $customization);
+
+            AnalyticsTracker::track('add_to_cart', $productId, [
+                'quantity'   => (int) $data['quantity'],
+                'size'       => $data['size'] ?? null,
+                'customized' => !empty($customization),
+            ]);
 
             return back()->with('status', 'Producto añadido al carrito.');
         } catch (\RuntimeException $e) {

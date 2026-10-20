@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\AnalyticsInteractionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
@@ -17,6 +19,7 @@ Route::get('/', [CatalogController::class, 'index'])->name('home');
 Route::get('/productos', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/productos/{product}', [CatalogController::class, 'show'])->name('catalog.show');
 Route::get('/productos/{product}/personalizar', [CatalogController::class, 'customize'])->name('catalog.customize');
+Route::post('/analitica/interaccion', [AnalyticsInteractionController::class, 'store'])->name('analytics.interaction');
 
 // ─── Autenticación (solo invitados) ──────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -60,4 +63,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/pedidos/{order}/rechazar', [AdminOrderController::class, 'reject'])->name('orders.reject');
 
     Route::get('/inventario', [InventoryController::class, 'index'])->name('inventory.index');
+
+    // ─── Analítica y mapas de calor ──────────────────────────────────────────
+    Route::get('/analitica', [AnalyticsController::class, 'index'])->name('analytics.index');
 });
