@@ -70,7 +70,7 @@
         <div class="product-show-grid">
             {{-- Columna de Imagen Contenida --}}
             <div>
-                <div style="background:var(--zyro-light); border:1px solid var(--zyro-border); aspect-ratio: 1 / 1.15; display:flex; align-items:center; justify-content:center; padding:2rem; position:relative; overflow:hidden;">
+                <div style="background:var(--zyro-light); border:1px solid var(--zyro-border); aspect-ratio: 16 / 11; display:flex; align-items:center; justify-content:center; padding:1.25rem; position:relative; overflow:hidden;">
                     <img
                         src="{{ $product->imageUrl() }}"
                         alt="{{ $product->name }}"

@@ -68,7 +68,7 @@ class ProductSeeder extends Seeder
                 'name' => 'ZYRO Pure',
                 'description' => 'Chompa en suave tono rosa con motivos florales de cerezo (sakura) en delantero y espalda. Algodón puro de alta densidad con acabado editorial contemporáneo.',
                 'price' => '80.00',
-                'image_path' => 'images/products/essential/pure.jpg',
+                'image_path' => 'images/products/soft-pink-source.png',
                 'category' => 'esencial',
                 'stock' => 18,
             ],

@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=cormorant-garamond:600,700|inter:400,500,600,700" rel="stylesheet" />
 
+    {{-- Favicon Oficial ZYRO --}}
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
     <style>
         :root {
             --zyro-black: #090909;
@@ -85,13 +89,30 @@
             display: flex;
             align-items: center;
             min-width: 0;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .brand-link:hover {
+            opacity: 0.85;
         }
 
         .brand-logo-image {
             display: block;
-            width: 112px;
-            height: 64px;
+            width: auto;
+            height: 32px;
             object-fit: contain;
+        }
+
+        .brand-wordmark {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #FFFFFF;
+            line-height: 1;
+            margin-left: 0.65rem;
         }
 
         .brand-badge {
@@ -784,7 +805,8 @@
         <aside id="admin-sidebar" class="admin-sidebar">
             <div class="sidebar-brand">
                 <a href="{{ route('admin.dashboard') }}" class="brand-link" aria-label="ZYRO Admin">
-                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
+                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo-white.png') }}" alt="ZYRO Monograma" width="40" height="32">
+                    <span class="brand-wordmark">ZYRO</span>
                 </a>
                 <span class="brand-badge">ADMIN</span>
             </div>

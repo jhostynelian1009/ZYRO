@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=cormorant-garamond:500,600,700|inter:400,500,600,700" rel="stylesheet" />
 
+    {{-- Favicon Oficial ZYRO --}}
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
     {{-- Assets Vite (Tailwind CSS & JavaScript) --}}
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -72,15 +76,36 @@
         }
 
         .brand-logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            gap: 0.65rem;
+            text-decoration: none;
             flex-shrink: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .brand-logo:hover {
+            opacity: 0.85;
         }
 
         .brand-logo-image {
-            width: 96px;
-            height: 58px;
+            width: auto;
+            height: 38px;
+            max-height: 38px;
             object-fit: contain;
+            display: block;
+        }
+
+        .brand-wordmark {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.625rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--zyro-black);
+            line-height: 1;
+            display: inline-block;
+            padding-top: 1px;
         }
 
         .nav-center {
@@ -326,6 +351,7 @@
             border: 1px solid var(--zyro-border);
             display: flex;
             flex-direction: column;
+            height: 100%;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
@@ -338,12 +364,12 @@
         .product-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 1 / 1.15;
+            aspect-ratio: 16 / 11;
             background: var(--zyro-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.25rem;
+            padding: 0.875rem;
             overflow: hidden;
         }
 
@@ -571,17 +597,19 @@
         @media (max-width: 880px) {
             .nav-center { display: none; }
             .header-inner { grid-template-columns: auto 1fr; }
-            .brand-logo-image { width: 78px; height: 52px; }
+            .brand-logo-image { height: 32px; }
+            .brand-wordmark { font-size: 1.45rem; letter-spacing: 0.16em; }
             .header-actions { gap: 0.75rem; }
             .search-form-compact input { width: 100px; }
         }
 
         @media (max-width: 640px) {
             .site-header { height: 60px; }
-            .header-inner { gap: 0.75rem; padding-inline: 0.75rem; }
-            .brand-logo-image { width: 64px; height: 44px; }
+            .header-inner { gap: 0.5rem; padding-inline: 0.75rem; }
+            .brand-logo-image { height: 26px; }
+            .brand-wordmark { font-size: 1.25rem; letter-spacing: 0.14em; }
             .search-form-compact { display: none; }
-            .header-actions { gap: 0.65rem; }
+            .header-actions { gap: 0.5rem; }
         }
 
         /* ─── ESTRUCTURA PRINCIPAL Y STICKY FOOTER ─── */
@@ -1343,7 +1371,8 @@
         <div class="container header-inner">
             {{-- Logo Izquierda --}}
             <a href="{{ route('home') }}" class="brand-logo" aria-label="ZYRO Inicio">
-                <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
+                <img class="brand-logo-image" src="{{ asset('images/zyro-logo-transparent.png') }}" alt="ZYRO Monograma" width="46" height="36">
+                <span class="brand-wordmark">ZYRO</span>
             </a>
 
             {{-- Navegación Centrada --}}
@@ -1408,9 +1437,10 @@
     <footer class="site-footer">
         <div class="container footer-grid">
             <div class="footer-col">
-                <div class="brand-logo" style="margin-bottom:0.75rem;">
-                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo.png') }}" alt="ZYRO">
-                </div>
+                <a href="{{ route('home') }}" class="brand-logo" style="margin-bottom:0.85rem;" aria-label="ZYRO Inicio">
+                    <img class="brand-logo-image" src="{{ asset('images/zyro-logo-white.png') }}" alt="ZYRO Monograma" width="46" height="36" style="height:36px;width:auto;">
+                    <span class="brand-wordmark" style="color:#FFFFFF;">ZYRO</span>
+                </a>
                 <p style="color:#A1A1AA;font-size:0.8125rem;line-height:1.6;margin-bottom:1rem;">
                     Colección editorial de chompas urbanas. Cuatro modelos con termorregulación activa ($370.00) y cuatro esenciales en algodón orgánico puro ($80.00).
                 </p>

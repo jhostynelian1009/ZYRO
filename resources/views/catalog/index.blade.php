@@ -36,11 +36,11 @@
 
                 {{-- Fotografía real de la prenda insignia en marco editorial --}}
                 <div style="background:var(--zyro-white); border:1px solid var(--zyro-border); padding:1.25rem; position:relative; box-shadow:0 4px 20px rgba(0,0,0,0.04);">
-                    <div style="aspect-ratio: 1 / 1.1; background:#F2F2F4; display:flex; align-items:center; justify-content:center; padding:1.5rem; overflow:hidden;">
+                    <div style="aspect-ratio: 16 / 11; background:#F2F2F4; display:flex; align-items:center; justify-content:center; padding:0.875rem; overflow:hidden;">
                         <img
                             src="{{ asset('images/products/lunar-tech-source.png') }}"
                             alt="Edición Insignia — Colección Cápsula"
-                            style="width:100%; height:100%; object-fit:contain;"
+                            style="width:100%; height:100%; object-fit:contain; transform:scale(1.05); transition:transform 0.3s ease;"
                         >
                     </div>
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-top:0.875rem; font-size:0.75rem;">
