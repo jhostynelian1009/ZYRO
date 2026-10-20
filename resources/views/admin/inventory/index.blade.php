@@ -70,13 +70,13 @@
                 href="{{ route('admin.inventory.index', array_merge(request()->except(['line', 'page']), ['line' => 'tech'])) }}"
                 class="filter-tab {{ $line === 'tech' ? 'active' : '' }}"
             >
-                <span>Línea Tech ($299.99)</span>
+                <span>Línea Tech ($370.00)</span>
             </a>
             <a
                 href="{{ route('admin.inventory.index', array_merge(request()->except(['line', 'page']), ['line' => 'esencial'])) }}"
                 class="filter-tab {{ $line === 'esencial' ? 'active' : '' }}"
             >
-                <span>Línea Esencial ($79.99)</span>
+                <span>Línea Esencial ($80.00)</span>
             </a>
         </div>
 

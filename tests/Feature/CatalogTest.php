@@ -104,12 +104,20 @@ class CatalogTest extends TestCase
             ->assertOk()
             ->assertSee('ZYRO Lunar Tech', false)
             ->assertSee('Línea Tech', false)
-            ->assertSee('299.99', false);
+            ->assertSee('370.00', false);
 
         $this->get(route('catalog.show', $esencialProduct))
             ->assertOk()
             ->assertSee('ZYRO Soft', false)
             ->assertSee('Línea Esencial', false)
-            ->assertSee('79.99', false);
+            ->assertSee('80.00', false);
+    }
+
+    public function test_seeded_collections_have_official_prices(): void
+    {
+        $this->seed(ProductSeeder::class);
+
+        $this->assertSame(4, Product::query()->where('category', 'tech')->where('price', '370.00')->count());
+        $this->assertSame(4, Product::query()->where('category', 'esencial')->where('price', '80.00')->count());
     }
 }
