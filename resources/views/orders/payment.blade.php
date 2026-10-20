@@ -31,7 +31,7 @@
 
     <div class="checkout-grid">
         {{-- Formulario de pago --}}
-        <form method="POST" action="{{ route('orders.payment.store', $order) }}" id="payment-form">
+        <form method="POST" action="{{ route('orders.payment.store', $order) }}" id="payment-form" data-clarity-mask="true">
             @csrf
 
             <div class="checkout-form-card">

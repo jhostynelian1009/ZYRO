@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PaymentMethod;
 use App\Http\Requests\PaymentRequest;
 use App\Models\Order;
+use App\Services\AnalyticsTracker;
 use App\Services\SimulatedPaymentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -47,6 +48,13 @@ class PaymentController extends Controller
             $result = $this->paymentService->process($order, $method);
 
             if ($result['success']) {
+                AnalyticsTracker::track('purchase_completed', null, [
+                    'order_id'     => $order->id,
+                    'order_number' => $order->order_number,
+                    'amount'       => (float) $order->total_amount,
+                    'method'       => $method->value,
+                ]);
+
                 return redirect()->route('orders.show', $order)
                     ->with('status', $result['message']);
             }

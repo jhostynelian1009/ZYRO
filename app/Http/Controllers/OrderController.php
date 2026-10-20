@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Order;
+use App\Services\AnalyticsTracker;
 use App\Services\CartService;
 use App\Services\CheckoutService;
 use Illuminate\Http\RedirectResponse;
@@ -26,6 +27,11 @@ class OrderController extends Controller
 
         /** @var \App\Models\User $user */
         $user = auth()->user();
+
+        AnalyticsTracker::track('begin_checkout', null, [
+            'items_count' => $this->cart->count(),
+            'subtotal'    => (float) $this->cart->subtotal(),
+        ]);
 
         return view('orders.create', [
             'items'    => $this->cart->items(),
@@ -51,6 +57,12 @@ class OrderController extends Controller
                 $this->cart->items(),
                 $request->validated()
             );
+
+            AnalyticsTracker::track('order_created', null, [
+                'order_id'     => $order->id,
+                'order_number' => $order->order_number,
+                'total'        => (float) $order->total_amount,
+            ]);
 
             $this->cart->clear();
 

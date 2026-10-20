@@ -20,7 +20,7 @@
 
     <div class="checkout-grid">
         {{-- Formulario de entrega --}}
-        <form method="POST" action="{{ route('orders.store') }}">
+        <form method="POST" action="{{ route('orders.store') }}" data-clarity-mask="true">
             @csrf
 
             <div class="checkout-form-card">

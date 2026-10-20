@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\AnalyticsTracker;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -41,6 +42,11 @@ class CatalogController extends Controller
     public function show(Product $product): View
     {
         abort_unless($product->is_active, 404);
+
+        AnalyticsTracker::track('product_view', $product->id, [
+            'line'  => $product->category,
+            'price' => (float) $product->price,
+        ]);
 
         $relatedProducts = Product::query()
             ->active()

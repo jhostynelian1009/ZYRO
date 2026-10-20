@@ -12,7 +12,7 @@
             <p class="auth-subtitle">El registro público crea únicamente una cuenta de cliente.</p>
         </header>
 
-        <form method="POST" action="{{ route('register') }}" class="auth-form" novalidate>
+        <form method="POST" action="{{ route('register') }}" class="auth-form" data-clarity-mask="true" novalidate>
             @csrf
 
             <div class="form-group">
