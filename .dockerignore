@@ -1,0 +1,48 @@
+# Control de versiones
+.git
+.gitignore
+.gitattributes
+.github
+
+# Entorno y credenciales confidenciales (NUNCA incluir en la imagen)
+.env
+.env.*
+*.env
+*.pem
+*.key
+
+# Dependencias locales (se instalan limpiamente en el contenedor)
+vendor/
+node_modules/
+
+# Archivos compilados en local
+public/build/
+public/hot
+
+# Cachés y logs de Laravel
+storage/logs/*
+!storage/logs/.gitignore
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+bootstrap/cache/*.php
+
+# Pruebas y documentación interna de desarrollo
+tests/
+phpunit.xml
+spec/
+.phpunit.result.cache
+
+# Archivos temporales de sistema e IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
