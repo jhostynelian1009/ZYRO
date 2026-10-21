@@ -21,6 +21,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // En producción, forzar HTTPS como refuerzo adicional
+        // al middleware TrustProxies configurado en bootstrap/app.php.
+        // Esto es seguro porque no afecta el entorno local (XAMPP).
+        if ($this->app->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         Gate::define('admin', function (User $user): bool {
             return $user->isAdmin();
         });
