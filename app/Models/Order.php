@@ -24,6 +24,7 @@ class Order extends Model
         'address',
         'city',
         'delivery_method',
+        'delivery_estimate',
         'delivery_notes',
         'subtotal',
         'tax_amount',
@@ -92,5 +93,24 @@ class Order extends Model
     public function getTotalAmountAttribute(): float
     {
         return (float) $this->total;
+    }
+
+    public function getDeliveryEstimateLabelAttribute(): string
+    {
+        if (! empty($this->delivery_estimate)) {
+            return $this->delivery_estimate;
+        }
+
+        return \App\Services\DeliveryService::estimateFor($this->delivery_method);
+    }
+
+    public function getDeliveryMethodLabelAttribute(): string
+    {
+        return \App\Services\DeliveryService::labelFor($this->delivery_method);
+    }
+
+    public function isPickup(): bool
+    {
+        return $this->delivery_method === 'pickup';
     }
 }

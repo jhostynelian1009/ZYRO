@@ -120,6 +120,7 @@
                     <tr>
                         <th>Número</th>
                         <th>Cliente</th>
+                        <th>Modalidad / Entrega</th>
                         <th>Total</th>
                         <th>Estado</th>
                         <th>Fecha de Creación</th>
@@ -139,7 +140,16 @@
                                 <div style="font-size:0.6875rem; color:var(--zyro-muted);">${{ $order->user->email ?? '—' }}</div>
                             </td>
                             <td>
+                                <div style="font-weight:600; font-size:0.8125rem;">{{ $order->delivery_method_label }}</div>
+                                <div style="font-size:0.6875rem; color:var(--zyro-muted); margin-top:0.15rem;">
+                                    ⏱ {{ $order->delivery_estimate_label }}
+                                </div>
+                            </td>
+                            <td>
                                 <span style="font-weight:700;">${{ number_format($order->total, 2) }}</span>
+                                <div style="font-size:0.6875rem; color:var(--zyro-muted);">
+                                    Envío: {{ $order->shipping_amount > 0 ? '$'.number_format($order->shipping_amount, 2) : 'GRATIS' }}
+                                </div>
                             </td>
                             <td class="order-status-cell">
                                 @include('orders.partials.status-badge', ['status' => $order->status])

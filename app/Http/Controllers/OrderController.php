@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Services\AnalyticsTracker;
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Services\DeliveryService;
 use App\Services\SafeBroadcaster;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -36,9 +37,11 @@ class OrderController extends Controller
         ]);
 
         return view('orders.create', [
-            'items'    => $this->cart->items(),
-            'subtotal' => $this->cart->subtotal(),
-            'user'     => $user,
+            'items'           => $this->cart->items(),
+            'subtotal'        => $this->cart->subtotal(),
+            'user'            => $user,
+            'deliveryMethods' => DeliveryService::all(),
+            'selectedMethod'  => old('delivery_method', 'standard'),
         ]);
     }
 

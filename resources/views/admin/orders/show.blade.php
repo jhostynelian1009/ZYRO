@@ -164,7 +164,7 @@
                         </div>
                         <div style="display:flex; justify-content:space-between; color:var(--zyro-muted);">
                             <span>Envío</span>
-                            <span>${{ number_format($order->shipping_amount, 2) }}</span>
+                            <span>{{ $order->shipping_amount > 0 ? '$'.number_format($order->shipping_amount, 2) : 'GRATIS ($0.00)' }}</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; font-size:1.125rem; font-weight:700; color:var(--zyro-black); padding-top:0.65rem; border-top:1px solid var(--zyro-border); margin-top:0.25rem;">
                             <span>Total del Pedido</span>
@@ -200,16 +200,38 @@
 
                         <div style="border-top:1px solid var(--zyro-border); padding-top:0.75rem;">
                             <span style="display:block; font-size:0.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--zyro-muted); margin-bottom:0.15rem;">
-                                Dirección de Entrega
+                                Logística y Modalidad de Entrega
                             </span>
-                            <div>{{ $order->address }}</div>
-                            <div style="color:var(--zyro-muted);">Ciudad: {{ $order->city }}</div>
-                            <div style="color:var(--zyro-muted); margin-top:0.25rem;">
-                                Modalidad: <strong>{{ ucfirst($order->delivery_method) }}</strong>
+                            <div style="margin-bottom:0.5rem;">
+                                <div style="font-weight:600; font-size:0.875rem; color:var(--zyro-black);">
+                                    {{ $order->delivery_method_label }}
+                                </div>
+                                <div style="display:inline-block; margin-top:0.25rem; background:var(--zyro-light); border:1px solid var(--zyro-border); padding:2px 8px; border-radius:2px; font-size:0.75rem; font-weight:600; color:var(--zyro-black);">
+                                    ⏱ Tiempo estimado: {{ $order->delivery_estimate_label }}
+                                </div>
+                                <div style="font-size:0.75rem; color:var(--zyro-muted); margin-top:0.25rem;">
+                                    Costo de envío aplicado: <strong>{{ $order->shipping_amount > 0 ? '$'.number_format($order->shipping_amount, 2) : 'GRATIS ($0.00)' }}</strong>
+                                </div>
                             </div>
+
+                            @if ($order->isPickup())
+                                <div style="background:#F9FAFB; border:1px solid var(--zyro-border); padding:0.6rem 0.75rem; border-radius:2px; font-size:0.75rem; color:var(--zyro-muted); margin-top:0.5rem;">
+                                    <strong style="color:var(--zyro-black); display:block; margin-bottom:0.15rem;">🏬 Sucursal Centro</strong>
+                                    Modalidad de retiro en tienda. El cliente retirará personalmente en el local tras recibir la notificación de pedido listo. No aplica entrega a domicilio.
+                                </div>
+                            @else
+                                <div style="margin-top:0.5rem; font-size:0.8125rem;">
+                                    <span style="font-size:0.6875rem; font-weight:700; text-transform:uppercase; color:var(--zyro-muted); display:block;">
+                                        Dirección de Entrega
+                                    </span>
+                                    <div>{{ $order->address }}</div>
+                                    <div style="color:var(--zyro-muted);">Ciudad: {{ $order->city }}</div>
+                                </div>
+                            @endif
+
                             @if ($order->delivery_notes)
-                                <div style="margin-top:0.35rem; font-style:italic; color:var(--zyro-muted);">
-                                    Notas: &ldquo;{{ $order->delivery_notes }}&rdquo;
+                                <div style="margin-top:0.5rem; font-size:0.75rem; font-style:italic; color:var(--zyro-muted); border-top:1px dashed var(--zyro-border); padding-top:0.5rem;">
+                                    Notas de entrega: &ldquo;{{ $order->delivery_notes }}&rdquo;
                                 </div>
                             @endif
                         </div>

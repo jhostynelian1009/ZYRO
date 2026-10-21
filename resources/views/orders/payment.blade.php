@@ -92,9 +92,19 @@
                 <span>IVA (15%)</span>
                 <span>${{ number_format($order->tax_amount, 2) }}</span>
             </div>
-            <div class="summary-row">
-                <span>Envío</span>
-                <span>${{ number_format($order->shipping_amount, 2) }}</span>
+            <div class="summary-row" style="align-items:flex-start;">
+                <div>
+                    <span>Modalidad de entrega</span>
+                    <span style="font-size:0.75rem; color:var(--zyro-muted); display:block;">
+                        {{ $order->delivery_method_label }}
+                    </span>
+                    <span style="font-size:0.6875rem; font-weight:600; color:var(--zyro-black); display:inline-block; margin-top:2px; background:var(--zyro-white); border:1px solid var(--zyro-border); padding:1px 6px; border-radius:2px;">
+                        ⏱ {{ $order->delivery_estimate_label }}
+                    </span>
+                </div>
+                <span style="font-weight:600;">
+                    {{ $order->shipping_amount > 0 ? '$'.number_format($order->shipping_amount, 2) : 'GRATIS' }}
+                </span>
             </div>
 
             <div class="summary-divider"></div>

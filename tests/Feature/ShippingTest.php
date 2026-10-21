@@ -218,4 +218,205 @@ class ShippingTest extends TestCase
         $response->assertSee('$3.00');
         $response->assertSee('$92.60');
     }
+
+    // ─── 6. Logística y Tiempos de Entrega ────────────────────────────────────
+
+    /** El envío estándar utiliza la tarifa configurada ($6.00) y registra 2–5 días hábiles. */
+    public function test_standard_delivery_uses_configured_tariff_and_shows_2_to_5_business_days(): void
+    {
+        $customer = $this->customer();
+        $product  = $this->product(price: 80.00);
+
+        $this->actingAs($customer)
+            ->withSession(['cart.items' => $this->cartItems($product, qty: 1)])
+            ->post(route('orders.store'), [
+                'customer_name'   => 'Cliente Estándar',
+                'phone'           => '0991122334',
+                'address'         => 'Av. Amazonas 500',
+                'city'            => 'Quito',
+                'delivery_method' => 'standard',
+            ])
+            ->assertRedirect();
+
+        $order = Order::query()->where('user_id', $customer->id)->latest()->firstOrFail();
+
+        $this->assertSame('standard', $order->delivery_method);
+        $this->assertSame('2–5 días hábiles', $order->delivery_estimate);
+        $this->assertEqualsWithDelta(6.00, (float) $order->shipping_amount, 0.001);
+
+        $response = $this->actingAs($customer)->get(route('orders.show', $order));
+        $response->assertOk();
+        $response->assertSee('Envío estándar');
+        $response->assertSee('2–5 días hábiles');
+        $response->assertSee('$6.00');
+    }
+
+    /** El envío exprés conserva la tarifa configurada y registra 1–2 días hábiles. */
+    public function test_express_delivery_preserves_configured_rate_and_shows_1_to_2_business_days(): void
+    {
+        $customer = $this->customer();
+        $product  = $this->product(price: 80.00);
+
+        $this->actingAs($customer)
+            ->withSession(['cart.items' => $this->cartItems($product, qty: 1)])
+            ->post(route('orders.store'), [
+                'customer_name'   => 'Cliente Exprés',
+                'phone'           => '0991122334',
+                'address'         => 'Av. Amazonas 500',
+                'city'            => 'Quito',
+                'delivery_method' => 'express',
+            ])
+            ->assertRedirect();
+
+        $order = Order::query()->where('user_id', $customer->id)->latest()->firstOrFail();
+
+        $this->assertSame('express', $order->delivery_method);
+        $this->assertSame('1–2 días hábiles', $order->delivery_estimate);
+        $this->assertEqualsWithDelta(6.00, (float) $order->shipping_amount, 0.001);
+
+        $response = $this->actingAs($customer)->get(route('orders.show', $order));
+        $response->assertOk();
+        $response->assertSee('Envío exprés');
+        $response->assertSee('1–2 días hábiles');
+        $response->assertSee('$6.00');
+    }
+
+    /** El retiro en tienda cobra $0.00 de envío e indica disponibilidad pendiente de confirmación en sucursal Centro. */
+    public function test_pickup_delivery_charges_zero_shipping_and_shows_pending_confirmation(): void
+    {
+        $customer = $this->customer();
+        $product  = $this->product(price: 80.00);
+
+        $this->actingAs($customer)
+            ->withSession(['cart.items' => $this->cartItems($product, qty: 1)])
+            ->post(route('orders.store'), [
+                'customer_name'   => 'Cliente Retiro',
+                'phone'           => '0991122334',
+                'address'         => 'Sucursal Centro',
+                'city'            => 'Quito',
+                'delivery_method' => 'pickup',
+            ])
+            ->assertRedirect();
+
+        $order = Order::query()->where('user_id', $customer->id)->latest()->firstOrFail();
+
+        // Subtotal: 80.00
+        // IVA 15%: 12.00
+        // Envío: 0.00
+        // Total: 92.00
+        $this->assertSame('pickup', $order->delivery_method);
+        $this->assertSame('Pendiente de confirmación', $order->delivery_estimate);
+        $this->assertEqualsWithDelta(0.00, (float) $order->shipping_amount, 0.001);
+        $this->assertEqualsWithDelta(92.00, (float) $order->total, 0.001);
+
+        $response = $this->actingAs($customer)->get(route('orders.show', $order));
+        $response->assertOk();
+        $response->assertSee('Retiro en tienda');
+        $response->assertSee('Pendiente de confirmación');
+        $response->assertSee('Sucursal Centro');
+        $response->assertSee('GRATIS');
+    }
+
+    /** El backend no acepta tarifas de envío manipuladas desde el navegador ni desde la sesión. */
+    public function test_backend_does_not_accept_manipulated_shipping_rate(): void
+    {
+        $customer = $this->customer();
+        $product  = $this->product(price: 80.00);
+
+        $this->actingAs($customer)
+            ->withSession(['cart.items' => $this->cartItems($product, qty: 1)])
+            ->post(route('orders.store'), [
+                'customer_name'   => 'Cliente Manipulador',
+                'phone'           => '0991122334',
+                'address'         => 'Av. Amazonas 500',
+                'city'            => 'Quito',
+                'delivery_method' => 'standard',
+                'shipping_amount' => 0.01, // Intento de manipulación en el payload
+                'total'           => 1.00,
+            ])
+            ->assertRedirect();
+
+        $order = Order::query()->where('user_id', $customer->id)->latest()->firstOrFail();
+
+        // El servidor debió calcular estrictamente $6.00 de envío y $98.00 de total
+        $this->assertEqualsWithDelta(6.00, (float) $order->shipping_amount, 0.001);
+        $this->assertEqualsWithDelta(98.00, (float) $order->total, 0.001);
+    }
+
+    /** La vista de checkout muestra las tres tarjetas de modalidades con plazos en días hábiles. */
+    public function test_checkout_view_displays_all_three_delivery_modalities(): void
+    {
+        $customer = $this->customer();
+        $product  = $this->product(price: 80.00);
+
+        $response = $this->actingAs($customer)
+            ->withSession(['cart.items' => $this->cartItems($product, qty: 1)])
+            ->get(route('checkout.create'));
+
+        $response->assertOk();
+        $response->assertSee('Método de entrega');
+        $response->assertSee('Envío estándar');
+        $response->assertSee('2–5 días hábiles');
+        $response->assertSee('Envío exprés');
+        $response->assertSee('1–2 días hábiles');
+        $response->assertSee('Retiro en tienda');
+        $response->assertSee('Pendiente de confirmación');
+        $response->assertSee('GRATIS');
+    }
+
+    /** El administrador visualiza la modalidad, estimación y costo de envío en el listado y detalle. */
+    public function test_admin_views_delivery_modality_and_estimate_in_index_and_detail(): void
+    {
+        $admin    = User::factory()->admin()->create();
+        $customer = $this->customer();
+
+        $order = Order::factory()->create([
+            'user_id'           => $customer->id,
+            'delivery_method'   => 'pickup',
+            'delivery_estimate' => 'Pendiente de confirmación',
+            'shipping_amount'   => 0.00,
+            'subtotal'          => 80.00,
+            'tax_amount'        => 12.00,
+            'total'             => 92.00,
+        ]);
+
+        // 1. Listado administrativo
+        $indexResponse = $this->actingAs($admin)->get(route('admin.orders.index'));
+        $indexResponse->assertOk();
+        $indexResponse->assertSee('Retiro en tienda');
+        $indexResponse->assertSee('Pendiente de confirmación');
+
+        // 2. Detalle administrativo
+        $showResponse = $this->actingAs($admin)->get(route('admin.orders.show', $order));
+        $showResponse->assertOk();
+        $showResponse->assertSee('Retiro en tienda');
+        $showResponse->assertSee('Pendiente de confirmación');
+        $showResponse->assertSee('Sucursal Centro');
+        $showResponse->assertSee('GRATIS ($0.00)');
+    }
+
+    /** Los pedidos históricos sin campo delivery_estimate en BD se muestran coherentemente mediante fallback. */
+    public function test_historical_orders_without_estimate_render_via_fallback(): void
+    {
+        $customer = $this->customer();
+
+        // Pedido sin estimate explícito en BD
+        $order = Order::factory()->create([
+            'user_id'           => $customer->id,
+            'delivery_method'   => 'standard',
+            'delivery_estimate' => null,
+            'shipping_amount'   => 6.00,
+            'subtotal'          => 80.00,
+            'tax_amount'        => 12.00,
+            'total'             => 98.00,
+        ]);
+
+        $this->assertNull($order->delivery_estimate);
+        $this->assertSame('2–5 días hábiles', $order->delivery_estimate_label);
+
+        $response = $this->actingAs($customer)->get(route('orders.show', $order));
+        $response->assertOk();
+        $response->assertSee('Envío estándar');
+        $response->assertSee('2–5 días hábiles');
+    }
 }

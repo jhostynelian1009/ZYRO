@@ -32,4 +32,42 @@ return [
     */
     'shipping' => (float) env('SHIPPING_COST', 6.00),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Modalidades de entrega y tiempos estimados
+    |--------------------------------------------------------------------------
+    | Configuración centralizada de las opciones logísticas de ZYRO.
+    */
+    'delivery_methods' => [
+        'standard' => [
+            'id'          => 'standard',
+            'name'        => 'Envío estándar',
+            'cost'        => (float) env('SHIPPING_COST', 6.00),
+            'estimate'    => '2–5 días hábiles',
+            'description' => 'Entrega en tu dirección.',
+            'badge'       => '2–5 días hábiles',
+            'icon'        => 'truck',
+        ],
+        'express' => [
+            'id'          => 'express',
+            'name'        => 'Envío exprés',
+            'cost'        => (float) env('SHIPPING_COST', 6.00),
+            'estimate'    => '1–2 días hábiles',
+            'description' => 'Modalidad de entrega prioritaria.',
+            'badge'       => '1–2 días hábiles',
+            'icon'        => 'zap',
+        ],
+        'pickup' => [
+            'id'          => 'pickup',
+            'name'        => 'Retiro en tienda',
+            'cost'        => 0.00,
+            'estimate'    => 'Pendiente de confirmación',
+            'description' => 'Recoge personalmente tu pedido en la sucursal Centro.',
+            'notice'      => 'Debes esperar la confirmación de que tu pedido está listo para retirar.',
+            'location'    => 'Sucursal Centro',
+            'badge'       => 'Pendiente de confirmación',
+            'icon'        => 'store',
+        ],
+    ],
+
 ];

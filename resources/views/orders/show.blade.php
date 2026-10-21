@@ -73,7 +73,7 @@
                     </div>
                     <div class="summary-row" style="margin-bottom:0.75rem;">
                         <span>Envío</span>
-                        <span>${{ number_format($order->shipping_amount, 2) }}</span>
+                        <span>{{ $order->shipping_amount > 0 ? '$'.number_format($order->shipping_amount, 2) : 'GRATIS' }}</span>
                     </div>
                     <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:0.75rem;border-top:1px solid var(--zyro-border);font-weight:700;font-size:1.05rem;color:var(--zyro-black);">
                         <span>Total</span>
@@ -86,18 +86,51 @@
         {{-- Panel derecho: entrega + pago --}}
         <div style="display:flex;flex-direction:column;gap:1.5rem;">
 
-            {{-- Datos de entrega --}}
+            {{-- Datos de entrega y logística --}}
             <div class="order-card">
                 <h2 style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--zyro-muted);margin-bottom:1rem;">
-                    Datos de entrega
+                    Datos de entrega y logística
                 </h2>
-                <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.875rem;color:var(--zyro-black);">
+                <div style="display:flex;flex-direction:column;gap:0.65rem;font-size:0.875rem;color:var(--zyro-black);">
                     <p><span style="color:var(--zyro-muted);">Destinatario:</span> {{ $order->customer_name }}</p>
                     <p><span style="color:var(--zyro-muted);">Teléfono:</span> {{ $order->phone }}</p>
-                    <p><span style="color:var(--zyro-muted);">Dirección:</span> {{ $order->address }}, {{ $order->city }}</p>
-                    <p><span style="color:var(--zyro-muted);">Modalidad:</span> {{ ucfirst($order->delivery_method) }}</p>
+
+                    @if ($order->isPickup())
+                        <div style="background:#F9FAFB;border:1px solid var(--zyro-border);padding:0.75rem;border-radius:2px;margin:0.25rem 0;">
+                            <p style="font-weight:600;font-size:0.8125rem;color:var(--zyro-black);margin-bottom:0.25rem;">
+                                🏬 Retiro en tienda — Sucursal Centro
+                            </p>
+                            <p style="font-size:0.75rem;color:var(--zyro-muted);line-height:1.4;">
+                                El pedido debe ser retirado en la sucursal Centro. Debes esperar la confirmación de que tu pedido está listo antes de acercarte.
+                            </p>
+                        </div>
+                    @else
+                        <p><span style="color:var(--zyro-muted);">Dirección:</span> {{ $order->address }}, {{ $order->city }}</p>
+                    @endif
+
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:0.5rem;border-top:1px solid var(--zyro-border);">
+                        <span style="color:var(--zyro-muted);">Modalidad:</span>
+                        <strong style="color:var(--zyro-black);">{{ $order->delivery_method_label }}</strong>
+                    </div>
+
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <span style="color:var(--zyro-muted);">Tiempo estimado:</span>
+                        <span style="background:var(--zyro-light);border:1px solid var(--zyro-border);padding:2px 8px;border-radius:2px;font-size:0.75rem;font-weight:600;color:var(--zyro-black);">
+                            ⏱ {{ $order->delivery_estimate_label }}
+                        </span>
+                    </div>
+
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <span style="color:var(--zyro-muted);">Costo de envío:</span>
+                        <span style="font-weight:600;">
+                            {{ $order->shipping_amount > 0 ? '$'.number_format($order->shipping_amount, 2) : 'GRATIS' }}
+                        </span>
+                    </div>
+
                     @if ($order->delivery_notes)
-                        <p><span style="color:var(--zyro-muted);">Notas:</span> {{ $order->delivery_notes }}</p>
+                        <p style="padding-top:0.4rem;border-top:1px solid var(--zyro-border);font-size:0.8125rem;">
+                            <span style="color:var(--zyro-muted);">Notas:</span> {{ $order->delivery_notes }}
+                        </p>
                     @endif
                 </div>
             </div>
