@@ -69,8 +69,8 @@ class TaxTest extends TestCase
      * Dado un producto de $100 y cantidad 2:
      *   subtotal   = 200.00
      *   IVA (15%)  =  30.00
-     *   envío      =   3.00
-     *   total      = 233.00
+     *   envío      =   6.00
+     *   total      = 236.00
      */
     public function test_order_tax_is_calculated_at_15_percent(): void
     {
@@ -83,12 +83,12 @@ class TaxTest extends TestCase
 
         $expectedSubtotal  = 200.00;
         $expectedTax       = round($expectedSubtotal * config('shop.iva_rate', 0.15), 2); // 30.00
-        $expectedShipping  = (float) config('shop.shipping', 3.00);
+        $expectedShipping  = (float) config('shop.shipping', 6.00);
         $expectedTotal     = round($expectedSubtotal + $expectedTax + $expectedShipping, 2);
 
         $this->assertEqualsWithDelta($expectedSubtotal, (float) $order->subtotal, 0.001, 'Subtotal incorrecto');
         $this->assertEqualsWithDelta($expectedTax,      (float) $order->tax_amount, 0.001, 'IVA incorrecto (debe ser 15%)');
-        $this->assertEqualsWithDelta($expectedShipping, (float) $order->shipping_amount, 0.001, 'Envío incorrecto');
+        $this->assertEqualsWithDelta($expectedShipping, (float) $order->shipping_amount, 0.001, 'Envío incorrecto (debe ser $6.00)');
         $this->assertEqualsWithDelta($expectedTotal,    (float) $order->total, 0.001, 'Total incorrecto');
     }
 
@@ -124,7 +124,7 @@ class TaxTest extends TestCase
         );
     }
 
-    /** Línea Tech: precio $370 × 1 → IVA 15 % = $55.50, total = $428.50. */
+    /** Línea Tech: precio $370 × 1 → IVA 15 % = $55.50, envío $6.00, total = $431.50. */
     public function test_tech_line_order_iva_15_percent(): void
     {
         $product  = $this->product(price: 370.00);
@@ -136,10 +136,11 @@ class TaxTest extends TestCase
 
         $this->assertEqualsWithDelta(370.00, (float) $order->subtotal, 0.001);
         $this->assertEqualsWithDelta(55.50,  (float) $order->tax_amount, 0.001, 'IVA Línea Tech debe ser $55.50');
-        $this->assertEqualsWithDelta(428.50, (float) $order->total, 0.001, 'Total Línea Tech debe ser $428.50');
+        $this->assertEqualsWithDelta(6.00,   (float) $order->shipping_amount, 0.001, 'Envío Línea Tech debe ser $6.00');
+        $this->assertEqualsWithDelta(431.50, (float) $order->total, 0.001, 'Total Línea Tech debe ser $431.50');
     }
 
-    /** Línea Essential: precio $80 × 1 → IVA 15 % = $12.00, total = $95.00. */
+    /** Línea Essential: precio $80 × 1 → IVA 15 % = $12.00, envío $6.00, total = $98.00. */
     public function test_essential_line_order_iva_15_percent(): void
     {
         $product  = $this->product(price: 80.00);
@@ -151,7 +152,8 @@ class TaxTest extends TestCase
 
         $this->assertEqualsWithDelta(80.00,  (float) $order->subtotal, 0.001);
         $this->assertEqualsWithDelta(12.00,  (float) $order->tax_amount, 0.001, 'IVA Línea Essential debe ser $12.00');
-        $this->assertEqualsWithDelta(95.00,  (float) $order->total, 0.001, 'Total Línea Essential debe ser $95.00');
+        $this->assertEqualsWithDelta(6.00,   (float) $order->shipping_amount, 0.001, 'Envío Línea Essential debe ser $6.00');
+        $this->assertEqualsWithDelta(98.00,  (float) $order->total, 0.001, 'Total Línea Essential debe ser $98.00');
     }
 
     // ─── Pedidos históricos ───────────────────────────────────────────────────

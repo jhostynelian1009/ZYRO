@@ -31,10 +31,10 @@ class CheckoutService
         return (float) config('shop.iva_rate', 0.15);
     }
 
-    /** Costo de envío fijo demo. */
+    /** Costo de envío fijo. */
     private function shipping(): float
     {
-        return (float) config('shop.shipping', 3.00);
+        return (float) config('shop.shipping', 6.00);
     }
 
     /**

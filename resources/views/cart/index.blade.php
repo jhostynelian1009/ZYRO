@@ -99,15 +99,23 @@
                     <span>Productos ({{ array_sum(array_column($items, 'quantity')) }})</span>
                     <span>${{ number_format($subtotal, 2) }}</span>
                 </div>
+                <div class="summary-row" style="font-size:0.8125rem; color:var(--zyro-muted);">
+                    <span>Envío</span>
+                    <span>${{ number_format(config('shop.shipping', 6.00), 2) }}</span>
+                </div>
+                <div class="summary-row" style="font-size:0.8125rem; color:var(--zyro-muted);">
+                    <span>IVA (15%)</span>
+                    <span>${{ number_format($subtotal * config('shop.iva_rate', 0.15), 2) }}</span>
+                </div>
 
                 <div class="summary-divider"></div>
 
                 <div class="summary-total-row">
-                    <span>Subtotal estimado</span>
-                    <span>${{ number_format($subtotal, 2) }}</span>
+                    <span>Total estimado</span>
+                    <span>${{ number_format($subtotal + ($subtotal * config('shop.iva_rate', 0.15)) + config('shop.shipping', 6.00), 2) }}</span>
                 </div>
 
-                <p class="summary-note">El total definitivo (IVA 15% + envío) se calcula al confirmar el pedido en el servidor.</p>
+                <p class="summary-note">El total definitivo (IVA 15% + envío $6.00) se calcula y valida en el servidor al confirmar.</p>
 
                 <a href="{{ route('checkout.create') }}" class="btn-primary" style="width:100%;text-align:center;display:block;padding:0.875rem;">
                     Continuar al checkout
