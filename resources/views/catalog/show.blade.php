@@ -118,7 +118,7 @@
                             </div>
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--zyro-muted);">Composición</span>
-                                <span>75% Lana Merino, 20% Fibras Tech, 5% Elastano</span>
+                                <span>66% Algodón, 33% Poliester</span>
                             </div>
                         @else
                             <div style="display:flex; justify-content:space-between;">
