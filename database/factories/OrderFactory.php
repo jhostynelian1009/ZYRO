@@ -18,25 +18,32 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $subtotal      = (float) fake()->randomFloat(2, 30, 200);
-        $taxAmount     = round($subtotal * (float) config('shop.iva_rate', 0.15), 2);
-        $shippingAmount = (float) config('shop.shipping', 6.00);
+        $subtotal       = (float) fake()->randomFloat(2, 30, 200);
+        $taxAmount      = round($subtotal * (float) config('shop.iva_rate', 0.15), 2);
+        $method         = fake()->randomElement(['pickup', 'standard', 'express']);
+        $shippingAmount = $method === 'pickup' ? 0.00 : (float) config('shop.shipping', 6.00);
         $total          = round($subtotal + $taxAmount + $shippingAmount, 2);
+        $estimate       = match ($method) {
+            'pickup'  => 'Pendiente de confirmación',
+            'express' => '1–2 días hábiles',
+            default   => '2–5 días hábiles',
+        };
 
         return [
-            'order_number'    => 'ZYR-'.strtoupper(Str::random(8)),
-            'user_id'         => User::factory(),
-            'customer_name'   => fake()->name(),
-            'phone'           => fake()->phoneNumber(),
-            'address'         => fake()->streetAddress(),
-            'city'            => fake()->city(),
-            'delivery_method' => fake()->randomElement(['pickup', 'standard', 'express']),
-            'delivery_notes'  => null,
-            'subtotal'        => $subtotal,
-            'tax_amount'      => $taxAmount,
-            'shipping_amount' => $shippingAmount,
-            'total'           => $total,
-            'status'          => OrderStatus::PendingApproval->value,
+            'order_number'      => 'ZYR-'.strtoupper(Str::random(8)),
+            'user_id'           => User::factory(),
+            'customer_name'     => fake()->name(),
+            'phone'             => fake()->phoneNumber(),
+            'address'           => fake()->streetAddress(),
+            'city'              => fake()->city(),
+            'delivery_method'   => $method,
+            'delivery_estimate' => $estimate,
+            'delivery_notes'    => null,
+            'subtotal'          => $subtotal,
+            'tax_amount'        => $taxAmount,
+            'shipping_amount'   => $shippingAmount,
+            'total'             => $total,
+            'status'            => OrderStatus::PendingApproval->value,
         ];
     }
 

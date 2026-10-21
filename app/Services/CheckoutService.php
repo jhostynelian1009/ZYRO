@@ -91,25 +91,28 @@ class CheckoutService
                 ];
             }
 
-            $subtotal      = round($subtotal, 2);
-            $taxAmount     = round($subtotal * $this->taxRate(), 2);
-            $shippingAmount = round($this->shipping(), 2);
-            $total          = round($subtotal + $taxAmount + $shippingAmount, 2);
+            $subtotal        = round($subtotal, 2);
+            $taxAmount       = round($subtotal * $this->taxRate(), 2);
+            $method          = $deliveryData['delivery_method'] ?? 'standard';
+            $shippingAmount  = round(DeliveryService::costFor($method), 2);
+            $deliveryEstimate= DeliveryService::estimateFor($method);
+            $total           = round($subtotal + $taxAmount + $shippingAmount, 2);
 
             $order = Order::query()->create([
-                'order_number'    => $this->generateOrderNumber(),
-                'user_id'         => $user->id,
-                'customer_name'   => $deliveryData['customer_name'],
-                'phone'           => $deliveryData['phone'],
-                'address'         => $deliveryData['address'],
-                'city'            => $deliveryData['city'],
-                'delivery_method' => $deliveryData['delivery_method'],
-                'delivery_notes'  => $deliveryData['delivery_notes'] ?? null,
-                'subtotal'        => $subtotal,
-                'tax_amount'      => $taxAmount,
-                'shipping_amount' => $shippingAmount,
-                'total'           => $total,
-                'status'          => OrderStatus::PendingApproval,
+                'order_number'      => $this->generateOrderNumber(),
+                'user_id'           => $user->id,
+                'customer_name'     => $deliveryData['customer_name'],
+                'phone'             => $deliveryData['phone'],
+                'address'           => $deliveryData['address'],
+                'city'              => $deliveryData['city'],
+                'delivery_method'   => $method,
+                'delivery_estimate' => $deliveryEstimate,
+                'delivery_notes'    => $deliveryData['delivery_notes'] ?? null,
+                'subtotal'          => $subtotal,
+                'tax_amount'        => $taxAmount,
+                'shipping_amount'   => $shippingAmount,
+                'total'             => $total,
+                'status'            => OrderStatus::PendingApproval,
             ]);
 
             $order->items()->createMany($lines);

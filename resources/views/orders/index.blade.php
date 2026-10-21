@@ -25,6 +25,7 @@
                 <thead>
                     <tr>
                         <th>Número de pedido</th>
+                        <th>Entrega</th>
                         <th>Total</th>
                         <th>Estado</th>
                         <th>Fecha</th>
@@ -36,6 +37,14 @@
                         <tr id="customer-order-{{ $order->id }}">
                             <td style="font-weight:600;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;">
                                 {{ $order->order_number }}
+                            </td>
+                            <td>
+                                <div style="font-size:0.8125rem;font-weight:600;color:var(--zyro-black);">
+                                    {{ $order->delivery_method_label }}
+                                </div>
+                                <div style="font-size:0.6875rem;color:var(--zyro-muted);margin-top:0.15rem;">
+                                    ⏱ {{ $order->delivery_estimate_label }}
+                                </div>
                             </td>
                             <td style="font-weight:600;">${{ number_format($order->total, 2) }}</td>
                             <td class="customer-order-status">
