@@ -144,7 +144,7 @@
 
                 <button type="submit" class="btn-confirm-order">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                    Confirmar pedido
+                    Confirmar y proceder al pago
                 </button>
 
             </div>{{-- checkout-form-card --}}
@@ -191,8 +191,8 @@
             </div>
 
             <div class="checkout-disclaimer-box">
-                <strong style="color:var(--zyro-black);display:block;margin-bottom:0.2rem;">Proceso de aprobación</strong>
-                El total definitivo se calcula en el servidor al confirmar. El pedido quedará pendiente de aprobación administrativa antes de proceder al pago.
+                <strong style="color:var(--zyro-black);display:block;margin-bottom:0.2rem;">Pago inmediato</strong>
+                El total definitivo se calcula en el servidor al confirmar. Al confirmar tu pedido, pasarás directamente a la pantalla de pago para finalizar tu compra.
             </div>
         </div>
 

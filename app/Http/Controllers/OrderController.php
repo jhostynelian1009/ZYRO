@@ -71,8 +71,8 @@ class OrderController extends Controller
             // Emitir evento de pedido creado para el panel administrativo en tiempo real.
             SafeBroadcaster::broadcast(new OrderCreated($order));
 
-            return redirect()->route('orders.show', $order)
-                ->with('status', "Pedido {$order->order_number} enviado. Pendiente de aprobación.");
+            return redirect()->route('orders.payment', $order)
+                ->with('status', "Pedido {$order->order_number} registrado. Procede a completar tu pago.");
         } catch (\RuntimeException $e) {
             return back()->withErrors(['checkout' => $e->getMessage()])->withInput();
         }

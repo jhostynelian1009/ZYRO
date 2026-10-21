@@ -144,13 +144,16 @@
                     </div>
 
                 @else
-                    <div style="background:var(--zyro-light);border:1px solid var(--zyro-border);border-left:3px solid var(--zyro-muted);border-radius:2px;padding:1.25rem;">
-                        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--zyro-muted);margin-bottom:0.5rem;">
-                            Pendiente de aprobación
+                    <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-left:3px solid #16A34A;border-radius:2px;padding:1.25rem;">
+                        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#166534;margin-bottom:0.5rem;">
+                            Pendiente de pago
                         </p>
-                        <p style="font-size:0.8125rem;color:var(--zyro-muted);line-height:1.5;">
-                            Tu pedido está en revisión. El pago estará disponible una vez que el administrador lo apruebe.
+                        <p style="font-size:0.8125rem;color:#166534;line-height:1.5;margin-bottom:1rem;">
+                            Tu pedido está registrado y listo para ser pagado. Procede al pago para completar tu compra.
                         </p>
+                        <a href="{{ route('orders.payment', $order) }}" class="btn-primary" style="display:inline-block;padding:0.75rem 1.5rem;">
+                            Realizar pago ahora
+                        </a>
                     </div>
                 @endif
             </div>

@@ -90,10 +90,10 @@ class OrderTest extends TestCase
                 'delivery_notes'  => '',
             ]);
 
-        $response->assertRedirect();
-
         $order = Order::query()->where('user_id', $customer->id)->first();
         $this->assertNotNull($order);
+        $response->assertRedirect(route('orders.payment', $order));
+
         $this->assertSame(OrderStatus::PendingApproval, $order->status);
         $this->assertCount(1, $order->items);
         $this->assertSame(2, $order->items->first()->quantity);

@@ -88,4 +88,9 @@ class Order extends Model
     {
         return $this->user_id === $user->id;
     }
+
+    public function getTotalAmountAttribute(): float
+    {
+        return (float) $this->total;
+    }
 }
