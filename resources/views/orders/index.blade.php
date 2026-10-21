@@ -33,12 +33,12 @@
                 </thead>
                 <tbody>
                     @foreach ($orders as $order)
-                        <tr>
+                        <tr id="customer-order-{{ $order->id }}">
                             <td style="font-weight:600;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;">
                                 {{ $order->order_number }}
                             </td>
                             <td style="font-weight:600;">${{ number_format($order->total, 2) }}</td>
-                            <td>
+                            <td class="customer-order-status">
                                 @include('orders.partials.status-badge', ['status' => $order->status])
                             </td>
                             <td style="color:var(--zyro-muted);">{{ $order->created_at->format('d/m/Y H:i') }}</td>
@@ -57,3 +57,47 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function renderCustomerBadge(status) {
+        if (status === 'approved') {
+            return '<span class="badge-status badge-approved">✓ Aprobado</span>';
+        } else if (status === 'paid') {
+            return '<span class="badge-status badge-paid">✓ Pagado</span>';
+        } else if (status === 'rejected') {
+            return '<span class="badge-status badge-rejected">✗ Rechazado</span>';
+        }
+        return '<span class="badge-status badge-pending">⏳ Pendiente de aprobación</span>';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        @auth
+        if (typeof window.zyroSubscribe === 'function') {
+            const userChannel = window.zyroSubscribe('private', 'user.{{ auth()->id() }}');
+
+            userChannel.listen('.OrderStatusUpdated', function (e) {
+                const row = document.getElementById(`customer-order-${e.order_id}`);
+                if (row) {
+                    const statusCell = row.querySelector('.customer-order-status');
+                    if (statusCell) {
+                        statusCell.innerHTML = renderCustomerBadge(e.to_status);
+                        statusCell.style.animation = 'zyroSlideIn 0.3s ease';
+                    }
+                }
+
+                if (typeof window.zyroToast === 'function') {
+                    const type = e.to_status === 'approved' ? 'green' : (e.to_status === 'rejected' ? 'red' : 'blue');
+                    window.zyroToast(
+                        `Tu pedido ${e.order_number} ahora está: ${e.to_status_label}`,
+                        type,
+                        e.order_url,
+                        'Ver pedido'
+                    );
+                }
+            });
+        }
+        @endauth
+    });
+</script>
+@endpush

@@ -13,6 +13,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon.png') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
+    {{-- JavaScript & WebSockets (Reverb + Echo) --}}
+    @vite(['resources/js/app.js'])
+
     <style>
         :root {
             --zyro-black: #090909;
@@ -841,9 +844,9 @@
                     @php
                         $pendingQuickCount = \App\Models\Order::query()->where('status', \App\Enums\OrderStatus::PendingApproval)->count();
                     @endphp
-                    @if ($pendingQuickCount > 0)
-                        <span class="sidebar-count amber">{{ $pendingQuickCount }}</span>
-                    @endif
+                    <span id="sidebar-pending-count" class="sidebar-count amber" style="{{ $pendingQuickCount > 0 ? '' : 'display:none;' }}">
+                        {{ $pendingQuickCount }}
+                    </span>
                 </a>
 
                 {{-- 5. Pedidos aprobados --}}
@@ -980,6 +983,47 @@
                 overlay.classList.toggle('active');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof window.zyroSubscribe === 'function') {
+                const adminChannel = window.zyroSubscribe('private', 'admin');
+
+                adminChannel.listen('.OrderCreated', function (e) {
+                    const badge = document.getElementById('sidebar-pending-count');
+                    if (badge && e.metrics) {
+                        badge.textContent = e.metrics.pending_orders;
+                        badge.style.display = e.metrics.pending_orders > 0 ? 'inline-flex' : 'none';
+                    }
+                    if (typeof window.zyroToast === 'function') {
+                        window.zyroToast(
+                            `Nuevo pedido recibido: ${e.order.order_number} ($${e.order.total_formatted}) de ${e.order.customer_name}`,
+                            'amber',
+                            e.order.detail_url,
+                            'Revisar pedido'
+                        );
+                    }
+                });
+
+                adminChannel.listen('.OrderStatusUpdated', function (e) {
+                    const badge = document.getElementById('sidebar-pending-count');
+                    if (badge && e.metrics) {
+                        badge.textContent = e.metrics.pending_orders;
+                        badge.style.display = e.metrics.pending_orders > 0 ? 'inline-flex' : 'none';
+                    }
+                });
+
+                adminChannel.listen('.PaymentStatusUpdated', function (e) {
+                    if (e.is_approved && typeof window.zyroToast === 'function') {
+                        window.zyroToast(
+                            `Pago confirmado: ${e.order_number} ($${e.amount_formatted})`,
+                            'green',
+                            e.admin_order_url,
+                            'Ver detalle'
+                        );
+                    }
+                });
+            }
+        });
     </script>
     @stack('scripts')
 </body>

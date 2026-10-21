@@ -27,7 +27,9 @@
                 {{ $order->order_number }}
             </h1>
             <div style="display:flex;align-items:center;gap:1rem;">
-                @include('orders.partials.status-badge', ['status' => $order->status])
+                <span id="order-status-badge">
+                    @include('orders.partials.status-badge', ['status' => $order->status])
+                </span>
                 <span style="font-size:0.75rem;color:var(--zyro-muted);">{{ $order->created_at->format('d/m/Y H:i') }}</span>
             </div>
         </div>
@@ -101,55 +103,57 @@
             </div>
 
             {{-- Sección de pago según estado --}}
-            @if ($order->status->value === 'approved')
-                <div style="background:#ECFDF5;border:1px solid #A7F3D0;border-left:3px solid #10B981;border-radius:2px;padding:1.25rem;">
-                    <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#065F46;margin-bottom:0.5rem;">
-                        ✓ Pedido aprobado
-                    </p>
-                    <p style="font-size:0.8125rem;color:#065F46;margin-bottom:1rem;line-height:1.5;">
-                        Tu pedido fue aprobado. Puedes continuar con el proceso de pago simulado.
-                    </p>
-                    <a href="{{ route('orders.payment', $order) }}" class="btn-primary" style="display:inline-block;padding:0.75rem 1.5rem;">
-                        Realizar pago
-                    </a>
-                </div>
+            <div id="order-action-panel">
+                @if ($order->status->value === 'approved')
+                    <div style="background:#ECFDF5;border:1px solid #A7F3D0;border-left:3px solid #10B981;border-radius:2px;padding:1.25rem;">
+                        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#065F46;margin-bottom:0.5rem;">
+                            ✓ Pedido aprobado
+                        </p>
+                        <p style="font-size:0.8125rem;color:#065F46;margin-bottom:1rem;line-height:1.5;">
+                            Tu pedido fue aprobado. Puedes continuar con el proceso de pago simulado.
+                        </p>
+                        <a href="{{ route('orders.payment', $order) }}" class="btn-primary" style="display:inline-block;padding:0.75rem 1.5rem;">
+                            Realizar pago
+                        </a>
+                    </div>
 
-            @elseif ($order->status->value === 'paid')
-                <div style="background:#EDE9FE;border:1px solid #C4B5FD;border-left:3px solid #7C3AED;border-radius:2px;padding:1.25rem;">
-                    <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#4C1D95;margin-bottom:0.5rem;">
-                        ✓ Pago completado
-                    </p>
-                    @php
-                        $pago = $order->payments->where('status.value', 'approved')->first()
-                            ?? $order->payments->sortByDesc('created_at')->first();
-                    @endphp
-                    @if ($pago)
-                        <p style="font-size:0.8125rem;color:#4C1D95;margin-bottom:0.25rem;">Referencia: <strong>{{ $pago->reference }}</strong></p>
-                        <p style="font-size:0.8125rem;color:#4C1D95;">Monto: <strong>${{ number_format($pago->amount, 2) }}</strong></p>
-                    @endif
-                    <p style="font-size:0.75rem;color:#6D28D9;margin-top:0.5rem;">Transacción de prueba completada exitosamente.</p>
-                </div>
+                @elseif ($order->status->value === 'paid')
+                    <div style="background:#EDE9FE;border:1px solid #C4B5FD;border-left:3px solid #7C3AED;border-radius:2px;padding:1.25rem;">
+                        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#4C1D95;margin-bottom:0.5rem;">
+                            ✓ Pago completado
+                        </p>
+                        @php
+                            $pago = $order->payments->where('status.value', 'approved')->first()
+                                ?? $order->payments->sortByDesc('created_at')->first();
+                        @endphp
+                        @if ($pago)
+                            <p style="font-size:0.8125rem;color:#4C1D95;margin-bottom:0.25rem;">Referencia: <strong>{{ $pago->reference }}</strong></p>
+                            <p style="font-size:0.8125rem;color:#4C1D95;">Monto: <strong>${{ number_format($pago->amount, 2) }}</strong></p>
+                        @endif
+                        <p style="font-size:0.75rem;color:#6D28D9;margin-top:0.5rem;">Transacción de prueba completada exitosamente.</p>
+                    </div>
 
-            @elseif ($order->status->value === 'rejected')
-                <div style="background:#FEF2F2;border:1px solid #FECACA;border-left:3px solid #DC2626;border-radius:2px;padding:1.25rem;">
-                    <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#991B1B;margin-bottom:0.5rem;">
-                        Pedido rechazado
-                    </p>
-                    <p style="font-size:0.8125rem;color:#991B1B;line-height:1.5;">
-                        Este pedido fue rechazado por el administrador. No es posible procesarlo.
-                    </p>
-                </div>
+                @elseif ($order->status->value === 'rejected')
+                    <div style="background:#FEF2F2;border:1px solid #FECACA;border-left:3px solid #DC2626;border-radius:2px;padding:1.25rem;">
+                        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#991B1B;margin-bottom:0.5rem;">
+                            Pedido rechazado
+                        </p>
+                        <p style="font-size:0.8125rem;color:#991B1B;line-height:1.5;">
+                            Este pedido fue rechazado por el administrador. No es posible procesarlo.
+                        </p>
+                    </div>
 
-            @else
-                <div style="background:var(--zyro-light);border:1px solid var(--zyro-border);border-left:3px solid var(--zyro-muted);border-radius:2px;padding:1.25rem;">
-                    <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--zyro-muted);margin-bottom:0.5rem;">
-                        Pendiente de aprobación
-                    </p>
-                    <p style="font-size:0.8125rem;color:var(--zyro-muted);line-height:1.5;">
-                        Tu pedido está en revisión. El pago estará disponible una vez que el administrador lo apruebe.
-                    </p>
-                </div>
-            @endif
+                @else
+                    <div style="background:var(--zyro-light);border:1px solid var(--zyro-border);border-left:3px solid var(--zyro-muted);border-radius:2px;padding:1.25rem;">
+                        <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--zyro-muted);margin-bottom:0.5rem;">
+                            Pendiente de aprobación
+                        </p>
+                        <p style="font-size:0.8125rem;color:var(--zyro-muted);line-height:1.5;">
+                            Tu pedido está en revisión. El pago estará disponible una vez que el administrador lo apruebe.
+                        </p>
+                    </div>
+                @endif
+            </div>
 
             {{-- Historial de intentos de pago --}}
             @if ($order->payments->isNotEmpty())
@@ -179,3 +183,124 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    const orderId     = {{ $order->id }};
+    const paymentUrl  = "{{ route('orders.payment', $order) }}";
+    const orderNumber = "{{ $order->order_number }}";
+
+    function updateToApproved() {
+        const badgeEl = document.getElementById('order-status-badge');
+        if (badgeEl) {
+            badgeEl.innerHTML = '<span class="badge-status badge-approved">✓ Aprobado</span>';
+        }
+
+        const panelEl = document.getElementById('order-action-panel');
+        if (panelEl) {
+            panelEl.innerHTML = `
+                <div style="background:#ECFDF5;border:1px solid #A7F3D0;border-left:3px solid #10B981;border-radius:2px;padding:1.25rem;animation:zyroSlideIn 0.3s ease;">
+                    <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#065F46;margin-bottom:0.5rem;">
+                        ✓ Pedido aprobado
+                    </p>
+                    <p style="font-size:0.8125rem;color:#065F46;margin-bottom:1rem;line-height:1.5;">
+                        Tu pedido fue aprobado. Puedes continuar con el proceso de pago simulado.
+                    </p>
+                    <a href="${paymentUrl}" class="btn-primary" style="display:inline-block;padding:0.75rem 1.5rem;">
+                        Realizar pago
+                    </a>
+                </div>
+            `;
+        }
+
+        if (typeof window.zyroToast === 'function') {
+            window.zyroToast(
+                `¡Tu pedido ${orderNumber} ha sido aprobado! Ya puedes realizar el pago.`,
+                'green',
+                paymentUrl,
+                'Pagar ahora'
+            );
+        }
+    }
+
+    function updateToRejected() {
+        const badgeEl = document.getElementById('order-status-badge');
+        if (badgeEl) {
+            badgeEl.innerHTML = '<span class="badge-status badge-rejected">✗ Rechazado</span>';
+        }
+
+        const panelEl = document.getElementById('order-action-panel');
+        if (panelEl) {
+            panelEl.innerHTML = `
+                <div style="background:#FEF2F2;border:1px solid #FECACA;border-left:3px solid #DC2626;border-radius:2px;padding:1.25rem;animation:zyroSlideIn 0.3s ease;">
+                    <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#991B1B;margin-bottom:0.5rem;">
+                        Pedido rechazado
+                    </p>
+                    <p style="font-size:0.8125rem;color:#991B1B;line-height:1.5;">
+                        Este pedido fue rechazado por el administrador. No es posible procesarlo.
+                    </p>
+                </div>
+            `;
+        }
+
+        if (typeof window.zyroToast === 'function') {
+            window.zyroToast(
+                `El pedido ${orderNumber} fue rechazado por el administrador.`,
+                'red'
+            );
+        }
+    }
+
+    function updateToPaid(ref, amount) {
+        const badgeEl = document.getElementById('order-status-badge');
+        if (badgeEl) {
+            badgeEl.innerHTML = '<span class="badge-status badge-paid">✓ Pagado</span>';
+        }
+
+        const panelEl = document.getElementById('order-action-panel');
+        if (panelEl) {
+            panelEl.innerHTML = `
+                <div style="background:#EDE9FE;border:1px solid #C4B5FD;border-left:3px solid #7C3AED;border-radius:2px;padding:1.25rem;animation:zyroSlideIn 0.3s ease;">
+                    <p style="font-size:0.6875rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#4C1D95;margin-bottom:0.5rem;">
+                        ✓ Pago completado
+                    </p>
+                    ${ref ? `<p style="font-size:0.8125rem;color:#4C1D95;margin-bottom:0.25rem;">Referencia: <strong>${ref}</strong></p>` : ''}
+                    ${amount ? `<p style="font-size:0.8125rem;color:#4C1D95;">Monto: <strong>$${amount}</strong></p>` : ''}
+                    <p style="font-size:0.75rem;color:#6D28D9;margin-top:0.5rem;">Transacción de prueba completada exitosamente.</p>
+                </div>
+            `;
+        }
+
+        if (typeof window.zyroToast === 'function') {
+            window.zyroToast(
+                `¡Pago confirmado exitosamente para el pedido ${orderNumber}!`,
+                'blue'
+            );
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof window.zyroSubscribe === 'function') {
+            const channel = window.zyroSubscribe('private', `orders.${orderId}`);
+
+            channel.listen('.OrderStatusUpdated', function (e) {
+                if (e.order_id === orderId) {
+                    if (e.to_status === 'approved') {
+                        updateToApproved();
+                    } else if (e.to_status === 'rejected') {
+                        updateToRejected();
+                    } else if (e.to_status === 'paid') {
+                        updateToPaid();
+                    }
+                }
+            });
+
+            channel.listen('.PaymentStatusUpdated', function (e) {
+                if (e.order_id === orderId && e.is_approved) {
+                    updateToPaid(e.reference, e.amount_formatted);
+                }
+            });
+        }
+    });
+</script>
+@endpush
