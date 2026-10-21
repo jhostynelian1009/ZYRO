@@ -118,7 +118,7 @@
                             </div>
                             <div style="display:flex; justify-content:space-between;">
                                 <span style="color:var(--zyro-muted);">Composición</span>
-                                <span>66% Algodón, 33% Poliester</span>
+                                <span>65% Algodón, 35% Poliester</span>
                             </div>
                         @else
                             <div style="display:flex; justify-content:space-between;">
