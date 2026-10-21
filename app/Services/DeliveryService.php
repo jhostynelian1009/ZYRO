@@ -20,18 +20,18 @@ class DeliveryService
                     'id'          => 'standard',
                     'name'        => 'Envío estándar',
                     'cost'        => $defaultCost,
-                    'estimate'    => '2–5 días hábiles',
+                    'estimate'    => 'Servientrega · 2–5 días hábiles',
                     'description' => 'Entrega en tu dirección.',
-                    'badge'       => '2–5 días hábiles',
+                    'badge'       => 'Servientrega · 2–5 días hábiles',
                     'icon'        => 'truck',
                 ],
                 'express' => [
                     'id'          => 'express',
                     'name'        => 'Envío exprés',
                     'cost'        => $defaultCost,
-                    'estimate'    => '1–2 días hábiles',
+                    'estimate'    => 'Servientrega · 1–2 días hábiles',
                     'description' => 'Modalidad de entrega prioritaria.',
-                    'badge'       => '1–2 días hábiles',
+                    'badge'       => 'Servientrega · 1–2 días hábiles',
                     'icon'        => 'zap',
                 ],
                 'pickup' => [
@@ -91,10 +91,10 @@ class DeliveryService
         }
 
         if ($method === 'express') {
-            return '1–2 días hábiles';
+            return self::get('express')['estimate'] ?? 'Servientrega · 1–2 días hábiles';
         }
 
-        return self::get($method)['estimate'] ?? '2–5 días hábiles';
+        return self::get($method)['estimate'] ?? 'Servientrega · 2–5 días hábiles';
     }
 
     /**

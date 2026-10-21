@@ -221,7 +221,7 @@ class ShippingTest extends TestCase
 
     // ─── 6. Logística y Tiempos de Entrega ────────────────────────────────────
 
-    /** El envío estándar utiliza la tarifa configurada ($6.00) y registra 2–5 días hábiles. */
+    /** El envío estándar utiliza la tarifa configurada ($6.00) y registra 2–5 días hábiles con Servientrega. */
     public function test_standard_delivery_uses_configured_tariff_and_shows_2_to_5_business_days(): void
     {
         $customer = $this->customer();
@@ -241,17 +241,17 @@ class ShippingTest extends TestCase
         $order = Order::query()->where('user_id', $customer->id)->latest()->firstOrFail();
 
         $this->assertSame('standard', $order->delivery_method);
-        $this->assertSame('2–5 días hábiles', $order->delivery_estimate);
+        $this->assertSame('Servientrega · 2–5 días hábiles', $order->delivery_estimate);
         $this->assertEqualsWithDelta(6.00, (float) $order->shipping_amount, 0.001);
 
         $response = $this->actingAs($customer)->get(route('orders.show', $order));
         $response->assertOk();
         $response->assertSee('Envío estándar');
-        $response->assertSee('2–5 días hábiles');
+        $response->assertSee('Servientrega · 2–5 días hábiles');
         $response->assertSee('$6.00');
     }
 
-    /** El envío exprés conserva la tarifa configurada y registra 1–2 días hábiles. */
+    /** El envío exprés conserva la tarifa configurada y registra 1–2 días hábiles con Servientrega. */
     public function test_express_delivery_preserves_configured_rate_and_shows_1_to_2_business_days(): void
     {
         $customer = $this->customer();
@@ -271,13 +271,13 @@ class ShippingTest extends TestCase
         $order = Order::query()->where('user_id', $customer->id)->latest()->firstOrFail();
 
         $this->assertSame('express', $order->delivery_method);
-        $this->assertSame('1–2 días hábiles', $order->delivery_estimate);
+        $this->assertSame('Servientrega · 1–2 días hábiles', $order->delivery_estimate);
         $this->assertEqualsWithDelta(6.00, (float) $order->shipping_amount, 0.001);
 
         $response = $this->actingAs($customer)->get(route('orders.show', $order));
         $response->assertOk();
         $response->assertSee('Envío exprés');
-        $response->assertSee('1–2 días hábiles');
+        $response->assertSee('Servientrega · 1–2 días hábiles');
         $response->assertSee('$6.00');
     }
 
@@ -343,7 +343,7 @@ class ShippingTest extends TestCase
         $this->assertEqualsWithDelta(98.00, (float) $order->total, 0.001);
     }
 
-    /** La vista de checkout muestra las tres tarjetas de modalidades con plazos en días hábiles. */
+    /** La vista de checkout muestra las tres tarjetas de modalidades con plazos y mención de Servientrega. */
     public function test_checkout_view_displays_all_three_delivery_modalities(): void
     {
         $customer = $this->customer();
@@ -355,10 +355,11 @@ class ShippingTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Método de entrega');
+        $response->assertSee('Realizamos nuestros envíos mediante Servientrega. Los plazos son estimados en días hábiles.');
         $response->assertSee('Envío estándar');
-        $response->assertSee('2–5 días hábiles');
+        $response->assertSee('Servientrega · 2–5 días hábiles');
         $response->assertSee('Envío exprés');
-        $response->assertSee('1–2 días hábiles');
+        $response->assertSee('Servientrega · 1–2 días hábiles');
         $response->assertSee('Retiro en tienda');
         $response->assertSee('Pendiente de confirmación');
         $response->assertSee('GRATIS');
@@ -412,11 +413,11 @@ class ShippingTest extends TestCase
         ]);
 
         $this->assertNull($order->delivery_estimate);
-        $this->assertSame('2–5 días hábiles', $order->delivery_estimate_label);
+        $this->assertSame('Servientrega · 2–5 días hábiles', $order->delivery_estimate_label);
 
         $response = $this->actingAs($customer)->get(route('orders.show', $order));
         $response->assertOk();
         $response->assertSee('Envío estándar');
-        $response->assertSee('2–5 días hábiles');
+        $response->assertSee('Servientrega · 2–5 días hábiles');
     }
 }

@@ -115,7 +115,7 @@
                         Método de entrega
                     </h2>
                     <p style="font-size:0.8125rem;color:var(--zyro-muted);margin-bottom:1.25rem;">
-                        Selecciona cómo deseas recibir tu pedido. Los plazos informados son estimados en días hábiles.
+                        Realizamos nuestros envíos mediante Servientrega. Los plazos son estimados en días hábiles.
                     </p>
 
                     <div class="delivery-methods-stack" role="radiogroup" aria-label="Modalidad de entrega">
@@ -254,7 +254,7 @@
                         {{ $deliveryMethods[$selectedMethod]['name'] ?? 'Envío estándar' }}
                     </span>
                     <span id="summary-delivery-estimate" style="font-size:0.6875rem;font-weight:600;color:var(--zyro-black);display:inline-block;margin-top:2px;background:var(--zyro-white);border:1px solid var(--zyro-border);padding:1px 6px;border-radius:2px;">
-                        ⏱ {{ $deliveryMethods[$selectedMethod]['estimate'] ?? '2–5 días hábiles' }}
+                        ⏱ {{ $deliveryMethods[$selectedMethod]['estimate'] ?? 'Servientrega · 2–5 días hábiles' }}
                     </span>
                 </div>
                 <span id="summary-shipping-cost" style="font-weight:600;">
@@ -437,7 +437,7 @@
 
             const cost = parseFloat(radio.dataset.cost || 0);
             const name = radio.dataset.name || 'Envío estándar';
-            const estimate = radio.dataset.estimate || '2–5 días hábiles';
+            const estimate = radio.dataset.estimate || 'Servientrega · 2–5 días hábiles';
             const methodKey = radio.value;
 
             // Actualizar clases de tarjetas

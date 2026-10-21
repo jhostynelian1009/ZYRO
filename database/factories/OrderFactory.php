@@ -20,14 +20,10 @@ class OrderFactory extends Factory
     {
         $subtotal       = (float) fake()->randomFloat(2, 30, 200);
         $taxAmount      = round($subtotal * (float) config('shop.iva_rate', 0.15), 2);
-        $method         = fake()->randomElement(['pickup', 'standard', 'express']);
-        $shippingAmount = $method === 'pickup' ? 0.00 : (float) config('shop.shipping', 6.00);
+        $method         = 'standard';
+        $shippingAmount = (float) config('shop.shipping', 6.00);
         $total          = round($subtotal + $taxAmount + $shippingAmount, 2);
-        $estimate       = match ($method) {
-            'pickup'  => 'Pendiente de confirmación',
-            'express' => '1–2 días hábiles',
-            default   => '2–5 días hábiles',
-        };
+        $estimate       = 'Servientrega · 2–5 días hábiles';
 
         return [
             'order_number'      => 'ZYR-'.strtoupper(Str::random(8)),
@@ -73,6 +69,24 @@ class OrderFactory extends Factory
         return $this->state([
             'status'  => OrderStatus::Paid->value,
             'paid_at' => now(),
+        ]);
+    }
+
+    public function pickup(): static
+    {
+        return $this->state([
+            'delivery_method'   => 'pickup',
+            'delivery_estimate' => 'Pendiente de confirmación',
+            'shipping_amount'   => 0.00,
+        ]);
+    }
+
+    public function express(): static
+    {
+        return $this->state([
+            'delivery_method'   => 'express',
+            'delivery_estimate' => 'Servientrega · 1–2 días hábiles',
+            'shipping_amount'   => (float) config('shop.shipping', 6.00),
         ]);
     }
 }
