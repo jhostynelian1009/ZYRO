@@ -44,9 +44,38 @@ class PaymentTest extends TestCase
         $order = Order::factory()->approved()->create([
             'user_id'  => $customer->id,
             'subtotal' => 49.90 * $qty,
-            'tax_amount' => round(49.90 * $qty * 0.12, 2),
-            'shipping_amount' => 3.00,
-            'total'    => round(49.90 * $qty * 1.12 + 3.00, 2),
+            'tax_amount' => round(49.90 * $qty * 0.15, 2),
+            'shipping_amount' => 6.00,
+            'total'    => round(49.90 * $qty * 1.15 + 6.00, 2),
+        ]);
+
+        OrderItem::factory()->create([
+            'order_id'     => $order->id,
+            'product_id'   => $product->id,
+            'product_name' => $product->name,
+            'size'         => 'M',
+            'quantity'     => $qty,
+            'unit_price'   => 49.90,
+            'line_total'   => 49.90 * $qty,
+        ]);
+
+        return [$order, $customer, $product];
+    }
+
+    /**
+     * Crea un pedido pendiente con una línea de ítem y devuelve [order, customer, product].
+     */
+    private function pendingOrderWithItem(int $qty = 2): array
+    {
+        $customer = $this->customer();
+        $product  = $this->product(['stock' => 10]);
+
+        $order = Order::factory()->pendingApproval()->create([
+            'user_id'  => $customer->id,
+            'subtotal' => 49.90 * $qty,
+            'tax_amount' => round(49.90 * $qty * 0.15, 2),
+            'shipping_amount' => 6.00,
+            'total'    => round(49.90 * $qty * 1.15 + 6.00, 2),
         ]);
 
         OrderItem::factory()->create([
@@ -80,13 +109,53 @@ class PaymentTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_customer_cannot_pay_pending_order(): void
+    public function test_customer_can_access_payment_page_for_pending_order(): void
     {
-        $customer = $this->customer();
-        $order    = Order::factory()->pendingApproval()->create(['user_id' => $customer->id]);
+        [$order, $customer] = $this->pendingOrderWithItem();
 
         $this->actingAs($customer)
             ->get(route('orders.payment', $order))
+            ->assertOk()
+            ->assertSee('Pago simulado')
+            ->assertSee($order->order_number);
+    }
+
+    public function test_pending_order_can_be_paid_directly_without_admin_approval(): void
+    {
+        [$order, $customer, $product] = $this->pendingOrderWithItem(qty: 2);
+        $stockBefore = $product->stock; // 10
+
+        $this->actingAs($customer)
+            ->post(route('orders.payment.store', $order), ['method' => 'test_card'])
+            ->assertRedirect(route('orders.show', $order));
+
+        $order->refresh();
+        $product->refresh();
+
+        // Estado del pedido actualizado directamente a Pagado
+        $this->assertSame(OrderStatus::Paid, $order->status);
+        $this->assertNotNull($order->paid_at);
+
+        // Pago registrado como aprobado
+        $payment = Payment::query()->where('order_id', $order->id)->first();
+        $this->assertNotNull($payment);
+        $this->assertSame(PaymentStatus::Approved, $payment->status);
+
+        // Stock descontado correctamente
+        $this->assertSame($stockBefore - 2, $product->stock);
+    }
+
+    public function test_customer_cannot_pay_already_paid_order(): void
+    {
+        [$order, $customer] = $this->approvedOrderWithItem();
+        $order->update(['status' => OrderStatus::Paid, 'paid_at' => now()]);
+
+        $this->actingAs($customer)
+            ->get(route('orders.payment', $order))
+            ->assertRedirect(route('orders.show', $order));
+
+        $this->actingAs($customer)
+            ->post(route('orders.payment.store', $order), ['method' => 'test_card'])
             ->assertRedirect(route('orders.show', $order));
     }
 
@@ -97,6 +166,10 @@ class PaymentTest extends TestCase
 
         $this->actingAs($customer)
             ->get(route('orders.payment', $order))
+            ->assertRedirect(route('orders.show', $order));
+
+        $this->actingAs($customer)
+            ->post(route('orders.payment.store', $order), ['method' => 'test_card'])
             ->assertRedirect(route('orders.show', $order));
     }
 
@@ -210,6 +283,46 @@ class PaymentTest extends TestCase
         // El stock sigue en 0
         $this->assertSame(0, $product->stock);
         // Se registró un pago rechazado
+        $rejectedPayment = Payment::query()
+            ->where('order_id', $order->id)
+            ->where('status', PaymentStatus::Rejected)
+            ->first();
+        $this->assertNotNull($rejectedPayment);
+    }
+
+    public function test_rejected_payment_on_pending_order_maintains_pending_status_and_allows_retry(): void
+    {
+        $customer = $this->customer();
+        $product  = $this->product(['stock' => 0]); // Sin stock
+        $order    = Order::factory()->pendingApproval()->create([
+            'user_id'         => $customer->id,
+            'subtotal'        => 49.90,
+            'tax_amount'      => 7.49,
+            'shipping_amount' => 6.00,
+            'total'           => 63.39,
+        ]);
+
+        OrderItem::factory()->create([
+            'order_id'     => $order->id,
+            'product_id'   => $product->id,
+            'product_name' => $product->name,
+            'size'         => 'M',
+            'quantity'     => 1,
+            'unit_price'   => 49.90,
+            'line_total'   => 49.90,
+        ]);
+
+        $this->actingAs($customer)
+            ->post(route('orders.payment.store', $order), ['method' => 'test_card'])
+            ->assertRedirect(route('orders.payment', $order));
+
+        $order->refresh();
+        $product->refresh();
+
+        // El pedido sigue en estado pendiente (no paid)
+        $this->assertSame(OrderStatus::PendingApproval, $order->status);
+        $this->assertSame(0, $product->stock);
+
         $rejectedPayment = Payment::query()
             ->where('order_id', $order->id)
             ->where('status', PaymentStatus::Rejected)

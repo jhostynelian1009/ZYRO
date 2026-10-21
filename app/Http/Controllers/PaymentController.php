@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Http\Requests\PaymentRequest;
 use App\Models\Order;
@@ -24,9 +25,14 @@ class PaymentController extends Controller
 
         abort_unless($order->isOwnedBy($user), 403);
 
-        if ($order->status->value !== 'approved') {
+        if ($order->status === OrderStatus::Paid) {
             return redirect()->route('orders.show', $order)
-                ->withErrors(['payment' => 'El pedido no está aprobado para pago.']);
+                ->with('status', 'Este pedido ya se encuentra pagado.');
+        }
+
+        if ($order->status === OrderStatus::Rejected || $order->status === OrderStatus::Cancelled) {
+            return redirect()->route('orders.show', $order)
+                ->withErrors(['payment' => 'Este pedido ha sido cancelado o rechazado y no admite pagos.']);
         }
 
         $methods = PaymentMethod::cases();
@@ -41,6 +47,16 @@ class PaymentController extends Controller
         $user = auth()->user();
 
         abort_unless($order->isOwnedBy($user), 403);
+
+        if ($order->status === OrderStatus::Paid) {
+            return redirect()->route('orders.show', $order)
+                ->with('status', 'Este pedido ya se encuentra pagado.');
+        }
+
+        if ($order->status === OrderStatus::Rejected || $order->status === OrderStatus::Cancelled) {
+            return redirect()->route('orders.show', $order)
+                ->withErrors(['payment' => 'Este pedido ha sido cancelado o rechazado y no admite pagos.']);
+        }
 
         $method = PaymentMethod::from($request->validated('method'));
 

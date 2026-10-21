@@ -41,9 +41,15 @@ class SimulatedPaymentService
     public function process(Order $order, PaymentMethod $method): array
     {
         // Pre-validación fuera de la transacción para fallo rápido.
-        if ($order->status !== OrderStatus::Approved) {
+        if ($order->status === OrderStatus::Paid) {
             throw new \RuntimeException(
-                'Este pedido no está aprobado para pago. Estado actual: '.$order->status->value
+                'Este pedido ya tiene un pago aprobado registrado.'
+            );
+        }
+
+        if ($order->status === OrderStatus::Rejected || $order->status === OrderStatus::Cancelled) {
+            throw new \RuntimeException(
+                'Este pedido no puede procesarse porque está rechazado o cancelado. Estado actual: '.$order->status->value
             );
         }
 
@@ -55,9 +61,15 @@ class SimulatedPaymentService
                 ->firstOrFail();
 
             // Doble verificación de estado tras el lock.
-            if ($freshOrder->status !== OrderStatus::Approved) {
+            if ($freshOrder->status === OrderStatus::Paid) {
                 throw new \RuntimeException(
-                    'El pedido ya no está en estado aprobado.'
+                    'Este pedido ya tiene un pago aprobado registrado.'
+                );
+            }
+
+            if ($freshOrder->status === OrderStatus::Rejected || $freshOrder->status === OrderStatus::Cancelled) {
+                throw new \RuntimeException(
+                    'El pedido no puede procesarse porque está rechazado o cancelado. Estado actual: '.$freshOrder->status->value
                 );
             }
 
@@ -116,7 +128,7 @@ class SimulatedPaymentService
                         return [
                             'success' => false,
                             'payment' => $payment,
-                            'message' => "Stock insuficiente para «{$product->name}». El pedido sigue aprobado; puedes reintentarlo más tarde.",
+                            'message' => "Stock insuficiente para «{$product->name}». El pedido permanece pendiente; puedes reintentarlo más tarde.",
                         ];
                     }
                 }
@@ -152,6 +164,8 @@ class SimulatedPaymentService
                     'processed_at' => now(),
                 ]);
 
+                $previousStatus = $freshOrder->status->value;
+
                 // Marcar pedido como paid.
                 $freshOrder->update([
                     'status'  => OrderStatus::Paid,
@@ -163,13 +177,13 @@ class SimulatedPaymentService
                     OrderStatusHistory::query()->create([
                         'order_id'   => $freshOrder->id,
                         'changed_by' => $freshOrder->user_id,
-                        'from_status'=> OrderStatus::Approved->value,
+                        'from_status'=> $previousStatus,
                         'to_status'  => OrderStatus::Paid->value,
                         'note'       => "Pago simulado aprobado. Referencia: {$reference}",
                     ]);
                 }
 
-                DB::afterCommit(function () use ($freshOrder, $payment, $updatedProducts, $reference) {
+                DB::afterCommit(function () use ($freshOrder, $payment, $updatedProducts, $reference, $previousStatus) {
                     SafeBroadcaster::broadcast(new PaymentStatusUpdated(
                         $freshOrder,
                         $payment,
@@ -178,7 +192,7 @@ class SimulatedPaymentService
 
                     SafeBroadcaster::broadcast(new OrderStatusUpdated(
                         $freshOrder,
-                        OrderStatus::Approved->value,
+                        $previousStatus,
                         OrderStatus::Paid->value,
                         "Pago aprobado. Referencia: {$reference}"
                     ));

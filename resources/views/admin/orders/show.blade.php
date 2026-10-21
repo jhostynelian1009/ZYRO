@@ -23,7 +23,7 @@
                     <button
                         type="submit"
                         class="btn-action btn-action-approve"
-                        onclick="return confirm('¿Aprobar el pedido {{ $order->order_number }} para habilitar el pago al cliente?')"
+                        onclick="return confirm('¿Aprobar administrativamente el pedido {{ $order->order_number }}?')"
                     >
                         <span>✓</span>
                         <span>Aprobar Pedido</span>
@@ -35,7 +35,7 @@
                     <button
                         type="submit"
                         class="btn-action btn-action-reject"
-                        onclick="return confirm('¿Rechazar el pedido {{ $order->order_number }}? Esta acción no se puede deshacer y el cliente no podrá pagarlo.')"
+                        onclick="return confirm('¿Rechazar el pedido {{ $order->order_number }}? Esta acción cancelará la orden y no se podrán procesar pagos.')"
                     >
                         <span>✕</span>
                         <span>Rechazar Pedido</span>
@@ -54,15 +54,15 @@
     @if ($order->status->value === 'pending_approval')
         <div style="background:var(--zyro-amber-bg); border:1px solid var(--zyro-amber-border); color:var(--zyro-amber-text); padding:1rem 1.25rem; border-radius:2px; margin-bottom:2rem; font-size:0.8125rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
             <div>
-                <strong>Revisión pendiente:</strong> Este pedido requiere tu aprobación antes de que el cliente pueda realizar el pago simulado.
+                <strong>Revisión de pedido:</strong> Pedido registrado pendiente de pago directo por el cliente o validación administrativa.
             </div>
             <span style="font-size:0.6875rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:700;">
-                Acción requerida
+                Pendiente
             </span>
         </div>
     @elseif ($order->status->value === 'approved')
         <div style="background:var(--zyro-blue-bg); border:1px solid var(--zyro-blue-border); color:var(--zyro-blue); padding:1rem 1.25rem; border-radius:2px; margin-bottom:2rem; font-size:0.8125rem;">
-            <strong>Pedido aprobado:</strong> El cliente ya tiene habilitada la opción de pago en su cuenta.
+            <strong>Pedido aprobado:</strong> El pedido fue validado administrativamente.
             @if ($order->approved_at)
                 Aprobado por <strong>{{ $order->approvedBy->name ?? 'Administrador' }}</strong> el {{ $order->approved_at->format('d/m/Y H:i') }}.
             @endif
