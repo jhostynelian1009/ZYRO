@@ -181,11 +181,27 @@
         .cart-pill {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .cart-pill-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .cart-pill-icon svg {
+            width: 20px;
+            height: 20px;
+            display: block;
         }
 
         .cart-count {
@@ -1411,8 +1427,23 @@
                     <button type="submit" aria-label="Ejecutar búsqueda">&rarr;</button>
                 </form>
 
-                <a href="{{ route('cart.index') }}" class="cart-pill" aria-label="Ver carrito">
-                    <span>Carrito</span>
+                <a href="{{ route('cart.index') }}" class="cart-pill" aria-label="Carrito de compras">
+                    <span class="cart-pill-icon" aria-hidden="true">
+                        {{-- Icono carrito minimalista premium — fondo transparente, silueta negra --}}
+                        <svg viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                            {{-- Asa del carrito (forma de L con esquina redondeada) --}}
+                            <path d="M4 10 C4 7.8 5.8 6 8 6 L16 6 C17.1 6 18 6.9 18 8 L18 10 Z" />
+                            <rect x="14" y="6" width="4" height="28" rx="2"/>
+                            <rect x="14" y="30" width="34" height="4" rx="2"/>
+                            {{-- Cuerpo trapezoidal del carrito --}}
+                            <path d="M18 10 L54 10 L50 34 L18 34 Z"/>
+                            {{-- Rueda izquierda --}}
+                            <circle cx="22" cy="46" r="6"/>
+                            {{-- Rueda derecha --}}
+                            <circle cx="44" cy="46" r="6"/>
+                        </svg>
+                    </span>
+                    <span class="sr-only">Carrito</span>
                     @php $cartCount = count(session('cart.items', [])); @endphp
                     @if ($cartCount > 0)
                         <span class="cart-count">{{ $cartCount }}</span>

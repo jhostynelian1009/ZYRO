@@ -175,8 +175,8 @@
                 <span>${{ number_format($subtotal, 2) }}</span>
             </div>
             <div class="summary-row">
-                <span>IVA 12%</span>
-                <span>${{ number_format($subtotal * 0.12, 2) }}</span>
+                <span>IVA (15%)</span>
+                <span>${{ number_format($subtotal * config('shop.iva_rate', 0.15), 2) }}</span>
             </div>
             <div class="summary-row">
                 <span>Envío (demo)</span>
@@ -187,7 +187,7 @@
 
             <div class="summary-total-row">
                 <span>Total estimado</span>
-                <span>${{ number_format($subtotal + $subtotal * 0.12 + 3.00, 2) }}</span>
+                <span>${{ number_format($subtotal + $subtotal * config('shop.iva_rate', 0.15) + config('shop.shipping', 3.00), 2) }}</span>
             </div>
 
             <div class="checkout-disclaimer-box">

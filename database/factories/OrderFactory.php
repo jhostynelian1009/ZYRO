@@ -19,8 +19,8 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         $subtotal      = (float) fake()->randomFloat(2, 30, 200);
-        $taxAmount     = round($subtotal * 0.12, 2);
-        $shippingAmount = 3.00;
+        $taxAmount     = round($subtotal * (float) config('shop.iva_rate', 0.15), 2);
+        $shippingAmount = (float) config('shop.shipping', 3.00);
         $total          = round($subtotal + $taxAmount + $shippingAmount, 2);
 
         return [

@@ -15,17 +15,27 @@ use Illuminate\Support\Str;
  * Reglas:
  * - Reconsulta productos y precios desde MySQL; nunca confía en valores del carrito.
  * - Valida stock, cantidad positiva y producto activo.
- * - Calcula subtotal, impuesto (12 %) y envío en servidor.
+ * - Calcula subtotal, impuesto (IVA %) y envío en servidor.
  * - Crea orders + order_items en transacción.
  * - No descuenta stock ni registra ingresos.
  */
 class CheckoutService
 {
-    /** Tasa de impuesto configurable (IVA 12 %). */
-    private const TAX_RATE = 0.12;
+    /**
+     * Devuelve la tasa de IVA configurada en config/shop.php (IVA_RATE).
+     * Usar un método en lugar de una constante permite leer el valor
+     * en tiempo de ejecución, facilitando su cambio vía variable de entorno.
+     */
+    private function taxRate(): float
+    {
+        return (float) config('shop.iva_rate', 0.15);
+    }
 
     /** Costo de envío fijo demo. */
-    private const SHIPPING = 3.00;
+    private function shipping(): float
+    {
+        return (float) config('shop.shipping', 3.00);
+    }
 
     /**
      * @param  array<string, array{product_id:int, size:?string, quantity:int}>  $cartItems
@@ -82,8 +92,8 @@ class CheckoutService
             }
 
             $subtotal      = round($subtotal, 2);
-            $taxAmount     = round($subtotal * self::TAX_RATE, 2);
-            $shippingAmount = round(self::SHIPPING, 2);
+            $taxAmount     = round($subtotal * $this->taxRate(), 2);
+            $shippingAmount = round($this->shipping(), 2);
             $total          = round($subtotal + $taxAmount + $shippingAmount, 2);
 
             $order = Order::query()->create([

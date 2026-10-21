@@ -107,7 +107,7 @@
                     <span>${{ number_format($subtotal, 2) }}</span>
                 </div>
 
-                <p class="summary-note">El total definitivo (IVA 12% + envío) se calcula al confirmar el pedido en el servidor.</p>
+                <p class="summary-note">El total definitivo (IVA 15% + envío) se calcula al confirmar el pedido en el servidor.</p>
 
                 <a href="{{ route('checkout.create') }}" class="btn-primary" style="width:100%;text-align:center;display:block;padding:0.875rem;">
                     Continuar al checkout

@@ -66,7 +66,7 @@
                         <span>${{ number_format($order->subtotal, 2) }}</span>
                     </div>
                     <div class="summary-row" style="margin-bottom:0.5rem;">
-                        <span>IVA 12%</span>
+                        <span>IVA (15%)</span>
                         <span>${{ number_format($order->tax_amount, 2) }}</span>
                     </div>
                     <div class="summary-row" style="margin-bottom:0.75rem;">
