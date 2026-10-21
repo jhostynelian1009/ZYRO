@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrderStatus;
+use App\Events\OrderStatusUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
+use App\Services\SafeBroadcaster;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -76,6 +78,13 @@ class OrderController extends Controller
 
         $this->recordHistory($order, OrderStatus::PendingApproval, OrderStatus::Approved, $admin->id, 'Aprobado por administrador.');
 
+        SafeBroadcaster::broadcast(new OrderStatusUpdated(
+            $order->fresh(),
+            OrderStatus::PendingApproval->value,
+            OrderStatus::Approved->value,
+            'Aprobado por administrador.'
+        ));
+
         return back()->with('status', "Pedido {$order->order_number} aprobado.");
     }
 
@@ -98,6 +107,13 @@ class OrderController extends Controller
         ]);
 
         $this->recordHistory($order, OrderStatus::PendingApproval, OrderStatus::Rejected, $admin->id, 'Rechazado por administrador.');
+
+        SafeBroadcaster::broadcast(new OrderStatusUpdated(
+            $order->fresh(),
+            OrderStatus::PendingApproval->value,
+            OrderStatus::Rejected->value,
+            'Rechazado por administrador.'
+        ));
 
         return back()->with('status', "Pedido {$order->order_number} rechazado.");
     }

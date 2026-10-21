@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCreated;
 use App\Http\Requests\CheckoutRequest;
 use App\Models\Order;
 use App\Services\AnalyticsTracker;
 use App\Services\CartService;
 use App\Services\CheckoutService;
+use App\Services\SafeBroadcaster;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -65,6 +67,9 @@ class OrderController extends Controller
             ]);
 
             $this->cart->clear();
+
+            // Emitir evento de pedido creado para el panel administrativo en tiempo real.
+            SafeBroadcaster::broadcast(new OrderCreated($order));
 
             return redirect()->route('orders.show', $order)
                 ->with('status', "Pedido {$order->order_number} enviado. Pendiente de aprobación.");

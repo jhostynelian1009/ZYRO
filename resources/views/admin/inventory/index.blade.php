@@ -25,7 +25,7 @@
                 <span class="stat-card-label">Total en Catálogo</span>
                 <span class="stat-card-icon icon-black">📦</span>
             </div>
-            <div class="stat-card-val">{{ $stats['total'] }}</div>
+            <div class="stat-card-val" id="inv-stat-total">{{ $stats['total'] }}</div>
             <p class="stat-card-desc">Registros totales en base de datos.</p>
         </div>
 
@@ -34,7 +34,7 @@
                 <span class="stat-card-label">Modelos Activos</span>
                 <span class="stat-card-icon icon-green">✓</span>
             </div>
-            <div class="stat-card-val">{{ $stats['active'] }}</div>
+            <div class="stat-card-val" id="inv-stat-active">{{ $stats['active'] }}</div>
             <p class="stat-card-desc">Visibles y comprables en la tienda.</p>
         </div>
 
@@ -43,7 +43,7 @@
                 <span class="stat-card-label">Stock Bajo (&le; 3)</span>
                 <span class="stat-card-icon icon-amber">⚠</span>
             </div>
-            <div class="stat-card-val">{{ $stats['low_stock'] }}</div>
+            <div class="stat-card-val" id="inv-stat-low">{{ $stats['low_stock'] }}</div>
             <p class="stat-card-desc">Modelos activos próximos a agotarse.</p>
         </div>
 
@@ -52,7 +52,7 @@
                 <span class="stat-card-label">Inactivos / Archivo</span>
                 <span class="stat-card-icon icon-blue">📁</span>
             </div>
-            <div class="stat-card-val">{{ $stats['inactive'] }}</div>
+            <div class="stat-card-val" id="inv-stat-inactive">{{ $stats['inactive'] }}</div>
             <p class="stat-card-desc">Históricos preservados por integridad.</p>
         </div>
     </div>
@@ -137,7 +137,7 @@
                     </thead>
                     <tbody>
                         @foreach ($products as $product)
-                            <tr>
+                            <tr id="inv-row-{{ $product->id }}">
                                 <td>
                                     <div style="display:flex; align-items:center; gap:0.75rem;">
                                         <div style="width:54px; height:38px; background:#F4F4F5; border:1px solid #E4E4E7; border-radius:2px; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
@@ -171,7 +171,7 @@
                                         {{ $product->formattedPrice() }}
                                     </span>
                                 </td>
-                                <td>
+                                <td class="inv-stock-cell">
                                     @if ($product->stock <= 0)
                                         <span class="badge-status badge-rejected">
                                             Agotado (0)
@@ -234,3 +234,46 @@
         @endif
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function renderStockBadge(stock) {
+        if (stock <= 0) {
+            return '<span class="badge-status badge-rejected">Agotado (0)</span>';
+        } else if (stock <= 3) {
+            return `<span class="badge-status badge-pending">Bajo (${stock} uds)</span>`;
+        }
+        return `<span style="font-weight:600; color:var(--zyro-green-text);">${stock} unidades</span>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof window.zyroSubscribe === 'function') {
+            const channel = window.zyroSubscribe('private', 'admin');
+
+            channel.listen('.InventoryUpdated', function (e) {
+                // 1. Actualizar métricas de cabecera
+                if (e.metrics) {
+                    const lowStockEl = document.getElementById('inv-stat-low');
+                    if (lowStockEl && e.metrics.low_stock_products !== undefined) {
+                        lowStockEl.textContent = e.metrics.low_stock_products;
+                    }
+                }
+
+                // 2. Actualizar celdas de existencias en tiempo real
+                if (Array.isArray(e.items)) {
+                    e.items.forEach(item => {
+                        const row = document.getElementById(`inv-row-${item.product_id}`);
+                        if (row) {
+                            const cell = row.querySelector('.inv-stock-cell');
+                            if (cell) {
+                                cell.innerHTML = renderStockBadge(item.stock);
+                                cell.style.animation = 'zyroSlideIn 0.3s ease';
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
+@endpush
