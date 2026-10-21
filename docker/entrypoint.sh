@@ -42,7 +42,12 @@ fi
 # (Nunca se ejecuta migrate:fresh ni seed automático en producción)
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo "==> [ZYRO] Variable RUN_MIGRATIONS=true detectada. Ejecutando migraciones pendientes..."
-    php artisan migrate --force || echo "==> [AVISO] No se pudieron ejecutar migraciones automáticas. Verifica la conexión a la base de datos."
+    if ! php artisan migrate --force; then
+        echo "==> [ERROR CRÍTICO] La ejecución de 'php artisan migrate --force' ha fallado." >&2
+        echo "==> [ERROR CRÍTICO] Verifique la conectividad con MySQL de Railway y las variables DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD." >&2
+        exit 1
+    fi
+    echo "==> [ZYRO] Migraciones ejecutadas exitosamente."
 else
     echo "==> [ZYRO] RUN_MIGRATIONS no está activo. Omitiendo migraciones automáticas en arranque."
 fi
