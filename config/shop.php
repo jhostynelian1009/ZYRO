@@ -27,7 +27,9 @@ return [
     | Costo de envío (demo)
     |--------------------------------------------------------------------------
     | Tarifa fija de envío de demostración en dólares.
+    |
+    | Variable de entorno: SHIPPING_COST
     */
-    'shipping' => (float) env('SHIPPING_COST', 3.00),
+    'shipping' => (float) env('SHIPPING_COST', 6.00),
 
 ];

@@ -114,10 +114,10 @@
                                 Retiro en tienda (sin cargo adicional)
                             </option>
                             <option value="standard" {{ old('delivery_method') === 'standard' ? 'selected' : '' }}>
-                                Envío estándar (demo — $3.00)
+                                Envío estándar (demo — ${{ number_format(config('shop.shipping', 6.00), 2) }})
                             </option>
                             <option value="express" {{ old('delivery_method') === 'express' ? 'selected' : '' }}>
-                                Envío express (demo — $3.00)
+                                Envío express (demo — ${{ number_format(config('shop.shipping', 6.00), 2) }})
                             </option>
                         </select>
                         @error('delivery_method')
@@ -180,14 +180,14 @@
             </div>
             <div class="summary-row">
                 <span>Envío (demo)</span>
-                <span>$3.00</span>
+                <span>${{ number_format(config('shop.shipping', 6.00), 2) }}</span>
             </div>
 
             <div class="summary-divider"></div>
 
             <div class="summary-total-row">
                 <span>Total estimado</span>
-                <span>${{ number_format($subtotal + $subtotal * config('shop.iva_rate', 0.15) + config('shop.shipping', 3.00), 2) }}</span>
+                <span>${{ number_format($subtotal + $subtotal * config('shop.iva_rate', 0.15) + config('shop.shipping', 6.00), 2) }}</span>
             </div>
 
             <div class="checkout-disclaimer-box">
