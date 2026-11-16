@@ -178,12 +178,36 @@
         }
     }
 
+    let isFetching = false;
+    let pollInterval = null;
+
     function fetchStats() {
+        if (isFetching) return;
+        isFetching = true;
         fetch(statsUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(r => r.json())
             .then(data => updateStatsUI(data))
-            .catch(() => {});
+            .catch(() => {})
+            .finally(() => { isFetching = false; });
     }
+
+    function startPolling() {
+        if (pollInterval) return;
+        pollInterval = setInterval(fetchStats, 25000);
+    }
+
+    function stopPolling() {
+        if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+        }
+    }
+
+    window.zyroAdminDashboard = {
+        fetchStats: fetchStats,
+        startPolling: startPolling,
+        stopPolling: stopPolling
+    };
 
     function createBadgeHtml(status) {
         if (status === 'approved') {
@@ -273,8 +297,20 @@
             });
         }
 
-        // Respaldo seguro: sincronización ligera cada 25 segundos
-        setInterval(fetchStats, 25000);
+        // Respaldo seguro: sincronización ligera cada 25 segundos cuando WebSocket no esté activo
+        if (!window.zyroRealtime || !window.zyroRealtime.isAvailable) {
+            startPolling();
+        }
+
+        window.addEventListener('zyro:realtime-state', function (e) {
+            if (e.detail && e.detail.state === 'connected') {
+                stopPolling();
+            } else {
+                startPolling();
+            }
+        });
+
+        window.addEventListener('beforeunload', stopPolling);
     });
 </script>
 @endpush

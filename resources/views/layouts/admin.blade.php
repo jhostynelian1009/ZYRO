@@ -52,6 +52,7 @@
             display: flex;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            overflow-wrap: break-word;
         }
 
         a { color: inherit; text-decoration: none; }

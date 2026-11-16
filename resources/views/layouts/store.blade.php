@@ -55,6 +55,7 @@
             flex-direction: column;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            overflow-wrap: break-word;
         }
 
         a { color: inherit; text-decoration: none; transition: opacity 0.2s, color 0.2s; }
@@ -861,6 +862,13 @@
             grid-template-columns: 1fr;
             gap: 2rem;
             align-items: start;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .cart-grid > * {
+            min-width: 0;
+            max-width: 100%;
         }
 
         @media (min-width: 960px) {
@@ -1146,6 +1154,13 @@
             grid-template-columns: 1fr;
             gap: 2rem;
             align-items: start;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .checkout-grid > * {
+            min-width: 0;
+            max-width: 100%;
         }
 
         @media (min-width: 960px) {

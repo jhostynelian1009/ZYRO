@@ -1,0 +1,80 @@
+{
+  "r03": {
+    "status": "APROBADO",
+    "details": {
+      "headerVisible": true,
+      "brandVisible": true,
+      "cartPillVisible": true,
+      "btnConfirmVisible": true,
+      "deliveryCardsCount": 3
+    }
+  },
+  "r08": {
+    "status": "APROBADO",
+    "details": {
+      "subtotalText": "$370.00",
+      "deliverySelect": "standard",
+      "estimateText": "⏱ Servientrega · 2–5 días hábiles",
+      "totalText": "$431.50"
+    }
+  },
+  "r04": {
+    "status": "APROBADO",
+    "details": {
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false
+    }
+  },
+  "r02": {
+    "status": "APROBADO",
+    "details": {
+      "nameLength": 116,
+      "addrLength": 141,
+      "notesLength": 384,
+      "overflow": false,
+      "scrollWidth": 1351,
+      "clientWidth": 1351
+    }
+  },
+  "r06": {
+    "status": "APROBADO",
+    "details": "Formulario de checkout valida y organiza entrega, notas y pago sin desbordamiento."
+  },
+  "r09": {
+    "status": "APROBADO",
+    "details": {
+      "firstClickHandled": true,
+      "secondClickPrevented": true,
+      "isDisabled": true
+    }
+  },
+  "r10": {
+    "status": "APROBADO",
+    "details": {
+      "focusableElementsCount": 14,
+      "labeledInputsCount": 8
+    }
+  },
+  "r05": {
+    "status": "APROBADO",
+    "details": {
+      "colorsTestedCount": 6,
+      "svgTextRendered": "ZYRO TECH 2026",
+      "activeView": true
+    }
+  },
+  "r07": {
+    "status": "APROBADO",
+    "details": {
+      "url": "/admin",
+      "dashboardExposed": true,
+      "hasFetchStats": true,
+      "hasStartPolling": true,
+      "isEchoAvailable": false,
+      "realtimeState": "uninitialized",
+      "pollingIntervalSec": 25,
+      "endpoint": "/admin/actualizaciones"
+    }
+  }
+}

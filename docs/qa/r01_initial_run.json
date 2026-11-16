@@ -1,0 +1,1355 @@
+{
+  "r01_viewports": [
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Catalog",
+      "path": "/productos",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "ProductDetail",
+      "path": "/productos/zyro-lunar-tech",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Customizer",
+      "path": "/productos/zyro-lunar-tech/personalizar",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Login",
+      "path": "/iniciar-sesion",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Register",
+      "path": "/registro",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CartWithItems",
+      "path": "/carrito",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrders",
+      "path": "/mi-cuenta/pedidos",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "CustomerOrderDetail",
+      "path": "/mi-cuenta/pedidos/1",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminDashboard",
+      "path": "/admin",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrders",
+      "path": "/admin/pedidos",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminOrderDetail",
+      "path": "/admin/pedidos/1",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminInventory",
+      "path": "/admin/inventario",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 320,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 360,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 560,
+      "scrollWidth": 560,
+      "clientWidth": 560,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 768,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 980,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 992,
+      "scrollWidth": 977,
+      "clientWidth": 977,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 1366,
+      "scrollWidth": 1351,
+      "clientWidth": 1351,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    },
+    {
+      "page": "AdminAnalytics",
+      "path": "/admin/analitica",
+      "viewport": 1920,
+      "scrollWidth": 1905,
+      "clientWidth": 1905,
+      "hasOverflow": false,
+      "offenderCount": 0,
+      "offenders": []
+    }
+  ],
+  "defects": []
+}

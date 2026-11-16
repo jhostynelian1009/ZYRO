@@ -85,12 +85,24 @@
         .customizer-layout {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2.5rem;
+            gap: 2rem;
             align-items: start;
+            width: 100%;
+            min-width: 0;
+        }
+        .customizer-layout > div {
+            min-width: 0;
+            width: 100%;
         }
         @media (min-width: 980px) {
             .customizer-layout {
                 grid-template-columns: 1.15fr 0.85fr;
+                gap: 1.5rem;
+            }
+        }
+        @media (min-width: 1200px) {
+            .customizer-layout {
+                gap: 2.5rem;
             }
         }
 
@@ -104,6 +116,8 @@
             top: 88px;
             display: flex;
             flex-direction: column;
+            width: 100%;
+            min-width: 0;
         }
 
         .preview-toolbar {
@@ -115,6 +129,8 @@
             border-bottom: 1px solid var(--zyro-border);
             gap: 0.75rem;
             flex-wrap: wrap;
+            width: 100%;
+            min-width: 0;
         }
 
         .view-pill-group {
@@ -187,7 +203,7 @@
 
         .preview-canvas-wrap {
             position: relative;
-            min-height: 480px;
+            min-height: 380px;
             height: 580px;
             display: flex;
             align-items: center;
@@ -195,6 +211,8 @@
             overflow: hidden;
             background: radial-gradient(circle at 50% 40%, #FFFFFF 0%, #F4F4F6 85%);
             user-select: none;
+            width: 100%;
+            min-width: 0;
         }
 
         .preview-svg-container {
@@ -205,6 +223,7 @@
             justify-content: center;
             transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
             transform-origin: center center;
+            min-width: 0;
         }
 
         .preview-svg-container svg {
@@ -223,6 +242,58 @@
             border-top: 1px solid var(--zyro-border);
             font-size: 0.75rem;
             color: var(--zyro-muted);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .preview-footer-info > div {
+            min-width: 0;
+            word-break: break-word;
+        }
+
+        @media (max-width: 640px) {
+            .customizer-layout {
+                gap: 1.5rem;
+            }
+            .preview-stage-card {
+                position: static;
+            }
+            .preview-toolbar {
+                padding: 0.65rem 0.75rem;
+                gap: 0.5rem;
+            }
+            .preview-canvas-wrap {
+                height: 420px;
+                min-height: 320px;
+            }
+            .preview-footer-info {
+                padding: 0.65rem 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.35rem;
+            }
+            .preview-footer-info > div:last-child {
+                text-align: left !important;
+            }
+            .location-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .preview-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .view-pill-btn {
+                padding: 0.3rem 0.65rem;
+            }
+            .zoom-indicator {
+                min-width: 34px;
+            }
         }
 
         /* ─── PANEL DE CONFIGURACIÓN ─── */
@@ -232,6 +303,18 @@
             border-radius: 2px;
             padding: 2rem;
             box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+            min-width: 0;
+            width: 100%;
+        }
+        @media (max-width: 640px) {
+            .config-card {
+                padding: 1.25rem 1rem;
+            }
+        }
+        @media (min-width: 980px) and (max-width: 1100px) {
+            .config-card {
+                padding: 1.25rem;
+            }
         }
 
         .step-section {
@@ -280,9 +363,14 @@
         .color-swatch-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
+            gap: 0.65rem;
         }
-        @media (min-width: 480px) {
+        @media (min-width: 480px) and (max-width: 979px) {
+            .color-swatch-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        @media (min-width: 1200px) {
             .color-swatch-grid {
                 grid-template-columns: repeat(6, 1fr);
             }
@@ -454,11 +542,14 @@
         .slider-row {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-top: 0.85rem;
+            flex-wrap: wrap;
+            width: 100%;
         }
         .custom-slider {
             flex: 1;
+            min-width: 90px;
             height: 4px;
             background: #E4E4E7;
             border-radius: 2px;
@@ -953,10 +1044,10 @@
 
                     {{-- Control de tamaño / escala --}}
                     <div class="slider-row">
-                        <span style="font-size:0.6875rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--zyro-muted); min-width:85px;">Tamaño diseño:</span>
+                        <span style="font-size:0.6875rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--zyro-muted);">Tamaño:</span>
                         <input type="range" id="scale-slider" class="custom-slider" min="50" max="150" value="100">
-                        <span id="scale-label" style="font-size:0.75rem; font-weight:600; color:var(--zyro-black); min-width:38px;">100%</span>
-                        <button type="button" id="btn-center-design" class="btn-secondary" style="font-size:0.6875rem; padding:0.3rem 0.6rem;" title="Centrar diseño en la zona">Centrar</button>
+                        <span id="scale-label" style="font-size:0.75rem; font-weight:600; color:var(--zyro-black); min-width:34px;">100%</span>
+                        <button type="button" id="btn-center-design" class="btn-secondary" style="font-size:0.6875rem; padding:0.3rem 0.6rem; margin-left:auto;" title="Centrar diseño en la zona">Centrar</button>
                     </div>
                 </div>
 
