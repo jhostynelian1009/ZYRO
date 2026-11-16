@@ -3,6 +3,7 @@
 namespace App\Payments\Clients;
 
 use App\Models\Order;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -17,7 +18,7 @@ use RuntimeException;
  *
  * Flujo:
  * - preparePayment(): POST /button/Prepare
- * - confirmTransaction(): POST /button/Confirm
+ * - confirmTransaction(): POST /button/V2/Confirm  { id, clientTxId }
  * - queryTransaction(): GET /button/V2/Confirm/{id}
  */
 class PayPhoneClient
@@ -26,6 +27,7 @@ class PayPhoneClient
     private string $storeId;
     private string $baseUrl;
     private string $mode;
+    private string $responseUrl;
 
     public function __construct(
         ?string $token = null,
@@ -34,8 +36,9 @@ class PayPhoneClient
         ?string $mode = null,
     ) {
         $this->mode = $mode ?? (string) config('payment.mode', 'mock');
-        $this->token = $token ?? (string) config('payment.payphone.token', '');
+        $this->token = $this->normalizeToken($token ?? (string) config('payment.payphone.token', ''));
         $this->storeId = $storeId ?? (string) config('payment.payphone.store_id', '');
+        $this->responseUrl = (string) config('payment.payphone.response_url', '');
         $this->baseUrl = rtrim($baseUrl ?? (string) (
             $this->mode === 'live'
                 ? config('payment.payphone.live_url', 'https://pay.payphonetodoesposible.com/api')
@@ -62,7 +65,7 @@ class PayPhoneClient
     public function getHeaders(): array
     {
         return [
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer '.$this->token,
             'Content-Type'  => 'application/json',
             'Accept'        => 'application/json',
         ];
@@ -131,55 +134,55 @@ class PayPhoneClient
             'clientTransactionId' => $idempotencyKey,
             'storeId'             => $this->storeId,
             'currency'            => (string) ($options['currency'] ?? config('payment.currency', 'USD')),
-            'reference'           => (string) ($options['reference'] ?? ('Pedido #' . ($order->order_number ?? $order->id ?? 'ZYRO'))),
+            'reference'           => (string) ($options['reference'] ?? ('Pedido #'.($order->order_number ?? $order->id ?? 'ZYRO'))),
         ];
 
-        if (!empty($options['responseUrl'])) {
-            $payload['responseUrl'] = $options['responseUrl'];
+        $responseUrl = (string) ($options['responseUrl'] ?? $this->responseUrl);
+        if ($responseUrl !== '') {
+            $payload['responseUrl'] = $responseUrl;
         }
-        if (!empty($options['cancellationUrl'])) {
+        if (! empty($options['cancellationUrl'])) {
             $payload['cancellationUrl'] = $options['cancellationUrl'];
         }
 
-        // Si no hay token configurado y Http no está simulado (stub sandbox), retornar fallback
-        if (empty($this->token) && !$this->isHttpFaked()) {
+        if (empty($this->token) && ! $this->isHttpFaked()) {
             Log::warning('PayPhoneClient: PAYPHONE_TOKEN no configurado en sandbox, retornando stub ficticio.');
-            $mockPaymentId = 'PP-' . strtoupper(Str::random(10));
+            $mockPaymentId = 'PP-'.strtoupper(Str::random(10));
+
             return [
                 'paymentId'           => $mockPaymentId,
-                'payWithCard'         => rtrim($this->baseUrl, '/') . '/button/checkout?paymentId=' . $mockPaymentId . '&clientTransactionId=' . $idempotencyKey,
+                'payWithCard'         => rtrim($this->baseUrl, '/').'/button/checkout?paymentId='.$mockPaymentId.'&clientTransactionId='.$idempotencyKey,
                 'clientTransactionId' => $idempotencyKey,
             ];
         }
 
-        $url = rtrim($this->baseUrl, '/') . '/button/Prepare';
+        $url = rtrim($this->baseUrl, '/').'/button/Prepare';
 
         Log::info('PayPhone preparePayment: enviando solicitud', [
             'clientTransactionId' => $idempotencyKey,
             'amount'              => $payload['amount'],
             'currency'            => $payload['currency'],
-            'storeId'             => $this->storeId,
+            'storeId_present'     => $this->storeId !== '',
+            'response_url_present'=> $responseUrl !== '',
         ]);
 
         $response = Http::withHeaders($this->getHeaders())
             ->post($url, $payload);
 
         if ($response->failed()) {
-            Log::error('PayPhone preparePayment falló', [
-                'status'              => $response->status(),
+            $this->logFailedResponse('preparePayment', $response, [
                 'clientTransactionId' => $idempotencyKey,
-                'error'               => $response->json('message') ?? $response->body(),
             ]);
 
-            throw new RuntimeException("Error en PayPhone API preparePayment [{$response->status()}]: {$response->body()}");
+            throw new RuntimeException($this->formatApiError('preparePayment', $response));
         }
 
         return $response->json() ?? [];
     }
 
     /**
-     * Confirma una transacción ante PayPhone vía API oficial con Bearer Token.
-     * POST /button/Confirm
+     * Confirma una transacción ante PayPhone vía API oficial.
+     * POST /button/V2/Confirm  { id, clientTxId }
      *
      * @return array<string, mixed>
      */
@@ -187,8 +190,9 @@ class PayPhoneClient
     {
         $this->guardMode();
 
-        if (empty($this->token) && !$this->isHttpFaked()) {
+        if (empty($this->token) && ! $this->isHttpFaked()) {
             Log::warning('PayPhoneClient: PAYPHONE_TOKEN no configurado en sandbox, retornando confirmación stub.');
+
             return [
                 'transactionId'       => $transactionId,
                 'clientTransactionId' => $clientTxId,
@@ -198,7 +202,7 @@ class PayPhoneClient
             ];
         }
 
-        $url = rtrim($this->baseUrl, '/') . '/button/Confirm';
+        $url = rtrim($this->baseUrl, '/').'/button/V2/Confirm';
 
         $payload = [
             'id'         => is_numeric($transactionId) ? (int) $transactionId : $transactionId,
@@ -208,25 +212,24 @@ class PayPhoneClient
         Log::info('PayPhone confirmTransaction: enviando confirmación', [
             'transactionId' => $transactionId,
             'clientTxId'    => $clientTxId,
+            'endpoint'      => $url,
         ]);
 
         $response = Http::withHeaders($this->getHeaders())
             ->post($url, $payload);
 
         if ($response->failed()) {
-            Log::error('PayPhone confirmTransaction falló', [
-                'status'        => $response->status(),
+            $this->logFailedResponse('confirmTransaction', $response, [
                 'transactionId' => $transactionId,
                 'clientTxId'    => $clientTxId,
-                'error'         => $response->json('message') ?? $response->body(),
             ]);
 
             $json = $response->json() ?? [];
-            if (!isset($json['transactionStatus'])) {
+            if (! isset($json['transactionStatus'])) {
                 $json['transactionStatus'] = 'Failed';
             }
-            if (!isset($json['message'])) {
-                $json['message'] = "Error [{$response->status()}] al confirmar con PayPhone: " . $response->body();
+            if (! isset($json['message'])) {
+                $json['message'] = $this->formatApiError('confirmTransaction', $response);
             }
 
             return $json;
@@ -245,8 +248,9 @@ class PayPhoneClient
     {
         $this->guardMode();
 
-        if (empty($this->token) && !$this->isHttpFaked()) {
+        if (empty($this->token) && ! $this->isHttpFaked()) {
             Log::warning('PayPhoneClient: PAYPHONE_TOKEN no configurado en sandbox, retornando consulta stub.');
+
             return [
                 'transactionId'     => $transactionId,
                 'transactionStatus' => 'Pending',
@@ -254,7 +258,7 @@ class PayPhoneClient
             ];
         }
 
-        $url = rtrim($this->baseUrl, '/') . '/button/V2/Confirm/' . urlencode($transactionId);
+        $url = rtrim($this->baseUrl, '/').'/button/V2/Confirm/'.urlencode($transactionId);
 
         Log::info('PayPhone queryTransaction: consultando transacción', [
             'transactionId' => $transactionId,
@@ -264,14 +268,12 @@ class PayPhoneClient
             ->get($url);
 
         if ($response->failed()) {
-            Log::error('PayPhone queryTransaction falló', [
-                'status'        => $response->status(),
+            $this->logFailedResponse('queryTransaction', $response, [
                 'transactionId' => $transactionId,
-                'error'         => $response->json('message') ?? $response->body(),
             ]);
 
             $json = $response->json() ?? [];
-            if (!isset($json['transactionStatus'])) {
+            if (! isset($json['transactionStatus'])) {
                 $json['transactionStatus'] = 'Failed';
             }
 
@@ -291,6 +293,7 @@ class PayPhoneClient
             $ref = new \ReflectionClass($factory);
             if ($ref->hasProperty('recording')) {
                 $prop = $ref->getProperty('recording');
+
                 return (bool) $prop->getValue($factory);
             }
         } catch (\Throwable) {
@@ -298,5 +301,46 @@ class PayPhoneClient
         }
 
         return false;
+    }
+
+    private function normalizeToken(string $token): string
+    {
+        $token = trim($token);
+
+        if (str_starts_with(strtolower($token), 'bearer ')) {
+            return trim(substr($token, 7));
+        }
+
+        return $token;
+    }
+
+    /**
+     * @param  array<string, mixed>  $context
+     */
+    private function logFailedResponse(string $operation, Response $response, array $context): void
+    {
+        Log::error("PayPhone {$operation} falló", array_merge($context, [
+            'status'     => $response->status(),
+            'error_code' => $response->json('errorCode') ?? $response->json('ErrorCode'),
+            'message'    => $response->json('message'),
+            'request_id' => $this->extractRequestId($response),
+        ]));
+    }
+
+    private function formatApiError(string $operation, Response $response): string
+    {
+        $errorCode = $response->json('errorCode') ?? $response->json('ErrorCode');
+        $message = $response->json('message') ?? $response->body();
+        $suffix = $errorCode !== null ? " ErrorCode={$errorCode}" : '';
+
+        return "Error en PayPhone API {$operation} [{$response->status()}]: {$message}{$suffix}";
+    }
+
+    private function extractRequestId(Response $response): ?string
+    {
+        return $response->header('X-Request-Id')
+            ?: $response->header('x-request-id')
+            ?: $response->header('Request-Id')
+            ?: null;
     }
 }

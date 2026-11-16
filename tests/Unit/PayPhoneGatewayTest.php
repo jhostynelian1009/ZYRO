@@ -70,6 +70,10 @@ class PayPhoneGatewayTest extends TestCase
         $this->assertEquals('custom_token_123', $customClient->getToken());
         $this->assertEquals('custom_store_456', $customClient->getStoreId());
         $this->assertEquals('https://custom.payphone.test/api', $customClient->getBaseUrl());
+
+        $prefixed = new PayPhoneClient(token: 'Bearer already-prefixed-token');
+        $this->assertEquals('already-prefixed-token', $prefixed->getToken());
+        $this->assertEquals('Bearer already-prefixed-token', $prefixed->getHeaders()['Authorization']);
     }
 
     public function test_prepare_payment_payload_formatting_and_cents_calculation(): void
@@ -161,7 +165,7 @@ class PayPhoneGatewayTest extends TestCase
     public function test_confirm_transaction_sends_bearer_token_and_correct_payload(): void
     {
         Http::fake([
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'email'               => 'cliente@test.com',
                 'cardType'            => 'Visa',
                 'bin'                 => '411111',
@@ -182,7 +186,7 @@ class PayPhoneGatewayTest extends TestCase
         $this->assertEquals(54321, $result['transactionId']);
 
         Http::assertSent(function (Request $request) {
-            $hasCorrectUrl = $request->url() === 'https://pay.payphonetodoesposible.com/api/button/Confirm';
+            $hasCorrectUrl = $request->url() === 'https://pay.payphonetodoesposible.com/api/button/V2/Confirm';
             $hasBearer = $request->hasHeader('Authorization', 'Bearer ' . $this->token);
             $hasContentType = $request->header('Content-Type')[0] === 'application/json';
 

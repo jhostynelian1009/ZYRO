@@ -134,7 +134,7 @@ class PayPhoneSandboxTest extends TestCase
                 'paymentId'   => $txId,
                 'payWithCard' => 'https://pay.payphonetodoesposible.com/api/button/pay?id=' . $txId,
             ], 200),
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'email'               => 'juan.perez@zyro.test',
                 'cardType'            => 'Visa',
                 'bin'                 => '411111',
@@ -175,9 +175,9 @@ class PayPhoneSandboxTest extends TestCase
             'reference' => $clientTxId,
         ]);
 
-        // 3. Verificar que se consultó /button/Confirm con Bearer token
+        // 3. Verificar que se consultó POST /button/V2/Confirm con Bearer token
         Http::assertSent(function (Request $request) use ($txId, $clientTxId) {
-            if ($request->url() !== 'https://pay.payphonetodoesposible.com/api/button/Confirm') {
+            if ($request->url() !== 'https://pay.payphonetodoesposible.com/api/button/V2/Confirm') {
                 return false;
             }
 
@@ -207,7 +207,7 @@ class PayPhoneSandboxTest extends TestCase
                 'paymentId'   => $txId,
                 'payWithCard' => 'https://pay.payphonetodoesposible.com/api/button/pay?id=' . $txId,
             ], 200),
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'statusCode'          => 2,
                 'transactionStatus'   => 'Canceled',
                 'message'             => 'Transacción cancelada por el usuario',
@@ -245,7 +245,7 @@ class PayPhoneSandboxTest extends TestCase
     public function test_webhook_handles_payphone_api_http_error_gracefully(): void
     {
         Http::fake([
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'message' => 'Transacción no encontrada en PayPhone',
             ], 404),
         ]);
@@ -273,7 +273,7 @@ class PayPhoneSandboxTest extends TestCase
                 'paymentId'   => $txId,
                 'payWithCard' => 'https://pay.payphonetodoesposible.com/api/button/pay?id=' . $txId,
             ], 200),
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'transactionId'       => $txId,
                 'clientTransactionId' => $clientTxId,
                 'statusCode'          => 3,
@@ -402,7 +402,7 @@ class PayPhoneSandboxTest extends TestCase
                 'paymentId'   => $txId,
                 'payWithCard' => 'https://pay.payphonetodoesposible.com/api/button/pay?id=' . $txId,
             ], 200),
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'statusCode'          => 2,
                 'transactionStatus'   => 'Expired',
                 'message'             => 'Tiempo límite de confirmación excedido (5 minutos)',

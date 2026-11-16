@@ -41,7 +41,7 @@ class DeunaSandboxTest extends TestCase
             'payment.deuna.api_key'        => $this->apiKey,
             'payment.deuna.store_code'     => $this->storeCode,
             'payment.deuna.webhook_secret' => $this->webhookSecret,
-            'payment.deuna.sandbox_url'    => 'https://api-staging.deuna.com',
+            'payment.deuna.sandbox_url'    => 'https://api.sandbox.deuna.io',
             'payment.deuna.live_url'       => 'https://api.deuna.com',
         ]);
     }
@@ -88,10 +88,10 @@ class DeunaSandboxTest extends TestCase
     {
         $order = $this->createTestOrder(80.00);
         $expectedOrderToken = 'tok_deuna_order_888';
-        $expectedCheckoutUrl = 'https://api-staging.deuna.com/checkout?order_token=' . $expectedOrderToken;
+        $expectedCheckoutUrl = 'https://api.sandbox.deuna.io/checkout?order_token=' . $expectedOrderToken;
 
         Http::fake([
-            'https://api-staging.deuna.com/merchants/orders' => Http::response([
+            'https://api.sandbox.deuna.io/merchants/orders' => Http::response([
                 'order_token'  => $expectedOrderToken,
                 'checkout_url' => $expectedCheckoutUrl,
                 'status'       => 'pending',
@@ -111,16 +111,17 @@ class DeunaSandboxTest extends TestCase
         $this->assertEquals((float) $order->total, $result->amount);
         $this->assertEquals($idempotencyKey, $result->idempotencyKey);
 
-        Http::assertSent(function (Request $request) use ($expectedOrderToken, $order) {
-            $hasCorrectUrl = $request->url() === 'https://api-staging.deuna.com/merchants/orders';
-            $hasApiKey = $request->hasHeader('X-Api-Key', $this->apiKey);
+        Http::assertSent(function (Request $request) use ($order, $idempotencyKey) {
+            $hasCorrectUrl = $request->url() === 'https://api.sandbox.deuna.io/merchants/orders';
+            $hasApiKey = $request->hasHeader('X-API-KEY', $this->apiKey);
+            $hasIdempotency = $request->hasHeader('X-Idempotency-Key', $idempotencyKey);
             $hasStoreCode = $request->hasHeader('X-Store-Code', $this->storeCode);
             $hasContentType = $request->header('Content-Type')[0] === 'application/json';
 
             $data = $request->data();
             $hasOrderId = isset($data['order']['order_id']) && $data['order']['order_id'] === $order->order_number;
 
-            return $hasCorrectUrl && $hasApiKey && $hasStoreCode && $hasContentType && $hasOrderId;
+            return $hasCorrectUrl && $hasApiKey && $hasIdempotency && $hasStoreCode && $hasContentType && $hasOrderId;
         });
     }
 
@@ -130,7 +131,7 @@ class DeunaSandboxTest extends TestCase
         $txId = 'tx_deuna_trans_999';
 
         Http::fake([
-            "https://api-staging.deuna.com/merchants/orders/{$token}" => Http::response([
+            "https://api.sandbox.deuna.io/merchants/orders/{$token}" => Http::response([
                 'order_token'    => $token,
                 'status'         => 'paid',
                 'amount'         => 97.00,
@@ -149,8 +150,8 @@ class DeunaSandboxTest extends TestCase
         $this->assertStringContainsString('aprobada', strtolower($result->message));
 
         Http::assertSent(function (Request $request) use ($token) {
-            return $request->url() === "https://api-staging.deuna.com/merchants/orders/{$token}"
-                && $request->hasHeader('X-Api-Key', $this->apiKey)
+            return $request->url() === "https://api.sandbox.deuna.io/merchants/orders/{$token}"
+                && $request->hasHeader('X-API-KEY', $this->apiKey)
                 && $request->hasHeader('X-Store-Code', $this->storeCode);
         });
     }
@@ -161,12 +162,12 @@ class DeunaSandboxTest extends TestCase
         $tokenFailed = 'tok_failed_222';
 
         Http::fake([
-            "https://api-staging.deuna.com/merchants/orders/{$tokenPending}" => Http::response([
+            "https://api.sandbox.deuna.io/merchants/orders/{$tokenPending}" => Http::response([
                 'order_token' => $tokenPending,
                 'status'      => 'pending',
                 'amount'      => 45.00,
             ], 200),
-            "https://api-staging.deuna.com/merchants/orders/{$tokenFailed}" => Http::response([
+            "https://api.sandbox.deuna.io/merchants/orders/{$tokenFailed}" => Http::response([
                 'order_token' => $tokenFailed,
                 'status'      => 'rejected',
                 'amount'      => 45.00,
@@ -310,9 +311,9 @@ class DeunaSandboxTest extends TestCase
         $orderToken = 'tok_e2e_deuna_reconcile';
 
         Http::fake([
-            'https://api-staging.deuna.com/merchants/orders' => Http::response([
+            'https://api.sandbox.deuna.io/merchants/orders' => Http::response([
                 'order_token'  => $orderToken,
-                'checkout_url' => 'https://api-staging.deuna.com/checkout?order_token=' . $orderToken,
+                'checkout_url' => 'https://api.sandbox.deuna.io/checkout?order_token=' . $orderToken,
                 'status'       => 'pending',
             ], 200),
         ]);

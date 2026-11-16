@@ -3,6 +3,7 @@
 namespace App\Payments\Clients;
 
 use App\Models\Order;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ class DeunaClient
     private string $baseUrl;
     private string $apiKey;
     private string $storeCode;
+    private string $merchantId;
     private string $webhookSecret;
 
     public function __construct(
@@ -23,11 +25,15 @@ class DeunaClient
     ) {
         $mode = config('payment.mode', 'mock');
         $this->baseUrl = $baseUrl ?? ($mode === 'live'
-            ? config('payment.deuna.live_url', 'https://api.deuna.com')
-            : config('payment.deuna.sandbox_url', 'https://api-staging.deuna.com'));
+            ? config('payment.deuna.live_url', 'https://api.deuna.io')
+            : config('payment.deuna.sandbox_url', 'https://api.sandbox.deuna.io'));
 
-        $this->apiKey = $apiKey ?? (string) config('payment.deuna.api_key', '');
+        $this->apiKey = $apiKey ?? (string) (
+            config('payment.deuna.api_key')
+            ?: config('payment.deuna.private_key', '')
+        );
         $this->storeCode = $storeCode ?? (string) (config('payment.deuna.store_code') ?: config('payment.deuna.store_id', ''));
+        $this->merchantId = (string) config('payment.deuna.merchant_id', '');
         $this->webhookSecret = $webhookSecret ?? (string) (config('payment.deuna.webhook_secret') ?: config('payment.webhook_secret', ''));
     }
 
@@ -42,18 +48,29 @@ class DeunaClient
     }
 
     /**
-     * Construye las cabeceras estándar para DEUNA.
+     * Cabeceras oficiales DEUNA.
+     * Autenticación: X-API-KEY (clave privada del comercio).
+     * X-Store-Code se envía cuando el comercio lo tiene configurado.
      *
      * @return array<string, string>
      */
-    public function getHeaders(): array
+    public function getHeaders(?string $idempotencyKey = null): array
     {
-        return [
-            'X-Api-Key'    => $this->apiKey,
-            'X-Store-Code' => $this->storeCode,
+        $headers = [
+            'X-API-KEY'    => $this->apiKey,
             'Content-Type' => 'application/json',
             'Accept'       => 'application/json',
         ];
+
+        if ($this->storeCode !== '') {
+            $headers['X-Store-Code'] = $this->storeCode;
+        }
+
+        if ($idempotencyKey) {
+            $headers['X-Idempotency-Key'] = $idempotencyKey;
+        }
+
+        return $headers;
     }
 
     public function getBaseUrl(): string
@@ -113,22 +130,35 @@ class DeunaClient
         $shipping = (float) ($order->shipping_amount ?? 0);
         $total = (float) ($order->total ?? ($subtotal + $tax + $shipping));
         $orderId = (string) ($order->order_number ?? $order->id ?? Str::uuid()->toString());
+        $subtotalCents = (int) round($subtotal * 100);
+        $taxCents = (int) round($tax * 100);
+        $totalCents = (int) round($total * 100);
 
         $payload = [
             'order' => [
-                'order_id'        => $orderId,
-                'currency'        => config('payment.currency', 'USD'),
-                'tax_amount'      => (int) round($tax * 100),
-                'shipping_amount' => (int) round($shipping * 100),
-                'sub_total'       => (int) round($subtotal * 100),
-                'total_amount'    => (int) round($total * 100),
-                'items'           => $items,
+                'order_id'            => $orderId,
+                'store_code'          => $this->storeCode !== '' ? $this->storeCode : 'all',
+                'currency'            => config('payment.currency', 'USD'),
+                'tax_amount'          => $taxCents,
+                'shipping_amount'     => (int) round($shipping * 100),
+                'items_total_amount'  => $subtotalCents,
+                'sub_total'           => $subtotalCents,
+                'total_amount'        => $totalCents,
+                'items'               => $items,
             ],
             'idempotency_key' => $idempotencyKey,
         ];
 
-        if (!empty($order->customer_name) || !empty($order->phone) || $order->user) {
+        if ($this->merchantId !== '') {
+            $payload['order']['merchant_id'] = $this->merchantId;
+        }
+
+        if (! empty($order->customer_name) || ! empty($order->phone) || $order->user) {
             $user = $order->user;
+            $payload['order']['payer_info'] = [
+                'email'            => (string) ($user?->email ?? $options['email'] ?? 'customer@zyro.local'),
+                'external_user_id' => (string) ($order->user_id ?? $user?->id ?? ''),
+            ];
             $payload['order']['user'] = [
                 'id'         => (string) ($order->user_id ?? $user?->id ?? ''),
                 'email'      => (string) ($user?->email ?? $options['email'] ?? 'customer@zyro.local'),
@@ -137,7 +167,7 @@ class DeunaClient
             ];
         }
 
-        if (!empty($order->address) || !empty($order->city)) {
+        if (! empty($order->address) || ! empty($order->city)) {
             $payload['order']['shipping_address'] = [
                 'address1' => (string) ($order->address ?? ''),
                 'city'     => (string) ($order->city ?? ''),
@@ -145,7 +175,7 @@ class DeunaClient
             ];
         }
 
-        if (!empty($options['extra_payload']) && is_array($options['extra_payload'])) {
+        if (! empty($options['extra_payload']) && is_array($options['extra_payload'])) {
             $payload = array_merge($payload, $options['extra_payload']);
         }
 
@@ -153,7 +183,11 @@ class DeunaClient
     }
 
     /**
-     * Crea una orden en DEUNA a través de POST /merchants/orders.
+     * Crea una orden tokenizada en DEUNA (flujo checkout / redirección).
+     * POST /merchants/orders
+     *
+     * No se usa POST /v2/merchants/orders/purchase: ese endpoint es Direct API
+     * y exige payment_source (token de tarjeta), lo que cambiaría el flujo comercial.
      *
      * @param  array<string, mixed>  $options
      * @return array<string, mixed>
@@ -162,20 +196,18 @@ class DeunaClient
     {
         $this->guardMode();
 
-        $url = rtrim($this->baseUrl, '/') . '/merchants/orders';
+        $url = rtrim($this->baseUrl, '/').'/merchants/orders';
         $payload = $this->formatOrderPayload($order, $idempotencyKey, $options);
 
-        $response = Http::withHeaders($this->getHeaders())
+        $response = Http::withHeaders($this->getHeaders($idempotencyKey))
             ->post($url, $payload);
 
         if ($response->failed()) {
-            Log::error('DEUNA createOrder falló', [
-                'status'   => $response->status(),
+            $this->logFailedResponse('createOrder', $response, [
                 'order_id' => $order->id,
-                'error'    => $response->json('message') ?? $response->body(),
             ]);
 
-            throw new RuntimeException("Error en DEUNA API createOrder [{$response->status()}]: {$response->body()}");
+            throw new RuntimeException("Error en DEUNA API createOrder [{$response->status()}]: ".$this->safeErrorBody($response));
         }
 
         return $response->json() ?? [];
@@ -190,19 +222,17 @@ class DeunaClient
     {
         $this->guardMode();
 
-        $url = rtrim($this->baseUrl, '/') . '/merchants/orders/' . urlencode($orderToken);
+        $url = rtrim($this->baseUrl, '/').'/merchants/orders/'.urlencode($orderToken);
 
         $response = Http::withHeaders($this->getHeaders())
             ->get($url);
 
         if ($response->failed()) {
-            Log::error('DEUNA getOrder falló', [
-                'status'      => $response->status(),
+            $this->logFailedResponse('getOrder', $response, [
                 'order_token' => $orderToken,
-                'error'       => $response->json('message') ?? $response->body(),
             ]);
 
-            throw new RuntimeException("Error en DEUNA API getOrder [{$response->status()}]: {$response->body()}");
+            throw new RuntimeException("Error en DEUNA API getOrder [{$response->status()}]: ".$this->safeErrorBody($response));
         }
 
         return $response->json() ?? [];
@@ -229,4 +259,24 @@ class DeunaClient
 
         return hash_equals($expected, trim($signature));
     }
+
+    /**
+     * @param  array<string, mixed>  $context
+     */
+    private function logFailedResponse(string $operation, Response $response, array $context): void
+    {
+        Log::error("DEUNA {$operation} falló", array_merge($context, [
+            'status'     => $response->status(),
+            'error'      => $response->json('message') ?? $response->json('error'),
+            'request_id' => $response->header('X-Request-Id') ?: $response->header('x-request-id'),
+        ]));
+    }
+
+    private function safeErrorBody(Response $response): string
+    {
+        $message = $response->json('message') ?? $response->json('error') ?? $response->body();
+
+        return is_string($message) ? $message : (json_encode($message) ?: '');   
+    }
 }
+

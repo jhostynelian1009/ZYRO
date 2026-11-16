@@ -59,7 +59,7 @@ class SandboxCertificationF5Test extends TestCase
             'payment.deuna.api_key'        => $this->deunaApiKey,
             'payment.deuna.store_code'     => $this->deunaStoreCode,
             'payment.deuna.webhook_secret' => $this->deunaWebhookSecret,
-            'payment.deuna.sandbox_url'    => 'https://api-staging.deuna.com',
+            'payment.deuna.sandbox_url'    => 'https://api.sandbox.deuna.io',
             'payment.webhook_secret'       => 'global_wh_secret_cert_2026',
         ]);
     }
@@ -116,7 +116,7 @@ class SandboxCertificationF5Test extends TestCase
                 'paymentId'   => 998877,
                 'payWithCard' => 'https://pay.payphonetodoesposible.com/api/button/pay?id=998877',
             ], 200),
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'transactionId'       => 998877,
                 'clientTransactionId' => $clientTxId,
                 'statusCode'          => 3,
@@ -145,14 +145,14 @@ class SandboxCertificationF5Test extends TestCase
                 && $data['tax'] === 1500;
         });
 
-        // Simular webhook y validar contrato en POST /button/Confirm
+        // Simular webhook y validar contrato en POST /button/V2/Confirm
         $this->postJson('/webhooks/payment/payphone', [
             'id'         => 998877,
             'clientTxId' => $clientTxId,
         ])->assertStatus(200)->assertJson(['success' => true, 'status' => 'approved']);
 
         Http::assertSent(function (Request $request) use ($clientTxId) {
-            if ($request->url() !== 'https://pay.payphonetodoesposible.com/api/button/Confirm') {
+            if ($request->url() !== 'https://pay.payphonetodoesposible.com/api/button/V2/Confirm') {
                 return false;
             }
             $data = $request->data();
@@ -173,9 +173,9 @@ class SandboxCertificationF5Test extends TestCase
         $orderToken = 'tok_deuna_contract_test_50';
 
         Http::fake([
-            'https://api-staging.deuna.com/merchants/orders' => Http::response([
+            'https://api.sandbox.deuna.io/merchants/orders' => Http::response([
                 'order_token'  => $orderToken,
-                'checkout_url' => 'https://api-staging.deuna.com/checkout?order_token=' . $orderToken,
+                'checkout_url' => 'https://api.sandbox.deuna.io/checkout?order_token=' . $orderToken,
                 'status'       => 'pending',
             ], 200),
         ]);
@@ -187,10 +187,10 @@ class SandboxCertificationF5Test extends TestCase
 
         // Verificar contrato en POST /merchants/orders
         Http::assertSent(function (Request $request) use ($order) {
-            if ($request->url() !== 'https://api-staging.deuna.com/merchants/orders') {
+            if ($request->url() !== 'https://api.sandbox.deuna.io/merchants/orders') {
                 return false;
             }
-            $hasKey = $request->hasHeader('X-Api-Key', $this->deunaApiKey);
+            $hasKey = $request->hasHeader('X-API-KEY', $this->deunaApiKey);
             $hasStore = $request->hasHeader('X-Store-Code', $this->deunaStoreCode);
             $data = $request->data();
             $hasOrderId = $data['order']['order_id'] === $order->order_number;
@@ -286,7 +286,7 @@ class SandboxCertificationF5Test extends TestCase
 
         // 3. Llega tardíamente un webhook confirmando la transacción en PayPhone
         Http::fake([
-            'https://pay.payphonetodoesposible.com/api/button/Confirm' => Http::response([
+            'https://pay.payphonetodoesposible.com/api/button/V2/Confirm' => Http::response([
                 'transactionId'       => 999888,
                 'clientTransactionId' => $clientTxId,
                 'statusCode'          => 3,

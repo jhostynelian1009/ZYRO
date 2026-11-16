@@ -38,28 +38,37 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | PayPhone (sandbox stub — credenciales reales no incluidas)
+    | PayPhone
     |--------------------------------------------------------------------------
+    | Confirmación oficial: POST {sandbox_url}/button/V2/Confirm
+    | Cuerpo: { "id": int, "clientTxId": string }
     */
     'payphone' => [
-        'token'       => env('PAYPHONE_TOKEN', ''),
-        'store_id'    => env('PAYPHONE_STORE_ID', ''),
-        'sandbox_url' => 'https://pay.payphonetodoesposible.com/api',
-        'live_url'    => 'https://pay.payphonetodoesposible.com/api',
+        'token'        => env('PAYPHONE_TOKEN', ''),
+        'store_id'     => env('PAYPHONE_STORE_ID', ''),
+        'response_url' => env('PAYPHONE_RESPONSE_URL', ''),
+        'sandbox_url'  => env('PAYPHONE_SANDBOX_URL', 'https://pay.payphonetodoesposible.com/api'),
+        'live_url'     => env('PAYPHONE_LIVE_URL', 'https://pay.payphonetodoesposible.com/api'),
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | DEUNA (sandbox stub — credenciales reales no incluidas)
+    | DEUNA
     |--------------------------------------------------------------------------
+    | Sandbox oficial: https://api.sandbox.deuna.io
+    | Flujo comercial ZYRO: tokenizar orden (POST /merchants/orders) y redirigir
+    | al checkout. POST /v2/merchants/orders/purchase es Direct API (payment_source)
+    | y no sustituye el flujo de redirección.
     */
     'deuna' => [
-        'api_key'        => env('DEUNA_API_KEY', ''),
+        'api_key'        => env('DEUNA_API_KEY', env('DEUNA_PRIVATE_KEY', '')),
+        'private_key'    => env('DEUNA_PRIVATE_KEY', env('DEUNA_API_KEY', '')),
         'store_code'     => env('DEUNA_STORE_CODE', ''),
+        'merchant_id'    => env('DEUNA_MERCHANT_ID', ''),
         'webhook_secret' => env('DEUNA_WEBHOOK_SECRET', env('PAYMENT_WEBHOOK_SECRET', '')),
         'sandbox'        => (bool) env('DEUNA_SANDBOX', true),
-        'sandbox_url'    => 'https://api-staging.deuna.com',
-        'live_url'       => 'https://api.deuna.com',
+        'sandbox_url'    => env('DEUNA_SANDBOX_URL', 'https://api.sandbox.deuna.io'),
+        'live_url'       => env('DEUNA_LIVE_URL', 'https://api.deuna.io'),
     ],
 
     /*

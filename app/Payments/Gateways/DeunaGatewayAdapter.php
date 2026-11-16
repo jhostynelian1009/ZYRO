@@ -53,7 +53,7 @@ class DeunaGatewayAdapter implements PaymentGatewayInterface
         $idempotencyKey = $payload['idempotency_key'] ?? Str::uuid()->toString();
         $reference      = 'DEUNA-' . strtoupper(Str::random(10));
         $amount         = (float) $order->total;
-        $baseUrl        = config('payment.deuna.sandbox_url', 'https://api-staging.deuna.com');
+        $baseUrl        = config('payment.deuna.sandbox_url', 'https://api.sandbox.deuna.io');
 
         try {
             $response = $this->client->createOrder($order, $idempotencyKey, $payload);

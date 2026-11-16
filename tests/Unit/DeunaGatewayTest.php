@@ -29,14 +29,14 @@ class DeunaGatewayTest extends TestCase
             'payment.deuna.api_key'        => $this->apiKey,
             'payment.deuna.store_code'     => $this->storeCode,
             'payment.deuna.webhook_secret' => $this->webhookSecret,
-            'payment.deuna.sandbox_url'    => 'https://api-staging.deuna.com',
+            'payment.deuna.sandbox_url'    => 'https://api.sandbox.deuna.io',
             'payment.deuna.live_url'       => 'https://api.deuna.com',
         ]);
 
         $this->client = new DeunaClient(
             apiKey: $this->apiKey,
             storeCode: $this->storeCode,
-            baseUrl: 'https://api-staging.deuna.com',
+            baseUrl: 'https://api.sandbox.deuna.io',
             webhookSecret: $this->webhookSecret
         );
     }
@@ -45,12 +45,12 @@ class DeunaGatewayTest extends TestCase
     {
         $headers = $this->client->getHeaders();
 
-        $this->assertArrayHasKey('X-Api-Key', $headers);
+        $this->assertArrayHasKey('X-API-KEY', $headers);
         $this->assertArrayHasKey('X-Store-Code', $headers);
         $this->assertArrayHasKey('Content-Type', $headers);
         $this->assertArrayHasKey('Accept', $headers);
 
-        $this->assertEquals($this->apiKey, $headers['X-Api-Key']);
+        $this->assertEquals($this->apiKey, $headers['X-API-KEY']);
         $this->assertEquals($this->storeCode, $headers['X-Store-Code']);
         $this->assertEquals('application/json', $headers['Content-Type']);
         $this->assertEquals('application/json', $headers['Accept']);
@@ -62,7 +62,7 @@ class DeunaGatewayTest extends TestCase
         $this->assertEquals($this->apiKey, $defaultClient->getApiKey());
         $this->assertEquals($this->storeCode, $defaultClient->getStoreCode());
         $this->assertEquals($this->webhookSecret, $defaultClient->getWebhookSecret());
-        $this->assertEquals('https://api-staging.deuna.com', $defaultClient->getBaseUrl());
+        $this->assertEquals('https://api.sandbox.deuna.io', $defaultClient->getBaseUrl());
 
         $customClient = new DeunaClient(
             apiKey: 'custom_key',
@@ -116,6 +116,7 @@ class DeunaGatewayTest extends TestCase
 
         $orderData = $payload['order'];
         $this->assertEquals('ORD-2026-TEST', $orderData['order_id']);
+        $this->assertEquals($this->storeCode, $orderData['store_code']);
         $this->assertEquals('USD', $orderData['currency']);
         $this->assertEquals(5000, $orderData['sub_total']); // 50.00 * 100
         $this->assertEquals(750, $orderData['tax_amount']); // 7.50 * 100

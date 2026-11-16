@@ -17,7 +17,7 @@ use RuntimeException;
  * Flujo oficial:
  * 1. charge(): Invoca preparePayment() para generar el botón de pago y retorna redirect.
  * 2. handleWebhook(): Recibe notificación con { id, clientTxId }, confirma la transacción
- *    con el API oficial POST /button/Confirm usando Bearer Token para autenticarla,
+ *    con el API oficial POST /button/V2/Confirm { id, clientTxId } usando Bearer Token,
  *    y retorna resultado approved o failed.
  * 3. queryTransaction(): Consulta estado ante PayPhone para conciliación.
  *
