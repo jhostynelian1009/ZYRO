@@ -28,6 +28,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => EnsureUserIsAdmin::class,
         ]);
+
+        // F4: Excluir webhooks de pago de la validación CSRF.
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/payment/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

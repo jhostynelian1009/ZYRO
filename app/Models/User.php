@@ -58,4 +58,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function createdOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'created_by');
+    }
+
+    public function orderInteractions(): HasMany
+    {
+        return $this->hasMany(OrderInteraction::class);
+    }
+
+    public function returnRequests(): HasMany
+    {
+        return $this->hasMany(ReturnRequest::class);
+    }
+
+    public function reviewedReturnRequests(): HasMany
+    {
+        return $this->hasMany(ReturnRequest::class, 'reviewer_id');
+    }
 }

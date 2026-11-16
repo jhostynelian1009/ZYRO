@@ -47,6 +47,15 @@
                 <span>&larr;</span>
                 <span>Todos los Pedidos</span>
             </a>
+            @if(isset($whatsappAgentUrl))
+                <a href="{{ $whatsappAgentUrl }}" target="_blank" class="btn-action btn-action-primary" style="margin-left:0.5rem;">
+                    📞 Contactar vía WhatsApp
+                </a>
+            @else
+                <a href="{{ app(\App\Contracts\WhatsAppLinkGeneratorInterface::class)->generateAgentContactLink($order) }}" target="_blank" class="btn-action btn-action-primary" style="margin-left:0.5rem;">
+                    📞 Contactar vía WhatsApp
+                </a>
+            @endif
         </div>
     </div>
 
@@ -219,15 +228,15 @@
                                     <strong style="color:var(--zyro-black); display:block; margin-bottom:0.15rem;">🏬 Sucursal Centro</strong>
                                     Modalidad de retiro en tienda. El cliente retirará personalmente en el local tras recibir la notificación de pedido listo. No aplica entrega a domicilio.
                                 </div>
-                            @else
-                                <div style="margin-top:0.5rem; font-size:0.8125rem;">
-                                    <span style="font-size:0.6875rem; font-weight:700; text-transform:uppercase; color:var(--zyro-muted); display:block;">
-                                        Dirección de Entrega
-                                    </span>
-                                    <div>{{ $order->address }}</div>
-                                    <div style="color:var(--zyro-muted);">Ciudad: {{ $order->city }}</div>
-                                </div>
                             @endif
+
+                            <div style="margin-top:0.5rem; font-size:0.8125rem;">
+                                <span style="font-size:0.6875rem; font-weight:700; text-transform:uppercase; color:var(--zyro-muted); display:block;">
+                                    {{ $order->isPickup() ? 'Dirección registrada del cliente' : 'Dirección de Entrega' }}
+                                </span>
+                                <div>{{ $order->address }}</div>
+                                <div style="color:var(--zyro-muted);">Ciudad: {{ $order->city }}</div>
+                            </div>
 
                             @if ($order->delivery_notes)
                                 <div style="margin-top:0.5rem; font-size:0.75rem; font-style:italic; color:var(--zyro-muted); border-top:1px dashed var(--zyro-border); padding-top:0.5rem;">
@@ -282,4 +291,88 @@
             </div>
         </div>
     </div>
+        {{-- Bitácora de Interacciones --}}
+        <div class="card-table-wrapper" style="margin-top:2rem;">
+            <div class="card-table-head">
+                <h2 class="card-table-title">Interacciones</h2>
+                <span style="font-size:0.75rem; color:var(--zyro-muted);">Registro de atenciones al pedido.</span>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Canal</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Notas de seguimiento</th>
+                            <th>Usuario</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($order->interactions as $interaction)
+                            <tr>
+                                <td>{{ ucfirst($interaction->channel instanceof \BackedEnum ? $interaction->channel->value : (string) $interaction->channel) }}</td>
+                                <td>{{ $interaction->interaction_type }}</td>
+                                <td>{{ $interaction->description }}</td>
+                                <td>{{ $interaction->follow_up_notes ?? '—' }}</td>
+                                <td>{{ $interaction->user->name ?? '—' }}</td>
+                                <td>{{ $interaction->created_at->format('d/m/Y H:i') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{-- Formulario para registrar nueva interacción --}}
+        <div class="card-table-wrapper" style="margin-top:1.5rem;">
+            <div class="card-table-head">
+                <h2 class="card-table-title">Nueva interacción</h2>
+            </div>
+            <div style="padding:1.25rem 1.5rem;">
+                <form method="POST" action="{{ route('admin.orders.interactions.store', $order) }}">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-1 font-medium">Canal</label>
+                            <select name="channel" class="w-full border rounded p-2" required>
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="punto_fisico">Punto Físico</option>
+                                <option value="llamada">Llamada</option>
+                                <option value="email">Email</option>
+                                <option value="web">Web</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1 font-medium">Tipo</label>
+                            <input type="text" name="interaction_type" class="w-full border rounded p-2" required maxlength="60">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block mb-1 font-medium">Descripción</label>
+                            <textarea name="description" class="w-full border rounded p-2" rows="3" required maxlength="1000"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block mb-1 font-medium">Notas de seguimiento (opcional)</label>
+                            <textarea name="follow_up_notes" class="w-full border rounded p-2" rows="2" maxlength="500"></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn-action btn-action-primary">Registrar interacción</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- Botón para continuar pedido (si no está pagado) --}}
+        @if ($order->status->value !== 'paid')
+            <div class="mt-6">
+                <form method="POST" action="{{ route('admin.orders.continue', $order) }}" style="display:inline;">
+                    @csrf
+                    <input type="hidden" name="payment_method" value="efectivo">
+                    <button type="submit" class="btn-action btn-action-primary">Continuar pedido (cobrar/entregar)</button>
+                </form>
+            </div>
+        @endif
+
 @endsection

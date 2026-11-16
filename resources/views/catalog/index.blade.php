@@ -149,6 +149,9 @@
                                         </div>
 
                                         <div class="product-actions-row">
+                                            <a href="{{ app(\App\Contracts\WhatsAppLinkGeneratorInterface::class)->generateProductLink($product) }}" class="btn-card-whatsapp" target="_blank" style="margin-left:0.5rem;">
+                                                WhatsApp
+                                            </a>
                                             <a href="{{ route('catalog.show', $product) }}" class="btn-card-details" data-clarity-action="card_details" data-product-id="{{ $product->id }}">
                                                 Detalles
                                             </a>

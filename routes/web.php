@@ -3,15 +3,19 @@
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\ManualOrderController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ReturnRequestController as AdminReturnRequestController;
 use App\Http\Controllers\AnalyticsInteractionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CustomerReturnRequestController;
 use App\Http\Controllers\CustomizationImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentWebhookController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Catálogo público ─────────────────────────────────────────────────────────
@@ -50,6 +54,12 @@ Route::middleware('auth')->group(function () {
     // ─── Pago simulado ────────────────────────────────────────────────────────
     Route::get('/mi-cuenta/pedidos/{order}/pago', [PaymentController::class, 'create'])->name('orders.payment');
     Route::post('/mi-cuenta/pedidos/{order}/pago-simulado', [PaymentController::class, 'store'])->name('orders.payment.store');
+
+    // ─── Cambios y Devoluciones (Autoservicio Cliente) ──────────────────────────
+    Route::get('/mi-cuenta/pedidos/{order}/solicitar-cambio', [CustomerReturnRequestController::class, 'create'])->name('customer.returns.create');
+    Route::post('/mi-cuenta/pedidos/{order}/solicitar-cambio', [CustomerReturnRequestController::class, 'store'])->name('customer.returns.store');
+    Route::get('/mi-cuenta/solicitudes', [CustomerReturnRequestController::class, 'index'])->name('customer.returns.index');
+    Route::get('/mi-cuenta/solicitudes/{returnRequest}', [CustomerReturnRequestController::class, 'show'])->name('customer.returns.show');
 });
 
 // ─── Panel de administración ──────────────────────────────────────────────────
@@ -57,13 +67,32 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/actualizaciones', [DashboardController::class, 'updates'])->name('updates');
 
+    // Ventas manuales / asistidas (K-001)
+    Route::get('/ventas/crear', [ManualOrderController::class, 'create'])->name('manual-orders.create');
+    Route::get('/pedidos/crear', [ManualOrderController::class, 'create'])->name('orders.create');
+    Route::post('/ventas', [ManualOrderController::class, 'store'])->name('manual-orders.store');
+
     Route::get('/pedidos', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/pedidos/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::post('/pedidos/{order}/aprobar', [AdminOrderController::class, 'approve'])->name('orders.approve');
     Route::post('/pedidos/{order}/rechazar', [AdminOrderController::class, 'reject'])->name('orders.reject');
+    Route::post('/pedidos/{order}/interacciones', [AdminOrderController::class, 'storeInteraction'])->name('orders.interactions.store');
+    Route::post('/pedidos/{order}/continuar', [AdminOrderController::class, 'continueOrder'])->name('orders.continue');
 
     Route::get('/inventario', [InventoryController::class, 'index'])->name('inventory.index');
+
+    // Cambios y Devoluciones (K-004)
+    Route::get('/solicitudes', [AdminReturnRequestController::class, 'index'])->name('returns.index');
+    Route::get('/solicitudes/{returnRequest}', [AdminReturnRequestController::class, 'show'])->name('returns.show');
+    Route::post('/solicitudes/{returnRequest}/iniciar-inspeccion', [AdminReturnRequestController::class, 'startInspection'])->name('returns.start-inspection');
+    Route::post('/solicitudes/{returnRequest}/resolver', [AdminReturnRequestController::class, 'resolve'])->name('returns.resolve');
 
     // ─── Analítica y mapas de calor ──────────────────────────────────────────
     Route::get('/analitica', [AnalyticsController::class, 'index'])->name('analytics.index');
 });
+
+
+// ─── Webhooks de pago (F4) ───────────────────────────────────────────────────
+// Sin middleware CSRF ni autenticación — son llamadas POST de proveedores externos.
+Route::post('/webhooks/payment/{gateway}', [PaymentWebhookController::class, 'receive'])
+    ->name('webhooks.payment');

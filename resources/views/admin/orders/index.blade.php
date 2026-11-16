@@ -94,6 +94,21 @@
                     {{ $orders->total() }} pedido(s) encontrado(s)
                 </span>
             </div>
+            <!-- Channel filter tabs -->
+            <div class="filter-tabs" role="tablist" style="margin-top:0.5rem;">
+                <a href="{{ route('admin.orders.index', array_merge(request()->except(['channel', 'page']), ['channel' => 'web'])) }}" class="filter-tab {{ ($channel ?? '') === 'web' ? 'active' : '' }}">
+                    <span>Web</span>
+                    <span class="tab-count" id="count-tab-web">{{ $counts['web'] ?? 0 }}</span>
+                </a>
+                <a href="{{ route('admin.orders.index', array_merge(request()->except(['channel', 'page']), ['channel' => 'whatsapp'])) }}" class="filter-tab {{ ($channel ?? '') === 'whatsapp' ? 'active' : '' }}">
+                    <span>WhatsApp</span>
+                    <span class="tab-count" id="count-tab-whatsapp">{{ $counts['whatsapp'] ?? 0 }}</span>
+                </a>
+                <a href="{{ route('admin.orders.index', array_merge(request()->except(['channel', 'page']), ['channel' => 'punto_fisico'])) }}" class="filter-tab {{ ($channel ?? '') === 'punto_fisico' ? 'active' : '' }}">
+                    <span>Punto Físico</span>
+                    <span class="tab-count" id="count-tab-punto_fisico">{{ $counts['punto_fisico'] ?? 0 }}</span>
+                </a>
+            </div>
         </div>
 
         <div id="orders-empty-state" style="padding: 4.5rem 2rem; text-align: center; color: var(--zyro-muted); {{ $orders->isEmpty() ? '' : 'display:none;' }}">
@@ -119,6 +134,8 @@
                 <thead>
                     <tr>
                         <th>Número</th>
+                        <th>Canal</th>
+                        <th>Responsable</th>
                         <th>Cliente</th>
                         <th>Modalidad / Entrega</th>
                         <th>Total</th>
@@ -134,6 +151,12 @@
                                 <strong style="font-family:monospace; font-size:0.875rem;">
                                     {{ $order->order_number }}
                                 </strong>
+                            </td>
+                            <td>
+                                {{ $order->channel_origin->label() ?? '—' }}
+                            </td>
+                            <td>
+                                {{ $order->creator->name ?? '—' }}
                             </td>
                             <td>
                                 <div style="font-weight:600;">{{ $order->customer_name ?: ($order->user->name ?? '—') }}</div>

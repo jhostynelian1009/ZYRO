@@ -70,4 +70,12 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Canal Oficial WhatsApp Business
+    |--------------------------------------------------------------------------
+    | Número de contacto telefónico para enlaces wa.me.
+    */
+    'whatsapp_number' => env('WHATSAPP_NUMBER', '593999999999'),
+
 ];

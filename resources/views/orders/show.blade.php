@@ -164,6 +164,11 @@
                             <p style="font-size:0.8125rem;color:#4C1D95;">Monto: <strong>${{ number_format($pago->amount, 2) }}</strong></p>
                         @endif
                         <p style="font-size:0.75rem;color:#6D28D9;margin-top:0.5rem;">Transacción de prueba completada exitosamente.</p>
+                        <div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px dashed #C4B5FD;">
+                            <a href="{{ route('customer.returns.create', $order) }}" class="btn-action" style="display:inline-block;font-size:0.75rem;">
+                                ↺ Solicitar cambio o devolución
+                            </a>
+                        </div>
                     </div>
 
                 @elseif ($order->status->value === 'rejected')
@@ -189,6 +194,13 @@
                         </a>
                     </div>
                 @endif
+
+                <div style="margin-top:1rem;">
+                    <a href="{{ app(\App\Contracts\WhatsAppLinkGeneratorInterface::class)->generateOrderInquiryLink($order) }}" target="_blank" class="btn-action" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;background:#10B981;color:#FFFFFF;border-color:#10B981;font-weight:600;padding:0.65rem 1rem;font-size:0.8125rem;">
+                        <span>💬</span>
+                        <span>Consultar sobre este pedido por WhatsApp</span>
+                    </a>
+                </div>
             </div>
 
             {{-- Historial de intentos de pago --}}

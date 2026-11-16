@@ -13,7 +13,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(\App\Contracts\OmnichannelOrderServiceInterface::class, \App\Services\ManualOrderService::class);
+        $this->app->singleton(\App\Contracts\ReturnRequestServiceInterface::class, \App\Services\ReturnRequestService::class);
+        $this->app->singleton(\App\Contracts\WhatsAppLinkGeneratorInterface::class, \App\Services\WhatsAppLinkService::class);
+
+        // F4: Arquitectura de pasarelas de pago.
+        $this->app->singleton(\App\Payments\PaymentGatewayManager::class);
+        $this->app->singleton(\App\Payments\Clients\PayPhoneClient::class);
+        $this->app->bind(\App\Contracts\PaymentGatewayInterface::class, function ($app) {
+            return $app->make(\App\Payments\PaymentGatewayManager::class)->gateway();
+        });
     }
 
     /**

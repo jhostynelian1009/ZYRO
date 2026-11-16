@@ -15,10 +15,17 @@ class Payment extends Model
     protected $fillable = [
         'order_id',
         'method',
+        'gateway',
+        'gateway_mode',
         'status',
         'amount',
+        'currency',
         'reference',
+        'external_transaction_id',
+        'idempotency_key',
         'processed_at',
+        'raw_response',
+        'error_message',
     ];
 
     /**
@@ -31,6 +38,7 @@ class Payment extends Model
             'status' => PaymentStatus::class,
             'amount' => 'decimal:2',
             'processed_at' => 'datetime',
+            'raw_response' => 'array',
         ];
     }
 

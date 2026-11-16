@@ -85,6 +85,11 @@ class Product extends Model
         return asset('images/products/placeholder.svg');
     }
 
+    public function getSkuAttribute(): string
+    {
+        return $this->attributes['sku'] ?? ('ZYR-'.str_pad((string) ($this->id ?? 1), 4, '0', STR_PAD_LEFT));
+    }
+
     public function formattedPrice(): string
     {
         return '$'.number_format((float) $this->price, 2, '.', ',');
@@ -152,6 +157,31 @@ class Product extends Model
         }
 
         return $query;
+    }
+
+    /**
+     * Comprueba si una talla solicitada es válida para el producto y si hay stock agregado disponible.
+     *
+     * NOTA ARQUITECTÓNICA (ALCANCE MVP):
+     * El inventario se gestiona a nivel agregado en `stock`. Las tallas permitidas se validan
+     * contra `size_options`. La disponibilidad de cualquier talla está limitada por el stock total.
+     */
+    public function hasStockForSize(?string $size, int $quantity = 1): bool
+    {
+        if ($this->stock < $quantity) {
+            return false;
+        }
+
+        if (filled($size) && ! empty($this->size_options)) {
+            return in_array($size, $this->size_options, true);
+        }
+
+        return true;
+    }
+
+    public function returnRequests(): HasMany
+    {
+        return $this->hasMany(ReturnRequest::class);
     }
 
     protected static function booted(): void

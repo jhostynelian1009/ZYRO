@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\OrderChannel;
 use App\Enums\OrderStatus;
 use Database\Factories\OrderFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,11 +21,13 @@ class Order extends Model
     protected $fillable = [
         'order_number',
         'user_id',
+        'created_by',
         'customer_name',
         'phone',
         'address',
         'city',
         'delivery_method',
+        'channel_origin',
         'delivery_estimate',
         'delivery_notes',
         'subtotal',
@@ -49,6 +53,7 @@ class Order extends Model
             'shipping_amount' => 'decimal:2',
             'total' => 'decimal:2',
             'status' => OrderStatus::class,
+            'channel_origin' => OrderChannel::class,
             'approved_at' => 'datetime',
             'rejected_at' => 'datetime',
             'paid_at' => 'datetime',
@@ -107,6 +112,45 @@ class Order extends Model
     public function getDeliveryMethodLabelAttribute(): string
     {
         return \App\Services\DeliveryService::labelFor($this->delivery_method);
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function interactions(): HasMany
+    {
+        return $this->hasMany(OrderInteraction::class);
+    }
+
+    public function returnRequests(): HasMany
+    {
+        return $this->hasMany(ReturnRequest::class);
+    }
+
+    public function scopeByChannel(Builder $query, ?string $channel): Builder
+    {
+        if (blank($channel)) {
+            return $query;
+        }
+
+        return $query->where('channel_origin', $channel);
+    }
+
+    public function latestPayment(): ?Payment
+    {
+        return $this->payments()->latest()->first();
+    }
+
+    public function getPaymentStatusAttribute(): string
+    {
+        return $this->latestPayment()?->status ?? 'pending';
+    }
+
+    public function getPaymentMethodAttribute(): ?string
+    {
+        return $this->latestPayment()?->method;
     }
 
     public function isPickup(): bool

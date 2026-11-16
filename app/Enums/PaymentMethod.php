@@ -7,4 +7,6 @@ enum PaymentMethod: string
     case TestCard = 'test_card';
     case BankTransferDemo = 'bank_transfer_demo';
     case WalletDemo = 'wallet_demo';
+    case Cash = 'efectivo';
+    case Transfer = 'transferencia';
 }

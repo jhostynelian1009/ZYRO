@@ -194,6 +194,10 @@
                                 </button>
                             </form>
                             <a href="{{ route('catalog.customize', $product) }}" class="btn-secondary" style="width:100%;margin-top:.75rem;padding-block:1rem;text-align:center;display:block;font-size:.8125rem;" data-clarity-action="detail_customize" data-product-id="{{ $product->id }}">Personaliza tu chompa</a>
+                            <a href="{{ app(\App\Contracts\WhatsAppLinkGeneratorInterface::class)->generateProductLink($product) }}" target="_blank" class="btn-action" style="width:100%;margin-top:.75rem;padding-block:0.85rem;text-align:center;display:flex;align-items:center;justify-content:center;gap:0.5rem;background:#10B981;color:#FFFFFF;border-color:#10B981;font-size:.8125rem;font-weight:600;">
+                                <span>💬</span>
+                                <span>Consultar o Comprar por WhatsApp (SKU: {{ $product->sku }})</span>
+                            </a>
                         @else
                             <div style="background:var(--zyro-light); border:1px solid var(--zyro-border); padding:1.5rem; text-align:center;">
                                 <p style="font-size:0.875rem; font-weight:600; margin-bottom:0.5rem; color:var(--zyro-black);">Inicia sesión para realizar tu pedido</p>
@@ -201,6 +205,12 @@
                                 <div style="display:flex; justify-content:center; gap:0.75rem;">
                                     <a href="{{ route('login') }}" class="btn-primary" style="padding:0.65rem 1.5rem;">Iniciar Sesión</a>
                                     <a href="{{ route('register') }}" class="btn-secondary" style="padding:0.65rem 1.5rem;">Crear Cuenta</a>
+                                </div>
+                                <div style="margin-top:1rem;">
+                                    <a href="{{ app(\App\Contracts\WhatsAppLinkGeneratorInterface::class)->generateProductLink($product) }}" target="_blank" class="btn-action" style="display:inline-flex;align-items:center;gap:0.5rem;font-size:.8125rem;">
+                                        <span>💬</span>
+                                        <span>Consultar por WhatsApp (SKU: {{ $product->sku }})</span>
+                                    </a>
                                 </div>
                             </div>
                         @endauth
